@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Jaydev Multicomm — Export Pricing</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=IBM+Plex+Mono:wght@300;400;500;600&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#080d1a; --surface:#0f1629; --surface2:#182040; --surface3:#1e2a50;
+  --border:#2a3560; --border2:#374270;
+  --amber:#f59e0b; --amber-dim:#b45309;
+  --input-bg:#1a1200; --input-border:#92400e; --input-text:#fcd34d;
+  --fixed-bg:#001529; --fixed-border:#1d3557; --fixed-text:#93c5fd;
+  --fob:#3b82f6; --fob-bg:#0c1a3d;
+  --cif:#10b981; --cif-bg:#061f14;
+  --text:#e2e8f0; --text-dim:#94a3b8; --text-muted:#475569;
+  --red:#ef4444; --green:#22c55e; --purple:#a78bfa; --orange:#fb923c;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min-height:100vh}
+
+/* ── HEADER ── */
+.hdr{background:var(--surface);border-bottom:1px solid var(--border);padding:0 24px;display:flex;align-items:center;justify-content:space-between;height:52px;position:sticky;top:0;z-index:100;box-shadow:0 1px 3px rgba(0,0,0,.05)}
+.logo{font-family:'Syne',sans-serif;font-weight:800;font-size:17px;color:var(--amber);letter-spacing:-0.3px}
+.logo em{color:var(--text-dim);font-weight:400;font-style:normal;font-size:12px;margin-left:10px}
+.hdr-right{display:flex;align-items:center;gap:16px}
+#clock{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--text-muted)}
+.save-pill{font-family:'IBM Plex Mono',monospace;font-size:10px;padding:4px 12px;border-radius:12px;background:#dcfce7;color:var(--green);border:1px solid #16a34a;opacity:0;transition:opacity .3s;box-shadow:0 2px 8px rgba(22,163,74,.1)}
+
+/* ── TABS ── */
+.tabs{background:var(--surface);border-bottom:1px solid var(--border);padding:0 20px;display:flex;gap:0;overflow-x:auto;position:sticky;top:52px;z-index:99;box-shadow:0 1px 2px rgba(0,0,0,.03)}
+.tab{padding:10px 18px;font-family:'Syne',sans-serif;font-weight:700;font-size:11px;letter-spacing:.8px;cursor:pointer;border:none;background:none;color:var(--text-muted);border-bottom:2px solid transparent;transition:all .15s;white-space:nowrap;position:relative;border-radius:6px 6px 0 0}
+.tab:hover{color:var(--text-dim);background:rgba(245,158,11,.08)}
+.tab.active{color:var(--amber);border-bottom-color:var(--amber);background:rgba(245,158,11,.05)}
+.tab.soon{opacity:.4;cursor:not-allowed}
+.soon-badge{font-size:8px;font-family:'IBM Plex Mono',monospace;background:var(--surface3);padding:2px 6px;border-radius:4px;margin-left:5px;vertical-align:middle;letter-spacing:0}
+
+/* ── LAYOUT ── */
+.main{display:grid;grid-template-columns:370px 1fr;height:calc(100vh - 98px)}
+.input-panel{background:var(--surface);border-right:1px solid var(--border);overflow-y:auto;height:100%;box-shadow:inset -1px 0 2px rgba(0,0,0,.02)}
+.results-panel{overflow-y:auto;padding:20px 24px;background:var(--bg);height:100%}
+
+/* ── INPUT SECTIONS ── */
+.sec-hdr{padding:10px 16px;background:var(--surface2);border-bottom:1px solid var(--border);border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:10}
+.sec-title{font-family:'Syne',sans-serif;font-weight:700;font-size:9px;letter-spacing:1.8px;text-transform:uppercase}
+.sec-title.daily{color:var(--amber)}
+.sec-title.fixed{color:#60a5fa}
+.sec-badge{font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--text-muted)}
+.reset-btn{font-family:'IBM Plex Mono',monospace;font-size:9px;padding:4px 10px;border-radius:6px;border:1px solid var(--border2);background:none;color:var(--text-muted);cursor:pointer;transition:all .15s;font-weight:500}
+.reset-btn:hover{border-color:var(--red);color:var(--red);background:rgba(239,68,68,.05)}
+
+.inp-row{display:grid;grid-template-columns:1fr 108px;align-items:center;gap:8px;padding:6px 16px;border-bottom:1px solid rgba(42,53,96,.2)}
+.inp-row:last-child{border-bottom:none}
+.inp-lbl{font-size:12px;color:var(--text-dim);line-height:1.3;font-weight:500}
+.inp-unit{font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--text-muted);margin-top:2px}
+
+input[type=number],select{width:100%;border-radius:8px;padding:7px 10px;font-family:'IBM Plex Mono',monospace;font-size:13px;font-weight:500;outline:none;transition:all .15s;border:1.5px solid transparent}
+input[type=number]{text-align:right}
+select{cursor:pointer}
+input.daily-inp,select.daily-inp{background:var(--input-bg);border-color:var(--input-border);color:var(--input-text)}
+input.daily-inp:focus,select.daily-inp:focus{border-color:var(--amber);box-shadow:0 0 0 3px rgba(245,158,11,.12)}
+input.fixed-inp,select.fixed-inp{background:var(--fixed-bg);border-color:var(--fixed-border);color:var(--fixed-text)}
+input.fixed-inp:focus,select.fixed-inp:focus{border-color:var(--fob);box-shadow:0 0 0 3px rgba(59,130,246,.12)}
+input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+input[type=number]{-moz-appearance:textfield}
+
+/* ── SPEC BAR ── */
+.spec-bar{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:14px 16px;display:flex;gap:24px;flex-wrap:wrap;margin-bottom:16px;box-shadow:0 2px 8px rgba(0,0,0,.05)}
+.spec-item{display:flex;flex-direction:column;gap:2px}
+.spec-lbl{font-size:9px;letter-spacing:1px;text-transform:uppercase;color:var(--text-muted);font-weight:600}
+.spec-val{font-family:'IBM Plex Mono',monospace;font-weight:600;font-size:13px;color:var(--text)}
+
+/* ── BREAKEVEN ── */
+.be-bar{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px}
+.be-card{background:var(--surface);border:1.5px solid var(--border);border-left:3px solid var(--orange);border-radius:12px;padding:14px 16px;box-shadow:0 2px 8px rgba(0,0,0,.04)}
+.be-lbl{font-size:9px;letter-spacing:1px;text-transform:uppercase;color:var(--text-muted);margin-bottom:6px;font-weight:600}
+.be-val{font-family:'IBM Plex Mono',monospace;font-weight:700;font-size:18px;color:var(--orange)}
+.be-sub{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--text-muted);margin-top:4px}
+
+/* ── BREAKDOWN ── */
+.bd-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px}
+.bd-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.04)}
+.bd-hdr{padding:10px 16px;background:var(--surface2);font-family:'Syne',sans-serif;font-weight:700;font-size:9px;letter-spacing:1.5px;text-transform:uppercase}
+.bd-hdr.fob{color:var(--fob)}
+.bd-hdr.cif{color:var(--cif)}
+.bd-row{display:flex;justify-content:space-between;align-items:center;padding:7px 16px;border-bottom:1px solid rgba(209,213,219,.5);font-size:12px}
+.bd-row:last-child{border-bottom:none}
+.bd-name{color:var(--text-dim);font-weight:500}
+.bd-val{font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:600;color:var(--text)}
+.bd-row.total{background:var(--surface2);border-top:1.5px solid var(--border)}
+.bd-row.total .bd-name{font-weight:600;color:var(--text);font-size:12px}
+.bd-row.total.fob .bd-val{color:var(--fob);font-size:13px;font-weight:700}
+.bd-row.total.cif .bd-val{color:var(--cif);font-size:13px;font-weight:700}
+
+/* ── SELL PRICE ── */
+.sell-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:16px;box-shadow:0 2px 8px rgba(0,0,0,.04)}
+.sell-hdr{padding:10px 16px;background:linear-gradient(90deg,#fef3c7,var(--surface));border-bottom:1px solid var(--border);font-family:'Syne',sans-serif;font-weight:700;font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(--amber)}
+.sell-grid{display:grid;grid-template-columns:1fr 1fr 1fr}
+.sell-blk{padding:13px 16px;border-right:1px solid var(--border)}
+.sell-blk:last-child{border-right:none}
+.sell-sub{font-size:9px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.8px;margin-bottom:6px;font-weight:600}
+.sell-fob{font-family:'IBM Plex Mono',monospace;font-weight:700;font-size:14px;color:#60a5fa}
+.sell-cif{font-family:'IBM Plex Mono',monospace;font-weight:700;font-size:14px;color:#34d399;margin-top:3px}
+
+/* ── MARGIN ── */
+.mgn-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:16px;box-shadow:0 2px 8px rgba(0,0,0,.04)}
+.mgn-grid{display:grid;grid-template-columns:1fr 1fr 1fr}
+.mgn-blk{padding:13px 16px;border-right:1px solid var(--border)}
+.mgn-blk:last-child{border-right:none}
+.mgn-fob{font-family:'IBM Plex Mono',monospace;font-weight:700;font-size:14px;color:var(--green)}
+.mgn-cif{font-family:'IBM Plex Mono',monospace;font-weight:700;font-size:14px;color:var(--purple);margin-top:3px}
+
+/* ── PORT REFERENCE ── */
+.port-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:16px;box-shadow:0 2px 8px rgba(0,0,0,.04)}
+.port-hdr{padding:9px 14px;background:var(--surface2);font-family:'Syne',sans-serif;font-weight:700;font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(--text-dim)}
+.port-table{width:100%;border-collapse:collapse;font-size:11px}
+.port-table th{padding:8px 12px;background:var(--surface3);color:var(--text-muted);font-family:'Syne',sans-serif;font-weight:700;font-size:9px;letter-spacing:1px;text-align:right;border-bottom:1px solid var(--border)}
+.port-table th:first-child{text-align:left}
+.port-table td{padding:8px 12px;border-bottom:1px solid rgba(209,213,219,.4);font-family:'IBM Plex Mono',monospace;text-align:right;color:var(--text-dim);font-weight:500}
+.port-table td:first-child{text-align:left;color:var(--fob);font-weight:600}
+.port-table tr:last-child td{border-bottom:none}
+
+/* ── COMING SOON ── */
+.cs{display:flex;flex-direction:column;align-items:center;justify-content:center;height:calc(100vh - 98px);gap:10px}
+.cs h2{font-family:'Syne',sans-serif;font-size:28px;font-weight:800;color:var(--text-dim)}
+.cs p{color:var(--text-muted);font-size:14px}
+</style>
+</head>
+<body>
+
+<div class="hdr">
+  <div class="logo">JAYDEV MULTICOMM <em>Export Pricing Intelligence</em></div>
+  <div class="hdr-right">
+    <span class="save-pill" id="savePill">✓ Saved</span>
+    <span id="clock"></span>
+  </div>
+</div>
+<div class="tabs" id="tabs"></div>
+<div id="app"></div>
+
+<script>
+// ═══════════════════════════════════════════════════════════════
+// PRODUCTS
+// ═══════════════════════════════════════════════════════════════
+const PRODUCTS=[
+  {id:'caustic',  label:'CAUSTIC SODA',  sub:'Flakes',               active:true},
+  {id:'sulphuric',label:'SULPHURIC ACID',sub:'98%',                  active:true},
+  {id:'calcium',  label:'CALCIUM CHLORIDE',sub:'',                   active:false},
+  {id:'pac',      label:'PAC',           sub:'Poly Aluminium Chloride',active:false},
+  {id:'h2o2',     label:'H₂O₂',          sub:'Hydrogen Peroxide',    active:false},
+  {id:'sulphur',  label:'SULPHUR',       sub:'Granular',             active:false},
+];
+
+// ═══════════════════════════════════════════════════════════════
+// PACKAGING OPTIONS
+// ═══════════════════════════════════════════════════════════════
+const PACKAGING={
+  caustic:[
+    {id:'pkg_25bag',name:'25 KG HDPE Bag',unit_weight:25,unit_cost:15,units_per_container:1040},
+    {id:'pkg_50bag',name:'50 KG HDPE Bag',unit_weight:50,unit_cost:28,units_per_container:520},
+    {id:'pkg_1tbag',name:'1000 KG Jumbo Bag',unit_weight:1000,unit_cost:350,units_per_container:26},
+  ],
+  sulphuric:[
+    {id:'pkg_ibc',name:'IBC Tank (1650 KG)',unit_weight:1650,unit_cost:8500,units_per_container:16,note:''},
+    {id:'pkg_drum',name:'200L Steel Drum (220 KG)',unit_weight:220,unit_cost:1200,units_per_container:78,note:''},
+    {id:'pkg_bulk',name:'ISO Bulk Tank (16000 KG)',unit_weight:16000,unit_cost:22000,units_per_container:1,note:'Lease-based | Return logistics included'},
+  ],
+};
+
+// ═══════════════════════════════════════════════════════════════
+// DEFAULTS
+// ═══════════════════════════════════════════════════════════════
+const DEF_CAUSTIC={
+  basic_rate:42, selected_packaging:'pkg_25bag', transport:25000, usd_inr:84,
+  ocean_frt:350, insurance:0.35, margin:8, moisture:0.3,
+  cha:2600, exam:4000, edi:36, gate:150,
+  cfs:10000, lolo:3000, detention:3000, ship_line:30000,
+  fumigation:2500, lashing:1500,
+};
+const DEF_SULPHURIC={
+  basic_rate:32, selected_packaging:'pkg_ibc', transport_kg:1, usd_inr:84,
+  ocean_frt:575, insurance:0.5, margin:10, tank_return_cost:0,
+  cha:2600, exam:4000, edi:36, gate:150,
+  cfs:10000, lolo:3000, detention:3000, ship_line:30000,
+  dg_usd:100, imdg:4000,
+};
+
+// ═══════════════════════════════════════════════════════════════
+// STORAGE (localStorage — persists per device)
+// ═══════════════════════════════════════════════════════════════
+function loadState(id,def){
+  try{const s=localStorage.getItem('jm2_'+id);if(s)return{...def,...JSON.parse(s)}}catch(e){}
+  return{...def};
+}
+function saveState(id,data){
+  try{localStorage.setItem('jm2_'+id,JSON.stringify(data));flashSave()}catch(e){}
+}
+let _saveT;
+function flashSave(){
+  const el=document.getElementById('savePill');
+  el.classList.add('show');
+  clearTimeout(_saveT);
+  _saveT=setTimeout(()=>el.classList.remove('show'),1500);
+}
+
+// ═══════════════════════════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════════════════════════
+let active='caustic';
+const S={
+  caustic:  loadState('caustic',  DEF_CAUSTIC),
+  sulphuric:loadState('sulphuric',DEF_SULPHURIC),
+};
+
+// ═══════════════════════════════════════════════════════════════
+// CALCULATIONS
+// ═══════════════════════════════════════════════════════════════
+function calcCaustic(d){
+  const pkg=PACKAGING.caustic.find(p=>p.id===d.selected_packaging);
+  const units_per_ctr=d.pkg_units_per_ctr!==undefined?d.pkg_units_per_ctr:pkg.units_per_container;
+  const unit_weight=d.pkg_unit_weight!==undefined?d.pkg_unit_weight:pkg.unit_weight;
+  const unit_cost=d.pkg_unit_cost!==undefined?d.pkg_unit_cost:pkg.unit_cost;
+  const total_kg=units_per_ctr*unit_weight*(1-d.moisture/100);
+  const total_mt=total_kg/1000;
+  const procurement=d.basic_rate*total_kg;
+  const bag_total=unit_cost*units_per_ctr;
+  const port=d.cha+d.exam+d.edi+d.gate+d.cfs+d.lolo+d.detention+d.ship_line+d.fumigation+d.lashing;
+  const fob_inr=procurement+bag_total+d.transport+port;
+  const fob_per_kg_usd=fob_inr/total_kg/d.usd_inr;
+  const fob_usd=fob_inr/d.usd_inr;
+  const ocean_inr=d.ocean_frt*total_mt*d.usd_inr;
+  const ins_inr=fob_inr*d.insurance/100;
+  const cif_inr=fob_inr+ocean_inr+ins_inr;
+  const cif_per_kg_usd=cif_inr/total_kg/d.usd_inr;
+  const cif_usd=cif_inr/d.usd_inr;
+  const sfob_kg=fob_per_kg_usd*(1+d.margin/100);
+  const scif_kg=cif_per_kg_usd*(1+d.margin/100);
+  return{total_kg,total_mt,procurement,bag_total,transport:d.transport,port,
+    fob_inr,fob_usd,fob_per_kg_usd,fob_per_mt_usd:fob_per_kg_usd*1000,
+    ocean_inr,ins_inr,cif_inr,cif_usd,cif_per_kg_usd,cif_per_mt_usd:cif_per_kg_usd*1000,
+    sfob_kg,sfob_mt:sfob_kg*1000,sfob_ctr:sfob_kg*total_kg,
+    scif_kg,scif_mt:scif_kg*1000,scif_ctr:scif_kg*total_kg,
+    mfob_mt:(sfob_kg-fob_per_kg_usd)*1000, mfob_ctr:(sfob_kg-fob_per_kg_usd)*total_kg,
+    mcif_mt:(scif_kg-cif_per_kg_usd)*1000, mcif_ctr:(scif_kg-cif_per_kg_usd)*total_kg,
+  };
+}
+
+function calcSulphuric(d){
+  const pkg=PACKAGING.sulphuric.find(p=>p.id===d.selected_packaging);
+  const units_per_ctr=d.pkg_units_per_ctr!==undefined?d.pkg_units_per_ctr:pkg.units_per_container;
+  const unit_weight=d.pkg_unit_weight!==undefined?d.pkg_unit_weight:pkg.unit_weight;
+  const unit_cost=d.pkg_unit_cost!==undefined?d.pkg_unit_cost:pkg.unit_cost;
+  const total_kg=units_per_ctr*unit_weight;
+  const total_mt=total_kg/1000;
+  const procurement=d.basic_rate*total_kg;
+  const tank_total=unit_cost*units_per_ctr;
+  const transport=d.transport_kg*total_kg;
+  const dg_inr=d.dg_usd*d.usd_inr;
+  const port_base=d.cha+d.exam+d.edi+d.gate+d.cfs+d.lolo+d.detention+d.ship_line+d.imdg;
+  const port=port_base+dg_inr;
+  const fob_inr=procurement+tank_total+transport+port;
+  const fob_per_kg_usd=fob_inr/total_kg/d.usd_inr;
+  const fob_usd=fob_inr/d.usd_inr;
+  const ocean_inr=d.ocean_frt*total_mt*d.usd_inr;
+  const ins_inr=fob_inr*d.insurance/100;
+  const cif_inr=fob_inr+ocean_inr+ins_inr;
+  const cif_per_kg_usd=cif_inr/total_kg/d.usd_inr;
+  const cif_usd=cif_inr/d.usd_inr;
+  const sfob_kg=fob_per_kg_usd*(1+d.margin/100);
+  const scif_kg=cif_per_kg_usd*(1+d.margin/100);
+  return{total_kg,total_mt,procurement,tank_total,transport,dg_inr,port_base,port,
+    fob_inr,fob_usd,fob_per_kg_usd,fob_per_mt_usd:fob_per_kg_usd*1000,
+    ocean_inr,ins_inr,cif_inr,cif_usd,cif_per_kg_usd,cif_per_mt_usd:cif_per_kg_usd*1000,
+    sfob_kg,sfob_mt:sfob_kg*1000,sfob_ctr:sfob_kg*total_kg,
+    scif_kg,scif_mt:scif_kg*1000,scif_ctr:scif_kg*total_kg,
+    mfob_mt:(sfob_kg-fob_per_kg_usd)*1000, mfob_ctr:(sfob_kg-fob_per_kg_usd)*total_kg,
+    mcif_mt:(scif_kg-cif_per_kg_usd)*1000, mcif_ctr:(scif_kg-cif_per_kg_usd)*total_kg,
+  };
+}
+
+// ═══════════════════════════════════════════════════════════════
+// FORMAT
+// ═══════════════════════════════════════════════════════════════
+const f0=v=>Math.round(v).toLocaleString('en-IN');
+const f2=v=>v.toLocaleString('en-IN',{minimumFractionDigits:2,maximumFractionDigits:2});
+const inr=v=>'₹'+f0(v);
+const usd=(v,d=2)=>'$'+v.toLocaleString('en-US',{minimumFractionDigits:d,maximumFractionDigits:d});
+
+// ═══════════════════════════════════════════════════════════════
+// HTML COMPONENTS
+// ═══════════════════════════════════════════════════════════════
+const I=(prod,key,val,lbl,unit,type)=>`
+<div class="inp-row">
+  <div><div class="inp-lbl">${lbl}</div><div class="inp-unit">${unit}</div></div>
+  <input type="number" class="${type}-inp" value="${val}" step="any"
+    oninput="upd('${prod}','${key}',this.value)">
+</div>`;
+
+const SEL=(prod,key,val,lbl,options)=>`
+<div class="inp-row">
+  <div><div class="inp-lbl">${lbl}</div></div>
+  <select class="daily-inp" style="padding:5px 8px" onchange="upd('${prod}','${key}',this.value)">
+    ${options.map(o=>`<option value="${o.id}" ${o.id===val?'selected':''}>${o.name}</option>`).join('')}
+  </select>
+</div>`;
+
+const BR=(name,val)=>`<div class="bd-row"><span class="bd-name">${name}</span><span class="bd-val">${val}</span></div>`;
+const BRT=(name,val,cls)=>`<div class="bd-row total ${cls}"><span class="bd-name">${name}</span><span class="bd-val">${val}</span></div>`;
+
+// ═══════════════════════════════════════════════════════════════
+// CAUSTIC SODA RENDER
+// ═══════════════════════════════════════════════════════════════
+function renderCaustic(){
+  const d=S.caustic, c=calcCaustic(d);
+  const pkg=PACKAGING.caustic.find(p=>p.id===d.selected_packaging);
+  return `
+<div class="main">
+<div class="input-panel">
+  <div class="sec-hdr"><span class="sec-title daily">▸ Daily Inputs</span><span class="sec-badge">Update every day</span></div>
+  <div>
+    ${I('caustic','basic_rate',d.basic_rate,'Basic Rate – Caustic Soda Flakes','₹ / kg','daily')}
+    ${SEL('caustic','selected_packaging',d.selected_packaging,'Packaging Type',PACKAGING.caustic)}
+    ${I('caustic','pkg_unit_cost',d.pkg_unit_cost||pkg.unit_cost,'Packaging Cost (override)','₹ / unit','daily')}
+    ${I('caustic','transport',d.transport,'Transport – Plant to Port','₹ / FCL','daily')}
+    ${I('caustic','usd_inr',d.usd_inr,'USD / INR Exchange Rate','INR / $','daily')}
+    ${I('caustic','ocean_frt',d.ocean_frt,'Ocean Freight (for CIF)','$ / MT','daily')}
+    ${I('caustic','insurance',d.insurance,'Marine Insurance','% of FOB','daily')}
+    ${I('caustic','margin',d.margin,'Target Margin','%','daily')}
+    ${I('caustic','moisture',d.moisture,'Moisture / Loss Allowance','%','daily')}
+  </div>
+  <div class="sec-hdr"><span class="sec-title fixed">▸ Port & Local Charges</span><button class="reset-btn" onclick="reset('caustic')">Reset defaults</button></div>
+  <div>
+    ${I('caustic','cha',d.cha,'CHA / Agency Charge','₹','fixed')}
+    ${I('caustic','exam',d.exam,'Customs Examination','₹','fixed')}
+    ${I('caustic','edi',d.edi,'EDI / Port Filing','₹','fixed')}
+    ${I('caustic','gate',d.gate,'Gate Pass','₹','fixed')}
+    ${I('caustic','cfs',d.cfs,'CFS Charge','₹','fixed')}
+    ${I('caustic','lolo',d.lolo,'LOLO Charge','₹','fixed')}
+    ${I('caustic','detention',d.detention,'Detention / Buffer','₹','fixed')}
+    ${I('caustic','ship_line',d.ship_line,'Shipping Line Local (BL + THC)','₹','fixed')}
+    ${I('caustic','fumigation',d.fumigation,'Fumigation Charge (Africa)','₹','fixed')}
+    ${I('caustic','lashing',d.lashing,'Lashing / Cargo Securing','₹','fixed')}
+  </div>
+</div>
+
+<div class="results-panel">
+  <div class="spec-bar">
+    <div class="spec-item"><span class="spec-lbl">Product</span><span class="spec-val">Caustic Soda Flakes</span></div>
+    <div class="spec-item"><span class="spec-lbl">Packing</span><span class="spec-val">${pkg.name}</span></div>
+    <div class="spec-item"><span class="spec-lbl">Units / FCL</span><span class="spec-val">${f0(pkg.units_per_container)}</span></div>
+    <div class="spec-item"><span class="spec-lbl">Net / FCL</span><span class="spec-val">${f2(c.total_mt)} MT</span></div>
+    <div class="spec-item"><span class="spec-lbl">Net KG / FCL</span><span class="spec-val">${f0(c.total_kg)} KG</span></div>
+    <div class="spec-item"><span class="spec-lbl">USD / INR</span><span class="spec-val">${d.usd_inr}</span></div>
+    <div class="spec-item"><span class="spec-lbl">Margin</span><span class="spec-val" style="color:var(--amber)">${d.margin}%</span></div>
+  </div>
+
+  <div class="be-bar">
+    <div class="be-card">
+      <div class="be-lbl">Break-even FOB (min price to quote)</div>
+      <div class="be-val">${usd(c.fob_per_kg_usd,4)} / KG</div>
+      <div class="be-sub">${usd(c.fob_per_mt_usd,2)} / MT &nbsp;·&nbsp; ${usd(c.fob_usd,0)} / FCL</div>
+    </div>
+    <div class="be-card">
+      <div class="be-lbl">Break-even CIF (min price to quote)</div>
+      <div class="be-val">${usd(c.cif_per_kg_usd,4)} / KG</div>
+      <div class="be-sub">${usd(c.cif_per_mt_usd,2)} / MT &nbsp;·&nbsp; ${usd(c.cif_usd,0)} / FCL</div>
+    </div>
+  </div>
+
+  <div class="bd-grid">
+    <div class="bd-card">
+      <div class="bd-hdr fob">FOB — Cost Build-up</div>
+      ${BR('Procurement – Caustic Soda',inr(c.procurement))}
+      ${BR('Packing Cost ('+pkg.name+' × '+f0(pkg.units_per_container)+')',inr(c.bag_total))}
+      ${BR('Transport – Plant to Port',inr(c.transport))}
+      ${BR('Port & Local Charges',inr(c.port))}
+      ${BRT('FOB Total (₹)',inr(c.fob_inr),'fob')}
+      ${BR('FOB Total (USD)',usd(c.fob_usd,0))}
+      ${BR('FOB per KG',usd(c.fob_per_kg_usd,4))}
+      ${BR('FOB per MT',usd(c.fob_per_mt_usd,2))}
+    </div>
+    <div class="bd-card">
+      <div class="bd-hdr cif">CIF — Full Landed Cost</div>
+      ${BR('FOB Base',inr(c.fob_inr))}
+      ${BR('+ Ocean Freight ('+d.ocean_frt+' $/MT)',inr(c.ocean_inr))}
+      ${BR('+ Marine Insurance ('+d.insurance+'%)',inr(c.ins_inr))}
+      ${BRT('CIF Total (₹)',inr(c.cif_inr),'cif')}
+      ${BR('CIF Total (USD)',usd(c.cif_usd,0))}
+      ${BR('CIF per KG',usd(c.cif_per_kg_usd,4))}
+      ${BR('CIF per MT',usd(c.cif_per_mt_usd,2))}
+    </div>
+  </div>
+
+  <div class="sell-card">
+    <div class="sell-hdr">▸ OFFER / SELLING PRICE &nbsp;— landing cost + ${d.margin}% margin</div>
+    <div class="sell-grid">
+      <div class="sell-blk">
+        <div class="sell-sub">Per KG</div>
+        <div class="sell-fob">${usd(c.sfob_kg,4)} &nbsp;FOB</div>
+        <div class="sell-cif">${usd(c.scif_kg,4)} &nbsp;CIF</div>
+      </div>
+      <div class="sell-blk">
+        <div class="sell-sub">Per MT</div>
+        <div class="sell-fob">${usd(c.sfob_mt,2)} &nbsp;FOB</div>
+        <div class="sell-cif">${usd(c.scif_mt,2)} &nbsp;CIF</div>
+      </div>
+      <div class="sell-blk">
+        <div class="sell-sub">Per FCL (${f2(c.total_mt)} MT)</div>
+        <div class="sell-fob">${usd(c.sfob_ctr,0)} &nbsp;FOB</div>
+        <div class="sell-cif">${usd(c.scif_ctr,0)} &nbsp;CIF</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="mgn-card">
+    <div class="bd-hdr" style="color:var(--purple);padding:9px 14px;background:var(--surface2);border-bottom:1px solid var(--border)">▸ GROSS MARGIN SUMMARY</div>
+    <div class="mgn-grid">
+      <div class="mgn-blk">
+        <div class="sell-sub">Margin / MT</div>
+        <div class="mgn-fob">${usd(c.mfob_mt,2)} FOB</div>
+        <div class="mgn-cif">${usd(c.mcif_mt,2)} CIF</div>
+      </div>
+      <div class="mgn-blk">
+        <div class="sell-sub">Margin / FCL (USD)</div>
+        <div class="mgn-fob">${usd(c.mfob_ctr,0)} FOB</div>
+        <div class="mgn-cif">${usd(c.mcif_ctr,0)} CIF</div>
+      </div>
+      <div class="mgn-blk">
+        <div class="sell-sub">Margin / FCL (₹)</div>
+        <div class="mgn-fob">${inr(c.mfob_ctr*d.usd_inr)} FOB</div>
+        <div class="mgn-cif">${inr(c.mcif_ctr*d.usd_inr)} CIF</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="port-card">
+    <div class="port-hdr">▸ PORT QUICK-REFERENCE — set Section B charges accordingly</div>
+    <table class="port-table">
+      <tr>
+        <th>PORT</th><th>TRANSPORT ₹</th><th>AGENCY ₹</th><th>EXAM ₹</th>
+        <th>CFS ₹</th><th>LOLO ₹</th>
+      </tr>
+      <tr><td>MUNDRA</td><td>18,000</td><td>2,600</td><td>4,000</td><td>10,000</td><td>3,000</td></tr>
+      <tr><td>HAZIRA</td><td>25,000</td><td>2,600</td><td>6,000</td><td>10,000</td><td>3,000</td></tr>
+      <tr><td>PIPAVAV</td><td>19,000</td><td>2,100</td><td>6,000</td><td>10,500</td><td>2,000</td></tr>
+    </table>
+  </div>
+</div>
+</div>`;
+}
+
+// ═══════════════════════════════════════════════════════════════
+// SULPHURIC ACID RENDER
+// ═══════════════════════════════════════════════════════════════
+function renderSulphuric(){
+  const d=S.sulphuric, c=calcSulphuric(d);
+  const pkg=PACKAGING.sulphuric.find(p=>p.id===d.selected_packaging);
+  return `
+<div class="main">
+<div class="input-panel">
+  <div class="sec-hdr"><span class="sec-title daily">▸ Daily Inputs</span><span class="sec-badge">Update every day</span></div>
+  <div>
+    ${I('sulphuric','basic_rate',d.basic_rate,'Basic Rate – Sulphuric Acid 98%','₹ / kg','daily')}
+    ${SEL('sulphuric','selected_packaging',d.selected_packaging,'Packaging Type',PACKAGING.sulphuric)}
+    ${I('sulphuric','pkg_unit_cost',d.pkg_unit_cost||pkg.unit_cost,'Packaging Cost (override)','₹ / unit','daily')}
+    ${I('sulphuric','transport_kg',d.transport_kg,'Transport – Plant to Port','₹ / kg','daily')}
+    ${I('sulphuric','usd_inr',d.usd_inr,'USD / INR Exchange Rate','INR / $','daily')}
+    ${I('sulphuric','ocean_frt',d.ocean_frt,'Ocean Freight (for CIF)','$ / MT','daily')}
+    ${I('sulphuric','insurance',d.insurance,'Marine Insurance','% of FOB','daily')}
+    ${I('sulphuric','margin',d.margin,'Target Margin','%','daily')}
+  </div>
+  <div class="sec-hdr"><span class="sec-title fixed">▸ Port & DG Charges</span><button class="reset-btn" onclick="reset('sulphuric')">Reset defaults</button></div>
+  <div>
+    ${I('sulphuric','cha',d.cha,'CHA / Agency Charge','₹','fixed')}
+    ${I('sulphuric','exam',d.exam,'Customs Examination','₹','fixed')}
+    ${I('sulphuric','edi',d.edi,'EDI / Port Filing','₹','fixed')}
+    ${I('sulphuric','gate',d.gate,'Gate Pass','₹','fixed')}
+    ${I('sulphuric','cfs',d.cfs,'CFS Charge','₹','fixed')}
+    ${I('sulphuric','lolo',d.lolo,'LOLO Charge','₹','fixed')}
+    ${I('sulphuric','detention',d.detention,'Detention / Buffer','₹','fixed')}
+    ${I('sulphuric','ship_line',d.ship_line,'Shipping Line Local (BL + THC)','₹','fixed')}
+    ${I('sulphuric','dg_usd',d.dg_usd,'DG Surcharge – UN 1830, Class 8','$ / FCL','fixed')}
+    ${I('sulphuric','imdg',d.imdg,'IMDG / DG Documentation Cost','₹','fixed')}
+  </div>
+</div>
+
+<div class="results-panel">
+  <div class="spec-bar">
+    <div class="spec-item"><span class="spec-lbl">Product</span><span class="spec-val">Sulphuric Acid 98%</span></div>
+    <div class="spec-item"><span class="spec-lbl">Packing</span><span class="spec-val">${pkg.name}</span></div>
+    <div class="spec-item"><span class="spec-lbl">Units / FCL</span><span class="spec-val">${f0(pkg.units_per_container)}</span></div>
+    <div class="spec-item"><span class="spec-lbl">Net / FCL</span><span class="spec-val">${f2(c.total_mt)} MT</span></div>
+    <div class="spec-item"><span class="spec-lbl">Net KG / FCL</span><span class="spec-val">${f0(c.total_kg)} KG</span></div>
+    <div class="spec-item"><span class="spec-lbl">Margin</span><span class="spec-val" style="color:var(--amber)">${d.margin}%</span></div>
+  </div>
+
+  <div class="be-bar">
+    <div class="be-card">
+      <div class="be-lbl">Break-even FOB (min price to quote)</div>
+      <div class="be-val">${usd(c.fob_per_kg_usd,4)} / KG</div>
+      <div class="be-sub">${usd(c.fob_per_mt_usd,2)} / MT &nbsp;·&nbsp; ${usd(c.fob_usd,0)} / FCL</div>
+    </div>
+    <div class="be-card">
+      <div class="be-lbl">Break-even CIF (min price to quote)</div>
+      <div class="be-val">${usd(c.cif_per_kg_usd,4)} / KG</div>
+      <div class="be-sub">${usd(c.cif_per_mt_usd,2)} / MT &nbsp;·&nbsp; ${usd(c.cif_usd,0)} / FCL</div>
+    </div>
+  </div>
+
+  <div class="bd-grid">
+    <div class="bd-card">
+      <div class="bd-hdr fob">FOB — Cost Build-up</div>
+      ${BR('Procurement – Sulphuric Acid',inr(c.procurement))}
+      ${BR('Packing Cost ('+pkg.name+' × '+f0(pkg.units_per_container)+')',inr(c.tank_total))}
+      ${BR('Transport – Plant to Port',inr(c.transport))}
+      ${BR('DG Surcharge ('+d.dg_usd+' $/FCL)',inr(c.dg_inr))}
+      ${BR('Port & Local Charges',inr(c.port_base))}
+      ${BRT('FOB Total (₹)',inr(c.fob_inr),'fob')}
+      ${BR('FOB Total (USD)',usd(c.fob_usd,0))}
+      ${BR('FOB per KG',usd(c.fob_per_kg_usd,4))}
+      ${BR('FOB per MT',usd(c.fob_per_mt_usd,2))}
+    </div>
+    <div class="bd-card">
+      <div class="bd-hdr cif">CIF — Full Landed Cost</div>
+      ${BR('FOB Base',inr(c.fob_inr))}
+      ${BR('+ Ocean Freight ('+d.ocean_frt+' $/MT)',inr(c.ocean_inr))}
+      ${BR('+ Marine Insurance ('+d.insurance+'%)',inr(c.ins_inr))}
+      ${BRT('CIF Total (₹)',inr(c.cif_inr),'cif')}
+      ${BR('CIF Total (USD)',usd(c.cif_usd,0))}
+      ${BR('CIF per KG',usd(c.cif_per_kg_usd,4))}
+      ${BR('CIF per MT',usd(c.cif_per_mt_usd,2))}
+    </div>
+  </div>
+
+  <div class="sell-card">
+    <div class="sell-hdr">▸ OFFER / SELLING PRICE &nbsp;— landing cost + ${d.margin}% margin</div>
+    <div class="sell-grid">
+      <div class="sell-blk">
+        <div class="sell-sub">Per KG</div>
+        <div class="sell-fob">${usd(c.sfob_kg,4)} &nbsp;FOB</div>
+        <div class="sell-cif">${usd(c.scif_kg,4)} &nbsp;CIF</div>
+      </div>
+      <div class="sell-blk">
+        <div class="sell-sub">Per MT</div>
+        <div class="sell-fob">${usd(c.sfob_mt,2)} &nbsp;FOB</div>
+        <div class="sell-cif">${usd(c.scif_mt,2)} &nbsp;CIF</div>
+      </div>
+      <div class="sell-blk">
+        <div class="sell-sub">Per FCL (${f2(c.total_mt)} MT)</div>
+        <div class="sell-fob">${usd(c.sfob_ctr,0)} &nbsp;FOB</div>
+        <div class="sell-cif">${usd(c.scif_ctr,0)} &nbsp;CIF</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="mgn-card">
+    <div class="bd-hdr" style="color:var(--purple);padding:9px 14px;background:var(--surface2);border-bottom:1px solid var(--border)">▸ GROSS MARGIN SUMMARY</div>
+    <div class="mgn-grid">
+      <div class="mgn-blk">
+        <div class="sell-sub">Margin / MT</div>
+        <div class="mgn-fob">${usd(c.mfob_mt,2)} FOB</div>
+        <div class="mgn-cif">${usd(c.mcif_mt,2)} CIF</div>
+      </div>
+      <div class="mgn-blk">
+        <div class="sell-sub">Margin / FCL (USD)</div>
+        <div class="mgn-fob">${usd(c.mfob_ctr,0)} FOB</div>
+        <div class="mgn-cif">${usd(c.mcif_ctr,0)} CIF</div>
+      </div>
+      <div class="mgn-blk">
+        <div class="sell-sub">Margin / FCL (₹)</div>
+        <div class="mgn-fob">${inr(c.mfob_ctr*d.usd_inr)} FOB</div>
+        <div class="mgn-cif">${inr(c.mcif_ctr*d.usd_inr)} CIF</div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>`;
+}
+
+// ═══════════════════════════════════════════════════════════════
+// EVENT HANDLERS
+// ═══════════════════════════════════════════════════════════════
+window.upd=function(prod,key,val){
+  S[prod][key]=parseFloat(val)||val;
+  // Reset unused packaging detail overrides when switching packaging type
+  if(key==='selected_packaging'){
+    delete S[prod].pkg_unit_weight;
+    delete S[prod].pkg_units_per_ctr;
+  }
+  saveState(prod,S[prod]);
+  renderResults();
+};
+window.reset=function(prod){
+  const def=prod==='caustic'?DEF_CAUSTIC:DEF_SULPHURIC;
+  S[prod]={...def};
+  // Clear packaging detail overrides
+  delete S[prod].pkg_unit_weight;
+  delete S[prod].pkg_units_per_ctr;
+  localStorage.removeItem('jm2_'+prod);
+  render();
+};
+window.switchTab=function(id){
+  const p=PRODUCTS.find(x=>x.id===id);
+  if(!p.active)return;
+  active=id;
+  render();
+};
+
+// ═══════════════════════════════════════════════════════════════
+// RENDER — partial (only results) to avoid input losing focus
+// ═══════════════════════════════════════════════════════════════
+function renderResults(){
+  // Re-render only the results panel to keep inputs focused
+  const rp=document.querySelector('.results-panel');
+  if(!rp){render();return;}
+  let html='';
+  if(active==='caustic'){
+    const d=S.caustic,c=calcCaustic(d);
+    const tmp=document.createElement('div');
+    tmp.innerHTML=renderCaustic();
+    const newRp=tmp.querySelector('.results-panel');
+    if(newRp)rp.innerHTML=newRp.innerHTML;
+  } else if(active==='sulphuric'){
+    const tmp=document.createElement('div');
+    tmp.innerHTML=renderSulphuric();
+    const newRp=tmp.querySelector('.results-panel');
+    if(newRp)rp.innerHTML=newRp.innerHTML;
+  }
+}
+
+function render(){
+  // Tabs
+  document.getElementById('tabs').innerHTML=PRODUCTS.map(p=>`
+    <button class="tab ${p.active&&active===p.id?'active':''} ${!p.active?'soon':''}"
+      onclick="switchTab('${p.id}')">
+      ${p.label}${p.sub?` <span style="font-weight:400;opacity:.6;font-size:10px">${p.sub}</span>`:''}
+      ${!p.active?`<span class="soon-badge">SOON</span>`:''}
+    </button>`).join('');
+
+  const app=document.getElementById('app');
+  if(active==='caustic') app.innerHTML=renderCaustic();
+  else if(active==='sulphuric') app.innerHTML=renderSulphuric();
+  else {
+    const p=PRODUCTS.find(x=>x.id===active);
+    app.innerHTML=`<div class="cs"><h2>${p.label}</h2><p>Calculator coming soon — in development.</p></div>`;
+  }
+}
+
+// Clock
+function tick(){
+  const n=new Date();
+  document.getElementById('clock').textContent=
+    n.toLocaleDateString('en-IN')+' · '+n.toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'});
+}
+tick(); setInterval(tick,30000);
+
+render();
+</script>
+</body>
+</html>
