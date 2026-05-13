@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>Jaydev Multicomm — Export Pricing</title>
+<title>Jaydev Multicomm - Export Pricing</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=IBM+Plex+Mono:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
 /* ═══════════════════════════════════════════
@@ -71,7 +71,7 @@ body {
   min-height: 100dvh;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  /* No overflow:hidden — kills iOS scroll */
+  /* No overflow:hidden - kills iOS scroll */
 }
 
 /* ═══════════════════════════════════════════
@@ -204,7 +204,7 @@ body {
 }
 
 /* ═══════════════════════════════════════════
-   SHELL — desktop two-column, mobile stacked
+   SHELL - desktop two-column, mobile stacked
 ═══════════════════════════════════════════ */
 .shell {
   display: grid;
@@ -238,7 +238,7 @@ body {
   .shell {
     grid-template-columns: 1fr;
     height: auto;
-    /* No fixed height on mobile — let content flow */
+    /* No fixed height on mobile - let content flow */
   }
   .sidebar, .results {
     height: auto;
@@ -344,11 +344,17 @@ select { cursor: pointer; padding: 8px 8px; }
 .fix:focus { background: var(--b5); border-color: var(--b3); box-shadow: 0 0 0 3px rgba(59,130,246,0.10); }
 
 input[type=number]::-webkit-outer-spin-button,
-input[type=number]::-webkit-inner-spin-button { -webkit-appearance: none; }
-input[type=number] { -moz-appearance: textfield; }
+input[type=number]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  appearance: none;
+}
+input[type=number] {
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
 
 /* ═══════════════════════════════════════════
-   RESULTS — SPEC STRIP
+   RESULTS - SPEC STRIP
 ═══════════════════════════════════════════ */
 .spec-strip {
   background: var(--surface); border: 1px solid var(--line2);
@@ -634,7 +640,7 @@ const DEF_SULPHURIC = {
   custom_clearance: 3500,   // Custom Clearance per container
   carting_exam:     1000,   // Carting Examination per container
   vgm_form13:        500,   // VGM & Form 13 per filing
-  lacing_choking:   2000,   // Belt & Wooden Edge — variable, editable
+  lacing_choking:   2000,   // Belt & Wooden Edge - variable, editable
   unloading:        1500,   // Unloading per container
   cfs_handling:    12000,   // CFS Handling (Receipted)
   container_repo:   5500,   // Container Repo Charges
@@ -884,12 +890,12 @@ function renderBeRow(c) {
   return `
 <div class="be-row">
   <div class="be-card">
-    <div class="be-label">Break-even FOB — minimum to quote</div>
+    <div class="be-label">Break-even FOB - minimum to quote</div>
     <div class="be-big">${usd(c.fob_per_kg_usd,4)} / KG</div>
     <div class="be-small">${usd(c.fob_per_mt_usd,2)} / MT &nbsp;·&nbsp; ${usd(c.fob_usd,0)} / FCL</div>
   </div>
   <div class="be-card">
-    <div class="be-label">Break-even CIF — minimum to quote</div>
+    <div class="be-label">Break-even CIF - minimum to quote</div>
     <div class="be-big">${usd(c.cif_per_kg_usd,4)} / KG</div>
     <div class="be-small">${usd(c.cif_per_mt_usd,2)} / MT &nbsp;·&nbsp; ${usd(c.cif_usd,0)} / FCL</div>
   </div>
@@ -899,7 +905,7 @@ function renderSellCard(c, margin) {
   return `
 <div class="sell-card">
   <div class="cost-head amber" style="border-bottom:1px solid rgba(245,158,11,0.2)">
-    Offer / Selling Price — break-even + ${margin}% margin
+    Offer / Selling Price - break-even + ${margin}% margin
   </div>
   <div class="sell-grid">
     ${SCOL('Per KG',         usd(c.sfob_kg,4), usd(c.scif_kg,4))}
@@ -938,10 +944,10 @@ function renderCaustic() {
     <span class="sec-tag">Update each day</span>
   </div>
   <div>
-    ${I('caustic','basic_rate',      d.basic_rate,  'Basic Rate — Caustic Soda Flakes','₹ / kg',   'dai')}
+    ${I('caustic','basic_rate',      d.basic_rate,  'Basic Rate - Caustic Soda Flakes','₹ / kg',   'dai')}
     ${SEL('caustic','selected_packaging', d.selected_packaging, 'Packaging Type', PKG.caustic)}
     ${I('caustic','pkg_unit_cost',   ucost,         'Packaging Cost (override)',       '₹ / unit', 'dai')}
-    ${I('caustic','transport',       d.transport,   'Transport — Plant to Port',       '₹ / FCL',  'dai')}
+    ${I('caustic','transport',       d.transport,   'Transport - Plant to Port',       '₹ / FCL',  'dai')}
     ${I('caustic','usd_inr',         d.usd_inr,     'USD / INR Exchange Rate',         'INR / $',  'dai')}
     ${I('caustic','ocean_frt',       d.ocean_frt,   'Ocean Freight (CIF only)',         '$ / MT',   'dai')}
     ${I('caustic','insurance',       d.insurance,   'Marine Insurance',                '% of FOB', 'dai')}
@@ -981,12 +987,12 @@ function renderCaustic() {
 
   <div class="breakdown-row">
     <div class="cost-card">
-      <div class="cost-head fob">FOB — Full Cost Build-up</div>
+      <div class="cost-head fob">FOB - Full Cost Build-up</div>
       <div class="cost-section">
         ${CSEC('Procurement')}
         ${CL('Caustic Soda Flakes', inr(c.procurement), d.basic_rate+' ₹/kg × '+f0(c.total_kg)+' kg')}
-        ${CL('Packaging — '+pkg.name, inr(c.packing), ucost+' ₹/unit × '+f0(pkg.units_per_container)+' units')}
-        ${CL('Transport — Plant to Port', inr(c.transport), 'Per FCL road freight')}
+        ${CL('Packaging - '+pkg.name, inr(c.packing), ucost+' ₹/unit × '+f0(pkg.units_per_container)+' units')}
+        ${CL('Transport - Plant to Port', inr(c.transport), 'Per FCL road freight')}
         ${CST('Sub-total', inr(c.procurement + c.packing + d.transport))}
       </div>
       <div class="cost-section">
@@ -1010,7 +1016,7 @@ function renderCaustic() {
       </div>
     </div>
     <div class="cost-card">
-      <div class="cost-head cif">CIF — Full Landed Cost</div>
+      <div class="cost-head cif">CIF - Full Landed Cost</div>
       <div class="cost-section">
         ${CSEC('FOB Base')}
         ${CL('FOB (as calculated)', inr(c.fob_inr), usd(c.fob_usd,0))}
@@ -1065,10 +1071,10 @@ function renderSulphuric() {
     <span class="sec-tag">Update each day</span>
   </div>
   <div>
-    ${I('sulphuric','basic_rate',    d.basic_rate,  'Basic Rate — Sulphuric Acid 98%',  '₹ / kg',   'dai')}
+    ${I('sulphuric','basic_rate',    d.basic_rate,  'Basic Rate - Sulphuric Acid 98%',  '₹ / kg',   'dai')}
     ${SEL('sulphuric','selected_packaging', d.selected_packaging, 'Packaging Type', PKG.sulphuric)}
     ${I('sulphuric','pkg_unit_cost', ucost,         'Packaging Cost (override)',         '₹ / unit', 'dai')}
-    ${I('sulphuric','transport_kg',  d.transport_kg,'Transport — Plant to Port',         '₹ / kg',   'dai')}
+    ${I('sulphuric','transport_kg',  d.transport_kg,'Transport - Plant to Port',         '₹ / kg',   'dai')}
     ${I('sulphuric','usd_inr',       d.usd_inr,     'USD / INR Exchange Rate',           'INR / $',  'dai')}
     ${I('sulphuric','ocean_frt',     d.ocean_frt,   'Ocean Freight (CIF only)',           '$ / MT',   'dai')}
     ${I('sulphuric','insurance',     d.insurance,   'Marine Insurance',                  '% of FOB', 'dai')}
@@ -1093,7 +1099,7 @@ function renderSulphuric() {
     <span class="sec-label teal">DG / Hazmat Charges</span>
   </div>
   <div>
-    ${I('sulphuric','dg_usd', d.dg_usd, 'DG Surcharge — UN 1830, Class 8', '$ / FCL', 'fix')}
+    ${I('sulphuric','dg_usd', d.dg_usd, 'DG Surcharge - UN 1830, Class 8', '$ / FCL', 'fix')}
     ${I('sulphuric','imdg',   d.imdg,   'IMDG / DG Documentation Cost',    '₹ / FCL', 'fix')}
   </div>
 </aside>
@@ -1112,12 +1118,12 @@ function renderSulphuric() {
 
   <div class="breakdown-row">
     <div class="cost-card">
-      <div class="cost-head fob">FOB — Full Cost Build-up</div>
+      <div class="cost-head fob">FOB - Full Cost Build-up</div>
       <div class="cost-section">
         ${CSEC('Procurement')}
         ${CL('Sulphuric Acid 98%', inr(c.procurement), d.basic_rate+' ₹/kg × '+f0(c.total_kg)+' kg')}
-        ${CL('Packaging — '+pkg.name, inr(c.packing), ucost+' ₹/unit × '+f0(pkg.units_per_container)+' units')}
-        ${CL('Transport — Plant to Port', inr(c.transport), d.transport_kg+' ₹/kg × '+f0(c.total_kg)+' kg')}
+        ${CL('Packaging - '+pkg.name, inr(c.packing), ucost+' ₹/unit × '+f0(pkg.units_per_container)+' units')}
+        ${CL('Transport - Plant to Port', inr(c.transport), d.transport_kg+' ₹/kg × '+f0(c.total_kg)+' kg')}
         ${CST('Sub-total', inr(c.procurement + c.packing + c.transport))}
       </div>
       <div class="cost-section">
@@ -1125,7 +1131,7 @@ function renderSulphuric() {
         ${CL('Custom Clearance', inr(d.custom_clearance))}
         ${CL('Carting / Examination', inr(d.carting_exam))}
         ${CL('VGM & Form 13 Filing', inr(d.vgm_form13))}
-        ${CL('Lacing / Choking', inr(d.lacing_choking), 'Belt & Wooden Edge — variable')}
+        ${CL('Lacing / Choking', inr(d.lacing_choking), 'Belt & Wooden Edge - variable')}
         ${CL('Unloading', inr(d.unloading))}
         ${CL('CFS Handling (Receipted)', inr(d.cfs_handling))}
         ${CL('Container Repo Charges', inr(d.container_repo))}
@@ -1146,7 +1152,7 @@ function renderSulphuric() {
       </div>
     </div>
     <div class="cost-card">
-      <div class="cost-head cif">CIF — Full Landed Cost</div>
+      <div class="cost-head cif">CIF - Full Landed Cost</div>
       <div class="cost-section">
         ${CSEC('FOB Base')}
         ${CL('FOB (as calculated)', inr(c.fob_inr), usd(c.fob_usd,0))}
@@ -1176,7 +1182,7 @@ function renderSulphuric() {
 ═══════════════════════════════════════ */
 let _deb;
 window.upd = function(prod, key, val) {
-  /* FIX: parseFloat('0') is falsy — use explicit check */
+  /* FIX: parseFloat('0') is falsy - use explicit check */
   const num = parseFloat(val);
   S[prod][key] = isNaN(num) ? val : num;
   if (key === 'selected_packaging') {
@@ -1204,7 +1210,7 @@ window.switchTab = function(id) {
   render();
 };
 
-/* Only patch the results panel — keeps sidebar inputs focused */
+/* Only patch the results panel - keeps sidebar inputs focused */
 function patchResults() {
   const rp = document.querySelector('.results');
   if (!rp) { render(); return; }
