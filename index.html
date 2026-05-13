@@ -196,7 +196,7 @@ input, select, textarea { -webkit-user-select: text; user-select: text; touch-ac
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   border-bottom: 1px solid var(--line2);
-  padding: 12px 16px;
+  padding: 6px 14px;
   padding-left: max(16px, env(safe-area-inset-left));
   padding-right: max(16px, env(safe-area-inset-right));
 }
@@ -205,17 +205,17 @@ input, select, textarea { -webkit-user-select: text; user-select: text; touch-ac
   background: var(--inset2);
   border: 1px solid var(--line2);
   border-radius: var(--rpill);
-  padding: 4px;
+  padding: 2px;
   gap: 3px;
 }
 .ptab {
-  flex: 1; padding: 10px 12px;
-  font-family: var(--sans); font-weight: 600; font-size: 13px;
+  flex: 1; padding: 6px 10px;
+  font-family: var(--sans); font-weight: 600; font-size: 12px;
   border: none; border-radius: var(--rpill);
   background: none; color: var(--ink3);
   cursor: pointer; transition: all 0.15s var(--ease);
   -webkit-tap-highlight-color: transparent;
-  min-height: 44px;
+  min-height: 34px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1042,61 +1042,60 @@ function renderCaustic() {
     ['Margin', d.margin+'%', 'color:#d97706;font-weight:700'],
   ])}
 
-  ${renderBeRow(c)}
-
-  <div class="breakdown-row">
-    <div class="cost-card">
-      <div class="cost-head fob">FOB - Full Cost Build-up</div>
-      <div class="cost-section">
-        ${CSEC('Procurement')}
-        ${CL('Caustic Soda Flakes', inr(c.procurement), d.basic_rate+' ₹/kg × '+f0(c.total_kg)+' kg')}
-        ${CL('Packaging - '+pkg.name, inr(c.packing), ucost+' ₹/unit × '+f0(pkg.units_per_container)+' units')}
-        ${CL('Transport - Plant to Port', inr(c.transport), 'Per FCL road freight')}
-        ${CST('Sub-total', inr(c.procurement + c.packing + d.transport))}
-      </div>
-      <div class="cost-section">
-        ${CSEC('Port & Local Charges')}
-        ${CL('CHA / Agency', inr(d.cha))}
-        ${CL('Customs Examination', inr(d.exam))}
-        ${CL('EDI / Port Filing', inr(d.edi))}
-        ${CL('Gate Pass', inr(d.gate))}
-        ${CL('CFS Charge', inr(d.cfs))}
-        ${CL('LOLO', inr(d.lolo))}
-        ${CL('Detention / Buffer', inr(d.detention))}
-        ${CL('Shipping Line (BL + THC)', inr(d.ship_line))}
-        ${CL('Fumigation (Africa)', inr(d.fumigation))}
-        ${CL('Lashing / Securing', inr(d.lashing))}
-        ${CST('Sub-total Port', inr(portSubtotal))}
-      </div>
-      ${CTL('FOB TOTAL', inr(c.fob_inr)+' · '+usd(c.fob_usd,0), 'fob')}
-      <div class="formula-note">
-        <strong>FOB/KG</strong> = ${inr(c.fob_inr)} ÷ ${f0(c.total_kg)} kg ÷ ${d.usd_inr} = <strong>${usd(c.fob_per_kg_usd,4)}</strong>
-        &nbsp;|&nbsp; <strong>FOB/MT</strong> = ${usd(c.fob_per_mt_usd,2)}
-      </div>
-    </div>
-    <div class="cost-card">
-      <div class="cost-head cif">CIF - Full Landed Cost</div>
-      <div class="cost-section">
-        ${CSEC('FOB Base')}
-        ${CL('FOB (as calculated)', inr(c.fob_inr), usd(c.fob_usd,0))}
-      </div>
-      <div class="cost-section">
-        ${CSEC('Freight & Insurance')}
-        ${CL('Ocean Freight', inr(c.ocean_inr), d.ocean_frt+' $/MT × '+f2(c.total_mt)+' MT × ₹'+d.usd_inr)}
-        ${CL('Marine Insurance', inr(c.ins_inr), d.insurance+'% of FOB value')}
-        ${CST('Sub-total', inr(c.ocean_inr + c.ins_inr))}
-      </div>
-      ${CTL('CIF TOTAL', inr(c.cif_inr)+' · '+usd(c.cif_usd,0), 'cif')}
-      <div class="formula-note">
-        <strong>CIF/KG</strong> = ${inr(c.cif_inr)} ÷ ${f0(c.total_kg)} kg ÷ ${d.usd_inr} = <strong>${usd(c.cif_per_kg_usd,4)}</strong>
-        &nbsp;|&nbsp; <strong>CIF/MT</strong> = ${usd(c.cif_per_mt_usd,2)}
-      </div>
-    </div>
-  </div>
-
   ${renderSellCard(c, d.margin)}
   ${renderMarginCard(c, d.usd_inr)}
 
+  ${renderBeRow(c)}
+
+    <div class="breakdown-row">
+      <div class="cost-card">
+        <div class="cost-head fob">FOB - Full Cost Build-up</div>
+        <div class="cost-section">
+          ${CSEC('Procurement')}
+          ${CL('Caustic Soda Flakes', inr(c.procurement), d.basic_rate+' ₹/kg × '+f0(c.total_kg)+' kg')}
+          ${CL('Packaging - '+pkg.name, inr(c.packing), ucost+' ₹/unit × '+f0(pkg.units_per_container)+' units')}
+          ${CL('Transport - Plant to Port', inr(c.transport), 'Per FCL road freight')}
+          ${CST('Sub-total', inr(c.procurement + c.packing + d.transport))}
+        </div>
+        <div class="cost-section">
+          ${CSEC('Port & Local Charges')}
+          ${CL('CHA / Agency', inr(d.cha))}
+          ${CL('Customs Examination', inr(d.exam))}
+          ${CL('EDI / Port Filing', inr(d.edi))}
+          ${CL('Gate Pass', inr(d.gate))}
+          ${CL('CFS Charge', inr(d.cfs))}
+          ${CL('LOLO', inr(d.lolo))}
+          ${CL('Detention / Buffer', inr(d.detention))}
+          ${CL('Shipping Line (BL + THC)', inr(d.ship_line))}
+          ${CL('Fumigation (Africa)', inr(d.fumigation))}
+          ${CL('Lashing / Securing', inr(d.lashing))}
+          ${CST('Sub-total Port', inr(portSubtotal))}
+        </div>
+        ${CTL('FOB TOTAL', inr(c.fob_inr)+' · '+usd(c.fob_usd,0), 'fob')}
+        <div class="formula-note">
+          <strong>FOB/KG</strong> = ${inr(c.fob_inr)} ÷ ${f0(c.total_kg)} kg ÷ ${d.usd_inr} = <strong>${usd(c.fob_per_kg_usd,4)}</strong>
+          &nbsp;|&nbsp; <strong>FOB/MT</strong> = ${usd(c.fob_per_mt_usd,2)}
+        </div>
+      </div>
+      <div class="cost-card">
+        <div class="cost-head cif">CIF - Full Landed Cost</div>
+        <div class="cost-section">
+          ${CSEC('FOB Base')}
+          ${CL('FOB (as calculated)', inr(c.fob_inr), usd(c.fob_usd,0))}
+        </div>
+        <div class="cost-section">
+          ${CSEC('Freight & Insurance')}
+          ${CL('Ocean Freight', inr(c.ocean_inr), d.ocean_frt+' $/MT × '+f2(c.total_mt)+' MT × ₹'+d.usd_inr)}
+          ${CL('Marine Insurance', inr(c.ins_inr), d.insurance+'% of FOB value')}
+          ${CST('Sub-total', inr(c.ocean_inr + c.ins_inr))}
+        </div>
+        ${CTL('CIF TOTAL', inr(c.cif_inr)+' · '+usd(c.cif_usd,0), 'cif')}
+        <div class="formula-note">
+          <strong>CIF/KG</strong> = ${inr(c.cif_inr)} ÷ ${f0(c.total_kg)} kg ÷ ${d.usd_inr} = <strong>${usd(c.cif_per_kg_usd,4)}</strong>
+          &nbsp;|&nbsp; <strong>CIF/MT</strong> = ${usd(c.cif_per_mt_usd,2)}
+        </div>
+      </div>
+    </div>
   <div class="port-card">
     <div class="cost-head neutral">Port Quick-Reference</div>
     <table class="tbl">
@@ -1173,6 +1172,8 @@ function renderSulphuric() {
     ['Margin', d.margin+'%', 'color:#d97706;font-weight:700'],
   ])}
 
+  ${renderSellCard(c, d.margin)}
+  ${renderMarginCard(c, d.usd_inr)}
   ${renderBeRow(c)}
 
   <div class="breakdown-row">
@@ -1229,9 +1230,6 @@ function renderSulphuric() {
       </div>
     </div>
   </div>
-
-  ${renderSellCard(c, d.margin)}
-  ${renderMarginCard(c, d.usd_inr)}
 </section>
 </div>`;
 }
