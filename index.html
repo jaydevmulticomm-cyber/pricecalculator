@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="theme-color" content="#ffffff">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -75,8 +75,8 @@ body {
   font-family: var(--sans);
   background: var(--page);
   color: var(--ink1);
-  height: 100vh;
-  height: 100dvh;
+  min-height: 100vh;
+  min-height: 100dvh;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   -webkit-user-select: none;
@@ -84,11 +84,12 @@ body {
   -webkit-touch-callout: none;
   padding: 0;
   margin: 0;
-  overflow: hidden;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
 body * { -webkit-user-select: text; user-select: text; }
-input, select, textarea { -webkit-user-select: text; user-select: text; }
+input, select, textarea { -webkit-user-select: text; user-select: text; touch-action: manipulation; }
 
 /* ═══════════════════════════════════════════
    HEADER
@@ -236,8 +237,8 @@ input, select, textarea { -webkit-user-select: text; user-select: text; }
 .shell {
   display: grid;
   grid-template-columns: 390px 1fr;
-  height: calc(100dvh - 96px);
-  overflow: hidden;
+  min-height: calc(100dvh - 96px);
+  overflow: visible;
   width: 100%;
 }
 
@@ -277,9 +278,9 @@ input, select, textarea { -webkit-user-select: text; user-select: text; }
 @media (max-width: 768px) {
   .shell {
     grid-template-columns: 1fr;
-    height: auto;
-    max-height: calc(100dvh - 152px);
-    overflow: hidden;
+    min-height: calc(100dvh - 152px);
+    overflow-y: auto;
+    overflow-x: hidden;
   }
   .sidebar, .results {
     width: 100%;
@@ -381,9 +382,14 @@ input[type=number], select {
 }
 @media (max-width: 768px) {
   input[type=number], select { 
-    font-size: 16px;
-    padding: 11px 10px;
-    height: 44px;
+    font-size: 14px;
+    padding: 9px 10px;
+    height: 40px;
+  }
+}
+@media (max-width: 768px) {
+  html {
+    font-size: 13px;
   }
 }
 input[type=number] { text-align: right; }

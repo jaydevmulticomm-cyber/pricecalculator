@@ -1,4 +1,4 @@
-const CACHE_NAME = 'jm-pricing-v1';
+const CACHE_NAME = 'jm-pricing-v2';
 const urlsToCache = [
   '/index.html',
   '/manifest.json'
