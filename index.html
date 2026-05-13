@@ -662,9 +662,9 @@ input[type=number] {
 /* ═══════════════════════════════════════
    DATA
 ═══════════════════════════════════════ */
-const PRODUCTS = [
-  { id:'caustic',   label:'Caustic Soda',    sub:'Flakes',                  active:true  },
+const PRODUCTS = [ 
   { id:'sulphuric', label:'Sulphuric Acid',  sub:'98%',                     active:true  },
+  { id:'caustic',   label:'Caustic Soda',    sub:'Flakes',                  active:true  },
   { id:'calcium',   label:'Calcium Chloride',sub:'',                        active:false },
   { id:'pac',       label:'PAC',             sub:'Poly Aluminium Chloride', active:false },
   { id:'h2o2',      label:'H₂O₂',            sub:'Hydrogen Peroxide',       active:false },
@@ -727,7 +727,7 @@ function flashSave() {
   _st = setTimeout(() => el.classList.remove('show'), 2000);
 }
 
-let active = 'caustic';
+let active = 'sulphuric'; // default active product
 let mobilePanel = 'inputs'; // 'inputs' | 'results'
 
 const S = {
