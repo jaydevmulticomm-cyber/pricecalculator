@@ -625,7 +625,7 @@ const PKG = {
 };
 
 const DEF_CAUSTIC = {
-  basic_rate:42, selected_packaging:'pkg_25bag', transport:25000, usd_inr:84,
+  basic_rate:42, selected_packaging:'pkg_25bag', transport:25000, usd_inr:95,
   ocean_frt:350, insurance:0.35, margin:8, moisture:0.3,
   cha:2600, exam:4000, edi:36, gate:150,
   cfs:10000, lolo:3000, detention:3000, ship_line:30000,
@@ -634,13 +634,13 @@ const DEF_CAUSTIC = {
 
 /* Updated sulphuric acid port charges as per the new charge sheet */
 const DEF_SULPHURIC = {
-  basic_rate:32, selected_packaging:'pkg_ibc', transport_kg:1, usd_inr:84,
-  ocean_frt:575, insurance:0.5, margin:10,
+  basic_rate:32, selected_packaging:'pkg_ibc', transport_kg:1, usd_inr:95,
+  ocean_frt:165, insurance:0.5, margin:10,
   /* Port / CFS charges */
   custom_clearance: 3500,   // Custom Clearance per container
   carting_exam:     1000,   // Carting Examination per container
   vgm_form13:        500,   // VGM & Form 13 per filing
-  lacing_choking:   2000,   // Belt & Wooden Edge - variable, editable
+  lacing_choking:      0,   // Belt & Wooden Edge - variable, editable
   unloading:        1500,   // Unloading per container
   cfs_handling:    12000,   // CFS Handling (Receipted)
   container_repo:   5500,   // Container Repo Charges
