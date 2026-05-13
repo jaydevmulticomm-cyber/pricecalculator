@@ -5,7 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="theme-color" content="#ffffff">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="JM Pricing">
 <meta name="description" content="Export pricing calculator for Jaydev Multicomm">
 <link rel="manifest" href="manifest.json">
@@ -18,6 +19,8 @@
    TOKENS (Apple-inspired minimal palette)
 ═══════════════════════════════════════════ */
 :root {
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
   --page:    #f9fafb;
   --surface: #ffffff;
   --inset:   #f3f4f6;
@@ -75,7 +78,6 @@ body {
   font-family: var(--sans);
   background: var(--page);
   color: var(--ink1);
-  min-height: 100vh;
   min-height: 100dvh;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -97,8 +99,8 @@ input, select, textarea { -webkit-user-select: text; user-select: text; touch-ac
 ═══════════════════════════════════════════ */
 .hdr {
   position: sticky; top: 0; z-index: 500;
-  height: calc(52px + env(safe-area-inset-top));
-  padding-top: env(safe-area-inset-top);
+  min-height: calc(58px + var(--safe-top));
+  padding-top: var(--safe-top);
   display: flex; align-items: center; justify-content: space-between;
   padding: 0 16px;
   background: rgba(255,255,255,0.95);
