@@ -9,11 +9,11 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="JM Pricing">
 <meta name="description" content="Export pricing calculator for Jaydev Multicomm">
-<link rel="manifest" href="manifest.json">
+<link rel="manifest" href="/manifest.json">
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'><rect fill='%23f59e0b' width='180' height='180' rx='36'/><text x='50%' y='50%' font-size='90' font-weight='800' fill='white' text-anchor='middle' dominant-baseline='central' font-family='sans-serif'>JM</text></svg>">
 <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'><rect fill='%23f59e0b' width='180' height='180' rx='40'/><text x='50%' y='50%' font-size='90' font-weight='800' fill='white' text-anchor='middle' dominant-baseline='central' font-family='sans-serif'>JM</text></svg>">
 <title>Jaydev Multicomm - Export Pricing</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=IBM+Plex+Mono:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..4₀,7₀₀;1,9..4₀,4₀₀&family=IBM+Plex+Mono:wght@3₀₀;4₀₀;5₀₀;6₀₀&display=swap" rel="stylesheet">
 <style>
 /* ═══════════════════════════════════════════
    TOKENS (Apple-inspired minimal palette)
@@ -70,8 +70,13 @@
 
 html {
   font-size: 14px;
-  overflow-x: hidden;
   height: 100%;
+  margin:0;
+  padding:0;
+  overflow-x:hidden;
+  overflow-y:auto;
+  min-height:100%;
+  background:#f5f5f7;
 }
 
 body {
@@ -88,7 +93,9 @@ body {
   margin: 0;
   overflow-y: auto;
   overflow-x: hidden;
-  padding-top: 0;
+  padding-top:var(--safe-top);
+  padding-bottom:var(--safe-bottom);
+  -webkit-overflow-scrolling:touch;
 }
 
 body * { -webkit-user-select: text; user-select: text; }

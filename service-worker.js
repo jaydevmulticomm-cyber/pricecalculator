@@ -1,69 +1,55 @@
-const CACHE_NAME = 'jm-pricing-v2';
-const urlsToCache = [
-  '/index.html',
-  '/manifest.json'
-];
+const CACHE_NAME = 'jm-pricing-v5';
 
-// Install event - cache files
-self.addEventListener('install', event => {
-  event.waitUntil(
-    caches.open(CACHE_NAME)
-      .then(cache => cache.addAll(urlsToCache))
-      .then(() => self.skipWaiting())
-  );
+self.addEventListener('install', () => {
+  self.skipWaiting();
 });
 
-// Activate event - clean up old caches
 self.addEventListener('activate', event => {
   event.waitUntil(
-    caches.keys().then(cacheNames => {
-      return Promise.all(
-        cacheNames.map(cacheName => {
-          if (cacheName !== CACHE_NAME) {
-            return caches.delete(cacheName);
+    caches.keys().then(keys =>
+      Promise.all(
+        keys.map(key => {
+          if (key !== CACHE_NAME) {
+            return caches.delete(key);
           }
         })
-      );
-    }).then(() => self.clients.claim())
+      )
+    ).then(() => self.clients.claim())
   );
 });
 
-// Fetch event - serve from cache, fallback to network
 self.addEventListener('fetch', event => {
-  if (event.request.method !== 'GET') {
+  if (event.request.method !== 'GET') return;
+
+  // NEVER CACHE HTML DURING DEVELOPMENT
+  if (event.request.headers.get('accept')?.includes('text/html')) {
+    event.respondWith(fetch(event.request));
     return;
   }
 
+  // Cache-first for static assets only
   event.respondWith(
-    caches.match(event.request)
-      .then(response => {
-        if (response) {
+    caches.match(event.request).then(cached => {
+      if (cached) return cached;
+
+      return fetch(event.request).then(response => {
+        // Ignore invalid responses
+        if (
+          !response ||
+          response.status !== 200 ||
+          response.type !== 'basic'
+        ) {
           return response;
         }
-        return fetch(event.request)
-          .then(response => {
-            // Don't cache non-successful responses
-            if (!response || response.status !== 200 || response.type === 'error') {
-              return response;
-            }
-            // Clone the response
-            const responseToCache = response.clone();
-            caches.open(CACHE_NAME)
-              .then(cache => {
-                cache.put(event.request, responseToCache);
-              });
-            return response;
-          })
-          .catch(() => {
-            // Offline fallback
-            return new Response('Offline - please check your connection', {
-              status: 503,
-              statusText: 'Service Unavailable',
-              headers: new Headers({
-                'Content-Type': 'text/plain'
-              })
-            });
-          });
-      })
+
+        const cloned = response.clone();
+
+        caches.open(CACHE_NAME).then(cache => {
+          cache.put(event.request, cloned);
+        });
+
+        return response;
+      });
+    })
   );
 });
