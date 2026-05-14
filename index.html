@@ -696,9 +696,21 @@ const PKG = {
 const DEF_CAUSTIC = {
   basic_rate:42, selected_packaging:'pkg_25bag', transport:25000, usd_inr:95,
   ocean_frt:350, insurance:0.35, margin:10, moisture:0.3,
-  cha:2600, exam:4000, edi:36, gate:150,
-  cfs:10000, lolo:3000, detention:3000, ship_line:30000,
-  fumigation:2500, lashing:1500,
+  /* Packaging dimensions for weight calculation */
+  bag_weight: 25, bags_per_container: 1000,
+  /* Port / Local charges - updated from charge sheet */
+  custom_clearance: 3500,   // Custom Clearance per container
+  carting_exam:     1000,   // Carting Examination per container
+  vgm_form13:        500,   // VGM & Form 13 per filing
+  lacing_choking:      0,   // Belt & Wooden Edge - variable, editable
+  unloading:        1500,   // Unloading per container
+  cfs_handling:    12000,   // CFS Handling (Receipted)
+  container_repo:   5500,   // Container Repo Charges
+  lifton:           3000,   // Lift-on / Detention
+  terminal_handling:18000,  // Terminal Handling Charge (THC)
+  shipping_line_local:6670, // Shipping Line Local (BL + seal + THC local)
+  fumigation:           0,  // Fumigation (not applicable)
+  lashing:              0,  // Lashing / Cargo Securing
 };
 
 /* Updated sulphuric acid port charges as per the new charge sheet */
@@ -787,23 +799,25 @@ window.addEventListener('resize', applyMobilePanel);
 ═══════════════════════════════════════ */
 function calcCaustic(d) {
   const pkg  = PKG.caustic.find(p => p.id === d.selected_packaging);
-  const units = d.pkg_units_per_ctr ?? pkg.units_per_container;
-  const uwt   = d.pkg_unit_weight   ?? pkg.unit_weight;
+  const units = d.bags_per_container ?? pkg.units_per_container;
+  const uwt   = d.bag_weight        ?? pkg.unit_weight;
   const ucost = d.pkg_unit_cost     ?? pkg.unit_cost;
 
   const total_kg    = units * uwt * (1 - d.moisture / 100);
   const total_mt    = total_kg / 1000;
   const procurement = d.basic_rate * total_kg;
   const packing     = ucost * units;
-  const port        = d.cha + d.exam + d.edi + d.gate + d.cfs
-                    + d.lolo + d.detention + d.ship_line + d.fumigation + d.lashing;
+  const port        = d.custom_clearance + d.carting_exam + d.vgm_form13
+                    + d.lacing_choking   + d.unloading    + d.cfs_handling
+                    + d.container_repo   + d.lifton       + d.terminal_handling
+                    + d.shipping_line_local + d.fumigation + d.lashing;
 
   const fob_inr        = procurement + packing + d.transport + port;
   const fob_usd        = fob_inr / d.usd_inr;
   const fob_per_kg_usd = fob_usd / total_kg;
   const fob_per_mt_usd = fob_per_kg_usd * 1000;
 
-  const ocean_inr = d.ocean_frt * total_mt * d.usd_inr;
+  const ocean_inr = d.ocean_frt * d.usd_inr;
   const ins_inr   = fob_inr * d.insurance / 100;
   const cif_inr   = fob_inr + ocean_inr + ins_inr;
   const cif_usd   = cif_inr / d.usd_inr;
@@ -814,16 +828,13 @@ function calcCaustic(d) {
   const scif_kg = cif_per_kg_usd * (1 + d.margin / 100);
 
   return {
-    total_kg, total_mt, procurement, packing, transport: d.transport, port,
+    units, total_kg, total_mt, procurement, packing, transport: d.transport, port,
     fob_inr, fob_usd, fob_per_kg_usd, fob_per_mt_usd,
     ocean_inr, ins_inr, cif_inr, cif_usd, cif_per_kg_usd, cif_per_mt_usd,
     sfob_kg, sfob_mt: sfob_kg * 1000, sfob_ctr: sfob_kg * total_kg,
     scif_kg, scif_mt: scif_kg * 1000, scif_ctr: scif_kg * total_kg,
     mfob_mt: (sfob_kg - fob_per_kg_usd) * 1000,  mfob_ctr: (sfob_kg - fob_per_kg_usd) * total_kg,
     mcif_mt: (scif_kg - cif_per_kg_usd) * 1000,  mcif_ctr: (scif_kg - cif_per_kg_usd) * total_kg,
-    _portBreakdown: { cha:d.cha, exam:d.exam, edi:d.edi, gate:d.gate, cfs:d.cfs,
-                      lolo:d.lolo, detention:d.detention, ship_line:d.ship_line,
-                      fumigation:d.fumigation, lashing:d.lashing },
   };
 }
 
@@ -850,7 +861,7 @@ function calcSulphuric(d) {
   const fob_per_kg_usd = fob_usd / total_kg;
   const fob_per_mt_usd = fob_per_kg_usd * 1000;
 
-  const ocean_inr = d.ocean_frt * total_mt * d.usd_inr;
+  const ocean_inr = d.ocean_frt * d.usd_inr;
   const ins_inr   = fob_inr * d.insurance / 100;
   const cif_inr   = fob_inr + ocean_inr + ins_inr;
   const cif_usd   = cif_inr / d.usd_inr;
@@ -878,6 +889,7 @@ const f0  = v => Math.round(v).toLocaleString('en-IN');
 const f2  = v => v.toLocaleString('en-IN', { minimumFractionDigits:2, maximumFractionDigits:2 });
 const f4  = v => v.toLocaleString('en-US', { minimumFractionDigits:4, maximumFractionDigits:4 });
 const inr = v => '₹' + f0(v);
+const inr2 = v => '₹' + v.toLocaleString('en-IN', { minimumFractionDigits:2, maximumFractionDigits:2 });
 const usd = (v, d=2) => '$' + v.toLocaleString('en-US', { minimumFractionDigits:d, maximumFractionDigits:d });
 
 /* ═══════════════════════════════════════
@@ -956,41 +968,63 @@ function renderSpecStrip(cells) {
   return `<div class="spec-strip">${cells.map(([k,v,s]) => SPEC(k,v,s||'')).join('')}</div>`;
 }
 function renderBeRow(c) {
+  const fobPerKgInr = c.fob_inr / c.total_kg;
+  const cifPerKgInr = c.cif_inr / c.total_kg;
+  const fobPerMtInr = fobPerKgInr * 1000;
+  const cifPerMtInr = cifPerKgInr * 1000;
+
   return `
 <div class="be-row">
   <div class="be-card">
     <div class="be-label">Break-even FOB - minimum to quote</div>
-    <div class="be-big">${usd(c.fob_per_kg_usd,4)} / KG</div>
-    <div class="be-small">${usd(c.fob_per_mt_usd,2)} / MT &nbsp;·&nbsp; ${usd(c.fob_usd,0)} / FCL</div>
+    <div class="be-big">${inr2(fobPerKgInr)} / KG</div>
+    <div class="be-small">${inr2(fobPerMtInr)} / MT &nbsp;·&nbsp; ${inr(c.fob_inr)} / FCL</div>
+    <div class="be-small" style="margin-top:6px; color: var(--ink4);">
+      ${usd(c.fob_per_kg_usd,4)} / KG &nbsp;·&nbsp; ${usd(c.fob_per_mt_usd,2)} / MT &nbsp;·&nbsp; ${usd(c.fob_usd,0)} / FCL
+    </div>
   </div>
   <div class="be-card">
     <div class="be-label">Break-even CIF - minimum to quote</div>
-    <div class="be-big">${usd(c.cif_per_kg_usd,4)} / KG</div>
-    <div class="be-small">${usd(c.cif_per_mt_usd,2)} / MT &nbsp;·&nbsp; ${usd(c.cif_usd,0)} / FCL</div>
+    <div class="be-big">${inr2(cifPerKgInr)} / KG</div>
+    <div class="be-small">${inr2(cifPerMtInr)} / MT &nbsp;·&nbsp; ${inr(c.cif_inr)} / FCL</div>
+    <div class="be-small" style="margin-top:6px; color: var(--ink4);">
+      ${usd(c.cif_per_kg_usd,4)} / KG &nbsp;·&nbsp; ${usd(c.cif_per_mt_usd,2)} / MT &nbsp;·&nbsp; ${usd(c.cif_usd,0)} / FCL
+    </div>
   </div>
 </div>`;
 }
-function renderSellCard(c, margin) {
+function renderSellCard(c, margin, usdInr) {
+  const sfobKgInr = c.sfob_kg * usdInr;
+  const scifKgInr = c.scif_kg * usdInr;
+  const sfobMtInr = c.sfob_mt * usdInr;
+  const scifMtInr = c.scif_mt * usdInr;
+  const sfobCtrInr = c.sfob_ctr * usdInr;
+  const scifCtrInr = c.scif_ctr * usdInr;
+
   return `
 <div class="sell-card">
   <div class="cost-head amber" style="border-bottom:1px solid rgba(245,158,11,0.2)">
     Offer / Selling Price - break-even + ${margin}% margin
   </div>
   <div class="sell-grid">
-    ${SCOL('Per KG',         usd(c.sfob_kg,4), usd(c.scif_kg,4))}
-    ${SCOL('Per MT',         usd(c.sfob_mt,2), usd(c.scif_mt,2))}
-    ${SCOL(`Per FCL · ${f2(c.total_mt)} MT`, usd(c.sfob_ctr,0), usd(c.scif_ctr,0))}
+    ${SCOL('Per KG',         `${inr2(sfobKgInr)} / KG<br><span style="font-size:11px;color:var(--ink4)">${usd(c.sfob_kg,4)} / KG</span>`, `${inr2(scifKgInr)} / KG<br><span style="font-size:11px;color:var(--ink4)">${usd(c.scif_kg,4)} / KG</span>`) }
+    ${SCOL('Per MT',         `${inr2(sfobMtInr)} / MT<br><span style="font-size:11px;color:var(--ink4)">${usd(c.sfob_mt,2)} / MT</span>`, `${inr2(scifMtInr)} / MT<br><span style="font-size:11px;color:var(--ink4)">${usd(c.scif_mt,2)} / MT</span>`) }
+    ${SCOL(`Per FCL · ${f2(c.total_mt)} MT`, `${inr(sfobCtrInr)} / FCL<br><span style="font-size:11px;color:var(--ink4)">${usd(c.sfob_ctr,0)} / FCL</span>`, `${inr(scifCtrInr)} / FCL<br><span style="font-size:11px;color:var(--ink4)">${usd(c.scif_ctr,0)} / FCL</span>`) }
   </div>
 </div>`;
 }
 function renderMarginCard(c, usdInr) {
+  const mfobMtInr = c.mfob_mt * usdInr;
+  const mcifMtInr = c.mcif_mt * usdInr;
+  const mfobCtrInr = c.mfob_ctr * usdInr;
+  const mcifCtrInr = c.mcif_ctr * usdInr;
+
   return `
 <div class="margin-card">
   <div class="cost-head purple">Gross Margin Summary</div>
   <div class="margin-grid">
-    ${MCOL('Margin / MT',       usd(c.mfob_mt,2)+' FOB',  usd(c.mcif_mt,2)+' CIF')}
-    ${MCOL('Margin / FCL (USD)',usd(c.mfob_ctr,0)+' FOB', usd(c.mcif_ctr,0)+' CIF')}
-    ${MCOL('Margin / FCL (₹)', inr(c.mfob_ctr*usdInr)+' FOB', inr(c.mcif_ctr*usdInr)+' CIF')}
+    ${MCOL('Margin / MT', `${inr2(mfobMtInr)} FOB<br><span style="font-size:11px;color:var(--ink4)">${usd(c.mfob_mt,2)} FOB</span>`, `${inr2(mcifMtInr)} CIF<br><span style="font-size:11px;color:var(--ink4)">${usd(c.mcif_mt,2)} CIF</span>`) }
+    ${MCOL('Margin / FCL', `${inr(mfobCtrInr)} FOB<br><span style="font-size:11px;color:var(--ink4)">${usd(c.mfob_ctr,0)} FOB</span>`, `${inr(mcifCtrInr)} CIF<br><span style="font-size:11px;color:var(--ink4)">${usd(c.mcif_ctr,0)} CIF</span>`) }
   </div>
 </div>`;
 }
@@ -1002,7 +1036,10 @@ function renderCaustic() {
   const d = S.caustic, c = calcCaustic(d);
   const pkg = PKG.caustic.find(p => p.id === d.selected_packaging);
   const ucost = d.pkg_unit_cost ?? pkg.unit_cost;
-  const portSubtotal = d.cha+d.exam+d.edi+d.gate+d.cfs+d.lolo+d.detention+d.ship_line+d.fumigation+d.lashing;
+  const portSubtotal = d.custom_clearance + d.carting_exam + d.vgm_form13
+                     + d.lacing_choking   + d.unloading    + d.cfs_handling
+                     + d.container_repo   + d.lifton       + d.terminal_handling
+                     + d.shipping_line_local + d.fumigation + d.lashing;
 
   return `
 <div class="shell">
@@ -1015,10 +1052,12 @@ function renderCaustic() {
   <div>
     ${I('caustic','basic_rate',      d.basic_rate,  'Basic Rate - Caustic Soda Flakes','₹ / kg',   'dai')}
     ${SEL('caustic','selected_packaging', d.selected_packaging, 'Packaging Type', PKG.caustic)}
+    ${I('caustic','bag_weight',      d.bag_weight,  'Bag Weight',                      'kg',       'dai')}
+    ${I('caustic','bags_per_container', d.bags_per_container, 'Bags per Container (20ft)', 'units', 'dai')}
     ${I('caustic','pkg_unit_cost',   ucost,         'Packaging Cost (override)',       '₹ / unit', 'dai')}
     ${I('caustic','transport',       d.transport,   'Transport - Plant to Port',       '₹ / FCL',  'dai')}
     ${I('caustic','usd_inr',         d.usd_inr,     'USD / INR Exchange Rate',         'INR / $',  'dai')}
-    ${I('caustic','ocean_frt',       d.ocean_frt,   'Ocean Freight (CIF only)',         '$ / MT',   'dai')}
+    ${I('caustic','ocean_frt',       d.ocean_frt,   'Ocean Freight (CIF only)',         '$ / Container',   'dai')}
     ${I('caustic','insurance',       d.insurance,   'Marine Insurance',                '% of FOB', 'dai')}
     ${I('caustic','margin',          d.margin,      'Target Margin',                   '%',        'dai')}
     ${I('caustic','moisture',        d.moisture,    'Moisture / Loss Allowance',        '%',        'dai')}
@@ -1028,16 +1067,18 @@ function renderCaustic() {
     <button class="reset-btn" onclick="reset('caustic')">Reset defaults</button>
   </div>
   <div>
-    ${I('caustic','cha',       d.cha,        'CHA / Agency Charge',           '₹ / FCL', 'fix')}
-    ${I('caustic','exam',      d.exam,       'Customs Examination',           '₹ / FCL', 'fix')}
-    ${I('caustic','edi',       d.edi,        'EDI / Port Filing',              '₹ / FCL', 'fix')}
-    ${I('caustic','gate',      d.gate,       'Gate Pass',                     '₹ / FCL', 'fix')}
-    ${I('caustic','cfs',       d.cfs,        'CFS Charge',                    '₹ / FCL', 'fix')}
-    ${I('caustic','lolo',      d.lolo,       'LOLO Charge',                   '₹ / FCL', 'fix')}
-    ${I('caustic','detention', d.detention,  'Detention / Buffer',            '₹ / FCL', 'fix')}
-    ${I('caustic','ship_line', d.ship_line,  'Shipping Line Local (BL + THC)','₹ / FCL', 'fix')}
-    ${I('caustic','fumigation',d.fumigation, 'Fumigation Charge (Africa)',    '₹ / FCL', 'fix')}
-    ${I('caustic','lashing',   d.lashing,   'Lashing / Cargo Securing',      '₹ / FCL', 'fix')}
+    ${I('caustic','custom_clearance', d.custom_clearance, 'Custom Clearance',               '₹ / FCL', 'fix')}
+    ${I('caustic','carting_exam',     d.carting_exam,     'Carting / Examination',           '₹ / FCL', 'fix')}
+    ${I('caustic','vgm_form13',       d.vgm_form13,       'VGM & Form 13 Filing',           '₹ / FCL', 'fix')}
+    ${I('caustic','lacing_choking',   d.lacing_choking,   'Lacing / Choking',               '₹ / FCL', 'fix')}
+    ${I('caustic','unloading',        d.unloading,        'Unloading',                      '₹ / FCL', 'fix')}
+    ${I('caustic','cfs_handling',     d.cfs_handling,     'CFS Handling (Receipted)',       '₹ / FCL', 'fix')}
+    ${I('caustic','container_repo',   d.container_repo,   'Container Repo Charges',         '₹ / FCL', 'fix')}
+    ${I('caustic','lifton',           d.lifton,           'Lift-on Charge',                 '₹ / FCL', 'fix')}
+    ${I('caustic','terminal_handling',d.terminal_handling, 'Terminal Handling Charge',      '₹ / FCL', 'fix')}
+    ${I('caustic','shipping_line_local',d.shipping_line_local, 'Shipping Line Local',       '₹ / FCL', 'fix')}
+    ${I('caustic','fumigation',       d.fumigation,       'Fumigation Charge',              '₹ / FCL', 'fix')}
+    ${I('caustic','lashing',          d.lashing,          'Lashing / Cargo Securing',       '₹ / FCL', 'fix')}
   </div>
 </aside>
 
@@ -1045,14 +1086,14 @@ function renderCaustic() {
   ${renderSpecStrip([
     ['Product','Caustic Soda Flakes'],
     ['Packing', pkg.name],
-    ['Units / FCL', f0(pkg.units_per_container)],
+    ['Units / FCL', f0(c.units)],
     ['Net / FCL', f2(c.total_mt)+' MT'],
     ['Net KG', f0(c.total_kg)+' KG'],
     ['USD / INR', String(d.usd_inr)],
     ['Margin', d.margin+'%', 'color:#d97706;font-weight:700'],
   ])}
 
-  ${renderSellCard(c, d.margin)}
+  ${renderSellCard(c, d.margin, d.usd_inr)}
   ${renderMarginCard(c, d.usd_inr)}
 
   ${renderBeRow(c)}
@@ -1069,15 +1110,17 @@ function renderCaustic() {
         </div>
         <div class="cost-section">
           ${CSEC('Port & Local Charges')}
-          ${CL('CHA / Agency', inr(d.cha))}
-          ${CL('Customs Examination', inr(d.exam))}
-          ${CL('EDI / Port Filing', inr(d.edi))}
-          ${CL('Gate Pass', inr(d.gate))}
-          ${CL('CFS Charge', inr(d.cfs))}
-          ${CL('LOLO', inr(d.lolo))}
-          ${CL('Detention / Buffer', inr(d.detention))}
-          ${CL('Shipping Line (BL + THC)', inr(d.ship_line))}
-          ${CL('Fumigation (Africa)', inr(d.fumigation))}
+          ${CL('Custom Clearance', inr(d.custom_clearance))}
+          ${CL('Carting / Examination', inr(d.carting_exam))}
+          ${CL('VGM & Form 13', inr(d.vgm_form13))}
+          ${CL('Lacing / Choking', inr(d.lacing_choking))}
+          ${CL('Unloading', inr(d.unloading))}
+          ${CL('CFS Handling', inr(d.cfs_handling))}
+          ${CL('Container Repo Charges', inr(d.container_repo))}
+          ${CL('Lift-on Charge', inr(d.lifton))}
+          ${CL('Terminal Handling Charge', inr(d.terminal_handling))}
+          ${CL('Shipping Line Local', inr(d.shipping_line_local))}
+          ${CL('Fumigation', inr(d.fumigation))}
           ${CL('Lashing / Securing', inr(d.lashing))}
           ${CST('Sub-total Port', inr(portSubtotal))}
         </div>
@@ -1095,7 +1138,7 @@ function renderCaustic() {
         </div>
         <div class="cost-section">
           ${CSEC('Freight & Insurance')}
-          ${CL('Ocean Freight', inr(c.ocean_inr), d.ocean_frt+' $/MT × '+f2(c.total_mt)+' MT × ₹'+d.usd_inr)}
+          ${CL('Ocean Freight', inr(c.ocean_inr), d.ocean_frt+' $/Container × ₹'+d.usd_inr)}
           ${CL('Marine Insurance', inr(c.ins_inr), d.insurance+'% of FOB value')}
           ${CST('Sub-total', inr(c.ocean_inr + c.ins_inr))}
         </div>
@@ -1109,10 +1152,16 @@ function renderCaustic() {
   <div class="port-card">
     <div class="cost-head neutral">Port Quick-Reference</div>
     <table class="tbl">
-      <tr><th>PORT</th><th>TRANSPORT ₹</th><th>AGENCY ₹</th><th>EXAM ₹</th><th>CFS ₹</th><th>LOLO ₹</th></tr>
-      <tr><td>MUNDRA</td><td>18,000</td><td>2,600</td><td>4,000</td><td>10,000</td><td>3,000</td></tr>
-      <tr><td>HAZIRA</td><td>25,000</td><td>2,600</td><td>6,000</td><td>10,000</td><td>3,000</td></tr>
-      <tr><td>PIPAVAV</td><td>19,000</td><td>2,100</td><td>6,000</td><td>10,500</td><td>2,000</td></tr>
+      <tr><th>CHARGE</th><th>AMOUNT</th></tr>
+      <tr><td>Custom Clearance</td><td>3,500</td></tr>
+      <tr><td>Carting/Exam</td><td>1,000</td></tr>
+      <tr><td>VGM & Form 13</td><td>500</td></tr>
+      <tr><td>Unloading</td><td>1,500</td></tr>
+      <tr><td>CFS Handling</td><td>12,000</td></tr>
+      <tr><td>Container Repo</td><td>5,500</td></tr>
+      <tr><td>Lift-on</td><td>3,000</td></tr>
+      <tr><td>Terminal Handling</td><td>18,000</td></tr>
+      <tr><td>Shipping Line Local</td><td>6,670</td></tr>
     </table>
   </div>
 </section>
@@ -1144,7 +1193,7 @@ function renderSulphuric() {
     ${I('sulphuric','pkg_unit_cost', ucost,         'Packaging Cost (override)',         '₹ / unit', 'dai')}
     ${I('sulphuric','transport_kg',  d.transport_kg,'Transport - Plant to Port',         '₹ / kg',   'dai')}
     ${I('sulphuric','usd_inr',       d.usd_inr,     'USD / INR Exchange Rate',           'INR / $',  'dai')}
-    ${I('sulphuric','ocean_frt',     d.ocean_frt,   'Ocean Freight (CIF only)',           '$ / MT',   'dai')}
+    ${I('sulphuric','ocean_frt',     d.ocean_frt,   'Ocean Freight (CIF only)',           '$ / Container',   'dai')}
     ${I('sulphuric','insurance',     d.insurance,   'Marine Insurance',                  '% of FOB', 'dai')}
     ${I('sulphuric','margin',        d.margin,      'Target Margin',                     '%',        'dai')}
   </div>
@@ -1182,7 +1231,7 @@ function renderSulphuric() {
     ['Margin', d.margin+'%', 'color:#d97706;font-weight:700'],
   ])}
 
-  ${renderSellCard(c, d.margin)}
+  ${renderSellCard(c, d.margin, d.usd_inr)}
   ${renderMarginCard(c, d.usd_inr)}
   ${renderBeRow(c)}
 
@@ -1229,7 +1278,7 @@ function renderSulphuric() {
       </div>
       <div class="cost-section">
         ${CSEC('Freight & Insurance')}
-        ${CL('Ocean Freight', inr(c.ocean_inr), d.ocean_frt+' $/MT × '+f2(c.total_mt)+' MT × ₹'+d.usd_inr)}
+        ${CL('Ocean Freight', inr(c.ocean_inr), d.ocean_frt+' $/Container × ₹'+d.usd_inr)}
         ${CL('Marine Insurance', inr(c.ins_inr), d.insurance+'% of FOB value')}
         ${CST('Sub-total', inr(c.ocean_inr + c.ins_inr))}
       </div>
