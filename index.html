@@ -946,19 +946,19 @@ const CTL = (name, val, fobOrCif) => `
 const CSEC = t => `<div class="cost-sec-title">${t}</div>`;
 
 /* Sell price column */
-const SCOL = (title, fobVal, cifVal) => `
+const SCOL = (title, fobVal, cifVal, showCif = true) => `
 <div class="sell-col">
   <div class="sell-k">${title}</div>
   <div class="sell-v-label">FOB</div><div class="sell-v-fob">${fobVal}</div>
-  <div class="sell-v-label" style="margin-top:8px">CIF</div><div class="sell-v-cif">${cifVal}</div>
+  ${showCif ? `<div class="sell-v-label" style="margin-top:8px">CIF</div><div class="sell-v-cif">${cifVal}</div>` : ''}
 </div>`;
 
 /* Margin column */
-const MCOL = (title, fobVal, cifVal) => `
+const MCOL = (title, fobVal, cifVal, showCif = true) => `
 <div class="margin-col">
   <div class="margin-k">${title}</div>
   <div class="margin-v-fob">${fobVal}</div>
-  <div class="margin-v-cif">${cifVal}</div>
+  ${showCif ? `<div class="margin-v-cif">${cifVal}</div>` : ''}
 </div>`;
 
 /* ═══════════════════════════════════════
@@ -1000,6 +1000,7 @@ function renderSellCard(c, margin, usdInr) {
   const scifMtInr = c.scif_mt * usdInr;
   const sfobCtrInr = c.sfob_ctr * usdInr;
   const scifCtrInr = c.scif_ctr * usdInr;
+  const showCif = c.ocean_inr > 0 || c.ins_inr > 0;
 
   return `
 <div class="sell-card">
@@ -1007,9 +1008,9 @@ function renderSellCard(c, margin, usdInr) {
     Offer / Selling Price - break-even + ${margin}% margin
   </div>
   <div class="sell-grid">
-    ${SCOL('Per KG',         `${inr2(sfobKgInr)} / KG<br><span style="font-size:11px;color:var(--ink4)">${usd(c.sfob_kg,4)} / KG</span>`, `${inr2(scifKgInr)} / KG<br><span style="font-size:11px;color:var(--ink4)">${usd(c.scif_kg,4)} / KG</span>`) }
-    ${SCOL('Per MT',         `${inr2(sfobMtInr)} / MT<br><span style="font-size:11px;color:var(--ink4)">${usd(c.sfob_mt,2)} / MT</span>`, `${inr2(scifMtInr)} / MT<br><span style="font-size:11px;color:var(--ink4)">${usd(c.scif_mt,2)} / MT</span>`) }
-    ${SCOL(`Per FCL · ${f2(c.total_mt)} MT`, `${inr(sfobCtrInr)} / FCL<br><span style="font-size:11px;color:var(--ink4)">${usd(c.sfob_ctr,0)} / FCL</span>`, `${inr(scifCtrInr)} / FCL<br><span style="font-size:11px;color:var(--ink4)">${usd(c.scif_ctr,0)} / FCL</span>`) }
+    ${SCOL('Per KG',         `${inr2(sfobKgInr)} / KG<br><span style="font-size:11px;color:var(--ink4)">${usd(c.sfob_kg,4)} / KG</span>`, `${inr2(scifKgInr)} / KG<br><span style="font-size:11px;color:var(--ink4)">${usd(c.scif_kg,4)} / KG</span>`, showCif) }
+    ${SCOL('Per MT',         `${inr2(sfobMtInr)} / MT<br><span style="font-size:11px;color:var(--ink4)">${usd(c.sfob_mt,2)} / MT</span>`, `${inr2(scifMtInr)} / MT<br><span style="font-size:11px;color:var(--ink4)">${usd(c.scif_mt,2)} / MT</span>`, showCif) }
+    ${SCOL(`Per FCL · ${f2(c.total_mt)} MT`, `${inr(sfobCtrInr)} / FCL<br><span style="font-size:11px;color:var(--ink4)">${usd(c.sfob_ctr,0)} / FCL</span>`, `${inr(scifCtrInr)} / FCL<br><span style="font-size:11px;color:var(--ink4)">${usd(c.scif_ctr,0)} / FCL</span>`, showCif) }
   </div>
 </div>`;
 }
@@ -1018,13 +1019,14 @@ function renderMarginCard(c, usdInr) {
   const mcifMtInr = c.mcif_mt * usdInr;
   const mfobCtrInr = c.mfob_ctr * usdInr;
   const mcifCtrInr = c.mcif_ctr * usdInr;
+  const showCif = c.ocean_inr > 0 || c.ins_inr > 0;
 
   return `
 <div class="margin-card">
   <div class="cost-head purple">Gross Margin Summary</div>
   <div class="margin-grid">
-    ${MCOL('Margin / MT', `${inr2(mfobMtInr)} FOB<br><span style="font-size:11px;color:var(--ink4)">${usd(c.mfob_mt,2)} FOB</span>`, `${inr2(mcifMtInr)} CIF<br><span style="font-size:11px;color:var(--ink4)">${usd(c.mcif_mt,2)} CIF</span>`) }
-    ${MCOL('Margin / FCL', `${inr(mfobCtrInr)} FOB<br><span style="font-size:11px;color:var(--ink4)">${usd(c.mfob_ctr,0)} FOB</span>`, `${inr(mcifCtrInr)} CIF<br><span style="font-size:11px;color:var(--ink4)">${usd(c.mcif_ctr,0)} CIF</span>`) }
+    ${MCOL('Margin / MT', `${inr2(mfobMtInr)} FOB<br><span style="font-size:11px;color:var(--ink4)">${usd(c.mfob_mt,2)} FOB</span>`, `${inr2(mcifMtInr)} CIF<br><span style="font-size:11px;color:var(--ink4)">${usd(c.mcif_mt,2)} CIF</span>`, showCif) }
+    ${MCOL('Margin / FCL', `${inr(mfobCtrInr)} FOB<br><span style="font-size:11px;color:var(--ink4)">${usd(c.mfob_ctr,0)} FOB</span>`, `${inr(mcifCtrInr)} CIF<br><span style="font-size:11px;color:var(--ink4)">${usd(c.mcif_ctr,0)} CIF</span>`, showCif) }
   </div>
 </div>`;
 }
@@ -1057,7 +1059,6 @@ function renderCaustic() {
     ${I('caustic','pkg_unit_cost',   ucost,         'Packaging Cost (override)',       '₹ / unit', 'dai')}
     ${I('caustic','transport',       d.transport,   'Transport - Plant to Port',       '₹ / FCL',  'dai')}
     ${I('caustic','usd_inr',         d.usd_inr,     'USD / INR Exchange Rate',         'INR / $',  'dai')}
-    ${I('caustic','ocean_frt',       d.ocean_frt,   'Ocean Freight (CIF only)',         '$ / Container',   'dai')}
     ${I('caustic','insurance',       d.insurance,   'Marine Insurance',                '% of FOB', 'dai')}
     ${I('caustic','margin',          d.margin,      'Target Margin',                   '%',        'dai')}
     ${I('caustic','moisture',        d.moisture,    'Moisture / Loss Allowance',        '%',        'dai')}
@@ -1067,20 +1068,21 @@ function renderCaustic() {
     <button class="reset-btn" onclick="reset('caustic')">Reset defaults</button>
   </div>
   <div>
+    ${I('caustic','ocean_frt',       d.ocean_frt,   'Ocean Freight (for cif / cfr)',     '$ / Container', 'fix')}
+    ${I('caustic','terminal_handling',d.terminal_handling, 'Terminal Handling Charge',      '₹ / FCL', 'fix')}
+    ${I('caustic','shipping_line_local',d.shipping_line_local, 'Shipping Line Local (BL, Seal, MUC, etc)', '₹ / FCL', 'fix')}
+    ${I('caustic','cfs_handling',     d.cfs_handling,     'CFS Handling (approx)',       '₹ / FCL', 'fix')}
     ${I('caustic','custom_clearance', d.custom_clearance, 'Custom Clearance',               '₹ / FCL', 'fix')}
+    ${I('caustic','vgm_form13',       d.vgm_form13,       'VGM &amp; Form 13 Filing',           '₹ / FCL', 'fix')}
     ${I('caustic','carting_exam',     d.carting_exam,     'Carting / Examination',           '₹ / FCL', 'fix')}
-    ${I('caustic','vgm_form13',       d.vgm_form13,       'VGM & Form 13 Filing',           '₹ / FCL', 'fix')}
-    ${I('caustic','lacing_choking',   d.lacing_choking,   'Lacing / Choking',               '₹ / FCL', 'fix')}
     ${I('caustic','unloading',        d.unloading,        'Unloading',                      '₹ / FCL', 'fix')}
-    ${I('caustic','cfs_handling',     d.cfs_handling,     'CFS Handling (Receipted)',       '₹ / FCL', 'fix')}
     ${I('caustic','container_repo',   d.container_repo,   'Container Repo Charges',         '₹ / FCL', 'fix')}
     ${I('caustic','lifton',           d.lifton,           'Lift-on Charge',                 '₹ / FCL', 'fix')}
-    ${I('caustic','terminal_handling',d.terminal_handling, 'Terminal Handling Charge',      '₹ / FCL', 'fix')}
-    ${I('caustic','shipping_line_local',d.shipping_line_local, 'Shipping Line Local',       '₹ / FCL', 'fix')}
     ${I('caustic','fumigation',       d.fumigation,       'Fumigation Charge',              '₹ / FCL', 'fix')}
     ${I('caustic','lashing',          d.lashing,          'Lashing / Cargo Securing',       '₹ / FCL', 'fix')}
   </div>
 </aside>
+
 
 <section class="results">
   ${renderSpecStrip([
@@ -1193,7 +1195,6 @@ function renderSulphuric() {
     ${I('sulphuric','pkg_unit_cost', ucost,         'Packaging Cost (override)',         '₹ / unit', 'dai')}
     ${I('sulphuric','transport_kg',  d.transport_kg,'Transport - Plant to Port',         '₹ / kg',   'dai')}
     ${I('sulphuric','usd_inr',       d.usd_inr,     'USD / INR Exchange Rate',           'INR / $',  'dai')}
-    ${I('sulphuric','ocean_frt',     d.ocean_frt,   'Ocean Freight (CIF only)',           '$ / Container',   'dai')}
     ${I('sulphuric','insurance',     d.insurance,   'Marine Insurance',                  '% of FOB', 'dai')}
     ${I('sulphuric','margin',        d.margin,      'Target Margin',                     '%',        'dai')}
   </div>
@@ -1202,15 +1203,16 @@ function renderSulphuric() {
     <button class="reset-btn" onclick="reset('sulphuric')">Reset defaults</button>
   </div>
   <div>
+    ${I('sulphuric','ocean_frt',     d.ocean_frt,   'Ocean Freight (for cif / cfr)',       '$ / Container', 'fix')}
+    ${I('sulphuric','ship_line',        d.ship_line,        'Shipping Line (BL, Seal, MUC, etc)',         '₹ / FCL', 'fix')}
+    ${I('sulphuric','cfs_handling',     d.cfs_handling,     'CFS Handling (approx)',        '₹ / FCL', 'fix')}
     ${I('sulphuric','custom_clearance', d.custom_clearance, 'Custom Clearance',               '₹ / FCL', 'fix')}
-    ${I('sulphuric','carting_exam',     d.carting_exam,     'Carting / Examination',           '₹ / FCL', 'fix')}
     ${I('sulphuric','vgm_form13',       d.vgm_form13,       'VGM &amp; Form 13 Filing',        '₹ / FCL', 'fix')}
-    ${I('sulphuric','lacing_choking',   d.lacing_choking,   'Lacing / Choking (Belt + Wood)',  '₹ / FCL', 'fix')}
+    ${I('sulphuric','carting_exam',     d.carting_exam,     'Carting / Examination',           '₹ / FCL', 'fix')}
     ${I('sulphuric','unloading',        d.unloading,        'Unloading',                       '₹ / FCL', 'fix')}
-    ${I('sulphuric','cfs_handling',     d.cfs_handling,     'CFS Handling (Receipted)',        '₹ / FCL', 'fix')}
     ${I('sulphuric','container_repo',   d.container_repo,   'Container Repo Charges',          '₹ / FCL', 'fix')}
     ${I('sulphuric','lifton',           d.lifton,           'Lift-on Charge',                  '₹ / FCL', 'fix')}
-    ${I('sulphuric','ship_line',        d.ship_line,        'Shipping Line (BL + THC)',         '₹ / FCL', 'fix')}
+    ${I('sulphuric','lacing_choking',   d.lacing_choking,   'Lacing / Choking (Belt + Wood)',  '₹ / FCL', 'fix')}
   </div>
   <div class="sec-head">
     <span class="sec-label teal">DG / Hazmat Charges</span>
