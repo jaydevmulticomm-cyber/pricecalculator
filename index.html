@@ -711,6 +711,7 @@ const DEF_CAUSTIC = {
   shipping_line_local:6670, // Shipping Line Local (BL + seal + MUC)
   fumigation:           0,  // Fumigation (not applicable)
   lashing:              0,  // Lashing / Cargo Securing
+  whatsapp_mode:'FOB',
 };
 
 /* Updated sulphuric acid port charges as per the new charge sheet */
@@ -728,7 +729,7 @@ const DEF_SULPHURIC = {
   lifton:           3000,   // Lift-on
   ship_line:       35000,   // Shipping Line (BL + THC)
   /* DG */
-  dg_usd:100, imdg:4000,
+  dg_usd:0, imdg:0,
 };
 
 /* ═══════════════════════════════════════
@@ -960,6 +961,67 @@ const MCOL = (title, fobVal, cifVal, showCif = true) => `
   <div class="margin-v-fob">${fobVal}</div>
   ${showCif ? `<div class="margin-v-cif">${cifVal}</div>` : ''}
 </div>`;
+
+const escapeHtml = text => String(text)
+  .replace(/&/g,'&amp;')
+  .replace(/</g,'&lt;')
+  .replace(/>/g,'&gt;');
+
+function buildWhatsappMessage(productName, packName, c, d, mode, showCif) {
+  const qtyMt = f2(c.total_mt);
+  const qtyKg = f0(c.total_kg);
+  const type = mode === 'CIF' && showCif ? 'CIF' : 'FOB';
+  const sellKgUsd = type === 'CIF' ? c.scif_kg : c.sfob_kg;
+  const sellMtUsd = sellKgUsd * 1000;
+  const sellFclUsd = type === 'CIF' ? c.scif_ctr : c.sfob_ctr;
+
+  return  `Dear Sir,\n\n` +
+
+          `We are pleased to offer the following:\n\n` +
+          `${productName}\n` +
+          `Packing: ${packName}\n` +
+          `Quantity: ${qtyMt} MT (${qtyKg} KG)\n` +
+          `Terms: ${type}\n\n` +
+
+          `Price:\n` +
+          `${usd(sellKgUsd,4)} / KG\n` +
+          `${usd(sellMtUsd,2)} / MT\n` +
+          `${usd(sellFclUsd,0)} / FCL\n\n` +
+
+          `Kindly let us know your required quantity and destination port.\n\n` +
+          `Validity: 2 Days\n\n` +
+
+          `Regards,\n` +
+          `Meet\n` +
+          `Jaydev Multicomm Pvt Ltd\n` +
+}
+
+window.setWhatsappMode = function(prod, mode) {
+  S[prod].whatsapp_mode = mode;
+  saveState(prod, S[prod]);
+  patchResults();
+};
+
+window.copyWhatsappMessage = function(prod) {
+  const d = S[prod];
+  const c = prod === 'caustic' ? calcCaustic(d) : calcSulphuric(d);
+  const pkg = PKG[prod].find(p => p.id === d.selected_packaging);
+  const showCif = c.ocean_inr > 0 || c.ins_inr > 0;
+  const mode = d.whatsapp_mode || 'FOB';
+  const msg = buildWhatsappMessage(prod === 'caustic' ? 'Caustic Soda Flakes' : 'Sulphuric Acid 98%', pkg.name, c, d, mode, showCif);
+
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(msg).then(() => {
+      const alertEl = document.getElementById('copyPill');
+      if (alertEl) {
+        alertEl.classList.add('show');
+        setTimeout(() => alertEl.classList.remove('show'), 1500);
+      }
+    });
+  } else {
+    window.prompt('Copy Customer Quote:', msg);
+  }
+};
 
 /* ═══════════════════════════════════════
    SHARED RESULTS BLOCKS
