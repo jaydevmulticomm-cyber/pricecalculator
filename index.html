@@ -1281,7 +1281,7 @@ function renderCaustic() {
     ${I('caustic','moisture',        d.moisture,    'Moisture / Loss Allowance',        '%',        'dai')}
   </div>
   <div class="sec-head">
-    <span class="sec-label blue">Port &amp; Local Charges</span>
+    <span class="sec-label blue">Port &amp; Charges</span>
     <button class="reset-btn" onclick="reset('caustic')">Reset defaults</button>
   </div>
   <div>
@@ -1402,7 +1402,7 @@ function renderSulphuric() {
     ${I('sulphuric','margin',        d.margin,      'Target Margin',                     '%',        'dai')}
   </div>
   <div class="sec-head">
-    <span class="sec-label blue">Port &amp; CFS Charges</span>
+    <span class="sec-label blue">Port &amp; Charges</span>
     <button class="reset-btn" onclick="reset('sulphuric')">Reset defaults</button>
   </div>
   <div>
@@ -1451,7 +1451,7 @@ function renderSulphuric() {
         ${CST('Sub-total', inr(c.procurement + c.packing + c.transport))}
       </div>
       <div class="cost-section">
-        ${CSEC('Port & CFS Charges')}
+        ${CSEC('Port & Charges')}
         ${CL('Custom Clearance', inr(d.custom_clearance))}
         ${CL('Carting / Examination', inr(d.carting_exam))}
         ${CL('VGM & Form 13 Filing', inr(d.vgm_form13))}
