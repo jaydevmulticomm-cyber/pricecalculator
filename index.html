@@ -635,6 +635,102 @@ input[type=number] {
    SECTION SPACER (visual breathing room)
 ═══════════════════════════════════════════ */
 .section-gap { height: 6px; }
+
+/* ═══════════════════════════════════════════
+   CUSTOMER QUOTE CARD
+═══════════════════════════════════════════ */
+.quote-card {
+  background: var(--surface);
+  border: 1.5px solid var(--g-bd);
+  border-radius: var(--r16); overflow: hidden;
+  box-shadow: var(--sh1), 0 0 20px rgba(16,185,129,0.05);
+  margin-bottom: 14px; position: relative;
+}
+.quote-card::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+  background: linear-gradient(90deg, var(--g2), var(--g3), var(--b3));
+}
+.quote-header {
+  padding: 11px 16px;
+  border-bottom: 1px solid var(--line2);
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 12px; flex-wrap: wrap;
+  background: linear-gradient(90deg, var(--g5), transparent);
+}
+.quote-title-group {
+  display: flex; align-items: center; gap: 8px;
+}
+.quote-title-dot {
+  width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0;
+  background: var(--g3); box-shadow: 0 0 5px rgba(16,185,129,0.5);
+}
+.quote-title {
+  font-family: var(--sans); font-size: 10px; font-weight: 700;
+  letter-spacing: 0.7px; text-transform: uppercase; color: var(--g1);
+}
+.quote-controls {
+  display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+}
+.quote-dest-wrap {
+  display: flex; align-items: center; gap: 6px;
+}
+.quote-dest-label {
+  font-size: 10px; font-weight: 600; color: var(--ink3); white-space: nowrap;
+}
+.quote-dest-input {
+  width: 160px; height: 32px;
+  border-radius: var(--r8); border: 1.5px solid var(--line2);
+  background: var(--surface); color: var(--ink1);
+  font-family: var(--sans); font-size: 12px; font-weight: 500;
+  padding: 0 10px; outline: none;
+  transition: border-color 0.13s var(--ease), box-shadow 0.13s var(--ease);
+}
+.quote-dest-input:focus {
+  border-color: var(--g3); box-shadow: 0 0 0 3px rgba(16,185,129,0.10);
+}
+.quote-dest-input::placeholder { color: var(--ink4); font-weight: 400; }
+@media (max-width: 480px) { .quote-dest-input { width: 120px; } }
+
+.quote-copy-btn {
+  display: flex; align-items: center; gap: 6px;
+  padding: 8px 16px; border-radius: var(--rpill);
+  background: linear-gradient(135deg, var(--g2), var(--g1));
+  color: #fff; border: none;
+  font-family: var(--sans); font-size: 12px; font-weight: 600;
+  cursor: pointer; letter-spacing: 0.2px;
+  box-shadow: 0 2px 8px rgba(5,150,105,0.32);
+  transition: all 0.14s var(--ease);
+  -webkit-tap-highlight-color: transparent;
+  white-space: nowrap;
+  position: relative;
+}
+.quote-copy-btn:hover  { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(5,150,105,0.38); }
+.quote-copy-btn:active { transform: scale(0.97); }
+.copy-pill {
+  position: absolute; top: -34px; left: 50%; transform: translateX(-50%) translateY(4px);
+  background: var(--g1); color: #fff; font-size: 10px; font-weight: 600;
+  padding: 4px 12px; border-radius: var(--rpill); white-space: nowrap;
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.18s var(--ease), transform 0.18s var(--ease);
+}
+.copy-pill.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+.quote-preview {
+  padding: 16px;
+}
+.quote-preview-inner {
+  background: var(--inset);
+  border: 1px solid var(--line2);
+  border-radius: var(--r12);
+  padding: 16px 18px;
+  font-family: var(--mono); font-size: 11.5px; font-weight: 400;
+  color: var(--ink2); line-height: 1.8;
+  white-space: pre-wrap; word-break: break-word;
+  -webkit-user-select: text; user-select: text;
+}
+.quote-line-key   { color: var(--ink4); font-size: 10px; }
+.quote-line-price { color: var(--b2); font-weight: 600; }
+.quote-line-head  { color: var(--ink1); font-weight: 600; }
 </style>
 </head>
 <body>
@@ -711,7 +807,7 @@ const DEF_CAUSTIC = {
   shipping_line_local:6670, // Shipping Line Local (BL + seal + MUC)
   fumigation:           0,  // Fumigation (not applicable)
   lashing:              0,  // Lashing / Cargo Securing
-  whatsapp_mode:'FOB',
+  dest_port: '',            // Destination port for CIF quotation
 };
 
 /* Updated sulphuric acid port charges as per the new charge sheet */
@@ -729,7 +825,7 @@ const DEF_SULPHURIC = {
   lifton:           3000,   // Lift-on
   ship_line:       35000,   // Shipping Line (BL + THC)
   /* DG */
-  dg_usd:0, imdg:0,
+  dg_usd:100, imdg:4000,
 };
 
 /* ═══════════════════════════════════════
@@ -967,65 +1063,124 @@ const escapeHtml = text => String(text)
   .replace(/</g,'&lt;')
   .replace(/>/g,'&gt;');
 
-function buildWhatsappMessage(productName, packName, c, d, mode, showCif) {
-  const qtyMt = f2(c.total_mt);
-  const qtyKg = f0(c.total_kg);
-  const type = mode === 'CIF' && showCif ? 'CIF' : 'FOB';
-  const sellKgUsd = type === 'CIF' ? c.scif_kg : c.sfob_kg;
-  const sellMtUsd = sellKgUsd * 1000;
-  const sellFclUsd = type === 'CIF' ? c.scif_ctr : c.sfob_ctr;
+/* ═══════════════════════════════════════
+   CUSTOMER QUOTE GENERATION
+═══════════════════════════════════════ */
 
-  return  `Dear Sir,\n\n` +
+/**
+ * Builds clean, client-facing plain-text quotation.
+ * NEVER exposes INR, break-even, internal costing, or margin.
+ * Auto-determines FOB-only vs FOB+CIF based on freight inputs.
+ */
+function buildCustomerQuote(productName, packName, c, d) {
+  const qtyMt  = f2(c.total_mt);
+  const qtyKg  = f0(c.total_kg);
+  const destPort = (d.dest_port || '').trim();
+  const hasCif   = c.ocean_inr > 0 || c.ins_inr > 0;
 
-          `We are pleased to offer the following:\n\n` +
-          `${productName}\n` +
-          `Packing: ${packName}\n` +
-          `Quantity: ${qtyMt} MT (${qtyKg} KG)\n` +
-          `Terms: ${type}\n\n` +
+  const fobLines =
+    `FOB Mundra Port, India\n` +
+    `  ${usd(c.sfob_kg, 4)} / KG\n` +
+    `  ${usd(c.sfob_mt, 2)} / MT\n` +
+    `  ${usd(c.sfob_ctr, 0)} / FCL`;
 
-          `Price:\n` +
-          `${usd(sellKgUsd,4)} / KG\n` +
-          `${usd(sellMtUsd,2)} / MT\n` +
-          `${usd(sellFclUsd,0)} / FCL\n\n` +
+  const cifLines = hasCif
+    ? `\nCIF ${destPort || '[Destination Port]'}\n` +
+      `  ${usd(c.scif_kg, 4)} / KG\n` +
+      `  ${usd(c.scif_mt, 2)} / MT\n` +
+      `  ${usd(c.scif_ctr, 0)} / FCL`
+    : '';
 
-          `Kindly let us know your required quantity and destination port.\n\n` +
-          `Validity: 2 Days\n\n` +
-
-          `Regards,\n` +
-          `Meet\n` +
-          `Jaydev Multicomm Pvt Ltd\n` +
+  return (
+    `Dear Sir,\n\n` +
+    `We are pleased to offer the following:\n\n` +
+    `${productName}\n` +
+    `Packing: ${packName}\n` +
+    `Quantity: ${qtyMt} MT (${qtyKg} KG)\n\n` +
+    `${fobLines}${cifLines}\n\n` +
+    `Offer Validity: 2 Days\n\n` +
+    `Kindly let us know your required quantity and destination port.\n\n` +
+    `Regards,\nMeet\nJaydev Multicomm`
+  );
 }
 
-window.setWhatsappMode = function(prod, mode) {
-  S[prod].whatsapp_mode = mode;
+/** Live-updates dest_port in state and patches preview only (no full re-render) */
+window.updDestPort = function(prod, val) {
+  S[prod].dest_port = val;
   saveState(prod, S[prod]);
-  patchResults();
-};
-
-window.copyWhatsappMessage = function(prod) {
+  const el = document.getElementById('quotePreview_' + prod);
+  if (!el) return;
   const d = S[prod];
   const c = prod === 'caustic' ? calcCaustic(d) : calcSulphuric(d);
   const pkg = PKG[prod].find(p => p.id === d.selected_packaging);
-  const showCif = c.ocean_inr > 0 || c.ins_inr > 0;
-  const mode = d.whatsapp_mode || 'FOB';
-  const msg = buildWhatsappMessage(prod === 'caustic' ? 'Caustic Soda Flakes' : 'Sulphuric Acid 98%', pkg.name, c, d, mode, showCif);
+  const productName = prod === 'caustic' ? 'Caustic Soda Flakes' : 'Sulphuric Acid 98%';
+  el.textContent = buildCustomerQuote(productName, pkg.name, c, d);
+};
+
+window.copyCustomerQuote = function(prod) {
+  const d = S[prod];
+  const c = prod === 'caustic' ? calcCaustic(d) : calcSulphuric(d);
+  const pkg = PKG[prod].find(p => p.id === d.selected_packaging);
+  const productName = prod === 'caustic' ? 'Caustic Soda Flakes' : 'Sulphuric Acid 98%';
+  const msg = buildCustomerQuote(productName, pkg.name, c, d);
+
+  const showPill = () => {
+    const pill = document.getElementById('copyPill_' + prod);
+    if (pill) {
+      pill.classList.add('show');
+      setTimeout(() => pill.classList.remove('show'), 1800);
+    }
+  };
 
   if (navigator.clipboard && navigator.clipboard.writeText) {
-    navigator.clipboard.writeText(msg).then(() => {
-      const alertEl = document.getElementById('copyPill');
-      if (alertEl) {
-        alertEl.classList.add('show');
-        setTimeout(() => alertEl.classList.remove('show'), 1500);
-      }
+    navigator.clipboard.writeText(msg).then(showPill).catch(() => {
+      window.prompt('Copy Customer Quote:', msg);
     });
   } else {
     window.prompt('Copy Customer Quote:', msg);
+    showPill();
   }
 };
 
 /* ═══════════════════════════════════════
    SHARED RESULTS BLOCKS
 ═══════════════════════════════════════ */
+function renderCustomerQuoteCard(prod, c, d, pkg, productName) {
+  const hasCif   = c.ocean_inr > 0 || c.ins_inr > 0;
+  const destPort = (d.dest_port || '').trim();
+  const preview  = buildCustomerQuote(productName, pkg.name, c, d);
+
+  return `
+<div class="quote-card">
+  <div class="quote-header">
+    <div class="quote-title-group">
+      <div class="quote-title-dot"></div>
+      <span class="quote-title">Customer Quote</span>
+    </div>
+    <div class="quote-controls">
+      ${hasCif ? `
+      <div class="quote-dest-wrap">
+        <span class="quote-dest-label">Dest. Port</span>
+        <input
+          class="quote-dest-input"
+          type="text"
+          placeholder="e.g. Port Klang"
+          value="${escapeHtml(destPort)}"
+          oninput="updDestPort('${prod}', this.value)"
+        >
+      </div>` : ''}
+      <button class="quote-copy-btn" onclick="copyCustomerQuote('${prod}')">
+        <span id="copyPill_${prod}" class="copy-pill">Copied!</span>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+        Copy Customer Quote
+      </button>
+    </div>
+  </div>
+  <div class="quote-preview">
+    <div class="quote-preview-inner" id="quotePreview_${prod}">${escapeHtml(preview)}</div>
+  </div>
+</div>`;
+}
 function renderSpecStrip(cells) {
   return `<div class="spec-strip">${cells.map(([k,v,s]) => SPEC(k,v,s||'')).join('')}</div>`;
 }
@@ -1213,21 +1368,7 @@ function renderCaustic() {
         </div>
       </div>
     </div>
-  <div class="port-card">
-    <div class="cost-head neutral">Port Quick-Reference</div>
-    <table class="tbl">
-      <tr><th>CHARGE</th><th>AMOUNT</th></tr>
-      <tr><td>Custom Clearance</td><td>3,500</td></tr>
-      <tr><td>Carting/Exam</td><td>1,000</td></tr>
-      <tr><td>VGM & Form 13</td><td>500</td></tr>
-      <tr><td>Unloading</td><td>1,500</td></tr>
-      <tr><td>CFS Handling</td><td>12,000</td></tr>
-      <tr><td>Container Repo</td><td>5,500</td></tr>
-      <tr><td>Lift-on</td><td>3,000</td></tr>
-      <tr><td>Terminal Handling</td><td>18,000</td></tr>
-      <tr><td>Shipping Line Local</td><td>6,670</td></tr>
-    </table>
-  </div>
+  ${renderCustomerQuoteCard('caustic', c, d, pkg, 'Caustic Soda Flakes')}
 </section>
 </div>`;
 }
@@ -1353,6 +1494,7 @@ function renderSulphuric() {
       </div>
     </div>
   </div>
+  ${renderCustomerQuoteCard('sulphuric', c, d, pkg, 'Sulphuric Acid 98%')}
 </section>
 </div>`;
 }
