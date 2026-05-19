@@ -803,8 +803,7 @@ const DEF_CAUSTIC = {
   cfs_handling:    12000,   // CFS Handling (Receipted)
   container_repo:   5500,   // Container Repo Charges
   lifton:           3000,   // Lift-on / Detention
-  terminal_handling:18000,  // Terminal Handling Charge (THC)
-  shipping_line_local:6670, // Shipping Line Local (BL + seal + MUC)
+  shipping_line_local:35000, // Shipping Line Local (BL + seal + MUC)
   fumigation:           0,  // Fumigation (not applicable)
   lashing:              0,  // Lashing / Cargo Securing
   dest_port: '',            // Destination port for CIF quotation
@@ -906,7 +905,7 @@ function calcCaustic(d) {
   const packing     = ucost * units;
   const port        = d.custom_clearance + d.carting_exam + d.vgm_form13
                     + d.lacing_choking   + d.unloading    + d.cfs_handling
-                    + d.container_repo   + d.lifton       + d.terminal_handling
+                    + d.container_repo   + d.lifton
                     + d.shipping_line_local + d.fumigation + d.lashing;
 
   const fob_inr        = procurement + packing + d.transport + port;
@@ -1257,7 +1256,7 @@ function renderCaustic() {
   const ucost = d.pkg_unit_cost ?? pkg.unit_cost;
   const portSubtotal = d.custom_clearance + d.carting_exam + d.vgm_form13
                      + d.lacing_choking   + d.unloading    + d.cfs_handling
-                     + d.container_repo   + d.lifton       + d.terminal_handling
+                     + d.container_repo   + d.lifton
                      + d.shipping_line_local + d.fumigation + d.lashing;
 
   return `
@@ -1286,7 +1285,6 @@ function renderCaustic() {
   </div>
   <div>
     ${I('caustic','ocean_frt',       d.ocean_frt,   'Ocean Freight (for cif / cfr)',     '$ / Container', 'fix')}
-    ${I('caustic','terminal_handling',d.terminal_handling, 'Terminal Handling Charge',      '₹ / FCL', 'fix')}
     ${I('caustic','shipping_line_local',d.shipping_line_local, 'Shipping Line Local (BL, Seal, MUC, etc)', '₹ / FCL', 'fix')}
     ${I('caustic','cfs_handling',     d.cfs_handling,     'CFS Handling (approx)',       '₹ / FCL', 'fix')}
     ${I('caustic','custom_clearance', d.custom_clearance, 'Custom Clearance',               '₹ / FCL', 'fix')}
@@ -1337,7 +1335,6 @@ function renderCaustic() {
           ${CL('CFS Handling', inr(d.cfs_handling))}
           ${CL('Container Repo Charges', inr(d.container_repo))}
           ${CL('Lift-on Charge', inr(d.lifton))}
-          ${CL('Terminal Handling Charge', inr(d.terminal_handling))}
           ${CL('Shipping Line Local', inr(d.shipping_line_local))}
           ${CL('Fumigation', inr(d.fumigation))}
           ${CL('Lashing / Securing', inr(d.lashing))}
