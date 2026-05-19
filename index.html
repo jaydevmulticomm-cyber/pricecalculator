@@ -791,7 +791,7 @@ const PKG = {
 
 const DEF_CAUSTIC = {
   basic_rate:46, selected_packaging:'pkg_25bag', transport:25000, usd_inr:99,
-  ocean_frt:1200, insurance:0.0, margin:10, moisture:0.0,
+  ocean_frt:0, insurance:0.0, margin:10, moisture:0.0,
   /* Packaging dimensions for weight calculation */
   bag_weight: 25, bags_per_container: 1000,
   /* Port / Local charges - updated from charge sheet */
@@ -812,7 +812,10 @@ const DEF_CAUSTIC = {
 /* Updated sulphuric acid port charges as per the new charge sheet */
 const DEF_SULPHURIC = {
   basic_rate:36, selected_packaging:'pkg_ibc', transport_kg:1, usd_inr:99,
-  ocean_frt:165, insurance:0.5, margin:10,
+  ocean_frt:0, insurance:0.0, margin:10,
+  /* Packaging dimensions for volume calculation */
+  pkg_units_per_ctr: 16,     // IBC Tanks per Container
+  pkg_unit_weight: 1650,     // KG Capacity per IBC Tank
   /* Port / CFS charges */
   custom_clearance: 3500,   // Custom Clearance per container
   carting_exam:     1000,   // Carting Examination per container
@@ -824,7 +827,7 @@ const DEF_SULPHURIC = {
   lifton:           3000,   // Lift-on
   ship_line:       35000,   // Shipping Line (BL + THC)
   /* DG */
-  dg_usd:100, imdg:4000,
+  dg_usd:0, imdg:0,
 };
 
 /* ═══════════════════════════════════════
@@ -903,12 +906,16 @@ function calcCaustic(d) {
   const total_mt    = total_kg / 1000;
   const procurement = d.basic_rate * total_kg;
   const packing     = ucost * units;
+  const transport_kg = typeof d.transport_kg === 'number'
+                     ? d.transport_kg
+                     : (typeof d.transport === 'number' && total_kg ? d.transport / total_kg : 0);
+  const transport   = transport_kg * total_kg;
   const port        = d.custom_clearance + d.carting_exam + d.vgm_form13
                     + d.lacing_choking   + d.unloading    + d.cfs_handling
                     + d.container_repo   + d.lifton
                     + d.shipping_line_local + d.fumigation + d.lashing;
 
-  const fob_inr        = procurement + packing + d.transport + port;
+  const fob_inr        = procurement + packing + transport + port;
   const fob_usd        = fob_inr / d.usd_inr;
   const fob_per_kg_usd = fob_usd / total_kg;
   const fob_per_mt_usd = fob_per_kg_usd * 1000;
@@ -924,7 +931,7 @@ function calcCaustic(d) {
   const scif_kg = cif_per_kg_usd * (1 + d.margin / 100);
 
   return {
-    units, total_kg, total_mt, procurement, packing, transport: d.transport, port,
+    units, total_kg, total_mt, procurement, packing, transport, port,
     fob_inr, fob_usd, fob_per_kg_usd, fob_per_mt_usd,
     ocean_inr, ins_inr, cif_inr, cif_usd, cif_per_kg_usd, cif_per_mt_usd,
     sfob_kg, sfob_mt: sfob_kg * 1000, sfob_ctr: sfob_kg * total_kg,
@@ -968,7 +975,7 @@ function calcSulphuric(d) {
   const scif_kg = cif_per_kg_usd * (1 + d.margin / 100);
 
   return {
-    total_kg, total_mt, procurement, packing, transport, dg_inr, port_local, port,
+    units, uwt, total_kg, total_mt, procurement, packing, transport, dg_inr, port_local, port,
     fob_inr, fob_usd, fob_per_kg_usd, fob_per_mt_usd,
     ocean_inr, ins_inr, cif_inr, cif_usd, cif_per_kg_usd, cif_per_mt_usd,
     sfob_kg, sfob_mt: sfob_kg * 1000, sfob_ctr: sfob_kg * total_kg,
@@ -1072,34 +1079,50 @@ const escapeHtml = text => String(text)
  * Auto-determines FOB-only vs FOB+CIF based on freight inputs.
  */
 function buildCustomerQuote(productName, packName, c, d) {
-  const qtyMt  = f2(c.total_mt);
-  const qtyKg  = f0(c.total_kg);
+  const qtyMt = f2(c.total_mt);
+  const qtyKg = f0(c.total_kg);
   const destPort = (d.dest_port || '').trim();
-  const hasCif   = c.ocean_inr > 0 || c.ins_inr > 0;
+  const hasCif = c.ocean_inr > 0 || c.ins_inr > 0;
+  const transportIncluded = c.transport > 0;
+  const productLine = productName === 'Sulphuric Acid 98%' ? 'Sulphuric Acid 98% Min' : `${productName}`;
+  const gradeLine = 'Industrial / Technical Grade';
+  const packingLabel = /IBC/i.test(packName) ? 'UN Approved IBC Tank' : packName;
+  const weightMatch = packName.match(/(\d[\d,]*)\s*KG/i);
+  const netWeightLine = /IBC/i.test(packName) && weightMatch ? `Weight per IBC: ${weightMatch[1].replace(/,/g, '')} KG` : '';
+  const unitLabel = /IBC/i.test(packName) ? 'IBCs' : 'units';
+  const qtyUnits = c.units || d.pkg_units_per_ctr || d.bags_per_container || '';
+  const quantityLine = qtyUnits
+    ? `Quantity: ${qtyMt} MT (${qtyKg} KG / ${f0(qtyUnits)} ${unitLabel})`
+    : `Quantity: ${qtyMt} MT (${qtyKg} KG)`;
+  const priceBasis = `Price Basis: FOB ${transportIncluded ? '(includes plant-to-port transport)' : '(excludes plant-to-port transport)'}`;
 
   const fobLines =
-    `FOB Mundra Port, India\n` +
-    `  ${usd(c.sfob_kg, 4)} / KG\n` +
-    `  ${usd(c.sfob_mt, 2)} / MT\n` +
-    `  ${usd(c.sfob_ctr, 0)} / FCL`;
+    `FOB Price: ${usd(c.sfob_mt, 2)} / MT\n` +
+    `FCL Value: ${usd(c.sfob_ctr, 0)} / FCL\n` +
+    `KG Price: ${usd(c.sfob_kg, 4)} / KG`;
 
   const cifLines = hasCif
-    ? `\nCIF ${destPort || '[Destination Port]'}\n` +
-      `  ${usd(c.scif_kg, 4)} / KG\n` +
-      `  ${usd(c.scif_mt, 2)} / MT\n` +
-      `  ${usd(c.scif_ctr, 0)} / FCL`
+  ? `\n\n${destPort ? `${destPort}`: ''}\n` +
+      `CIF Price: ${usd(c.scif_mt, 2)} / MT\n` +
+      `FCL Value: ${usd(c.scif_ctr, 0)} / FCL\n` +
+      `KG Price: ${usd(c.scif_kg, 4)} / KG`
     : '';
 
   return (
-    `Dear Sir,\n\n` +
-    `We are pleased to offer the following:\n\n` +
-    `${productName}\n` +
-    `Packing: ${packName}\n` +
-    `Quantity: ${qtyMt} MT (${qtyKg} KG)\n\n` +
+
+    `Date: 19 May 2026\n\n` +
+    `Rate updates,\n\n` +
+    `${productLine}\n` +
+    `${gradeLine}\n` +
+    `Packing: ${packingLabel}${netWeightLine ? ` | ${netWeightLine}` : ''}\n` +
+    `${quantityLine}\n` +
+    `Origin: India\n\n` +
+    `${priceBasis}\n` +
+    `Payment: Advance TT\n` +
+    `Validity: 2 working days \n(subject to raw material & freight confirmation)\n\n` +
     `${fobLines}${cifLines}\n\n` +
-    `Offer Validity: 2 Days\n\n` +
-    `Kindly let us know your required quantity and destination port.\n\n` +
-    `Regards,\nJaydev Multicomm Pvt Ltd`
+    `Delivery: Ready within 2–4 days from payment confirmation.` +
+    `COA/spec sheet available on request.\n`
   );
 }
 
@@ -1254,6 +1277,9 @@ function renderCaustic() {
   const d = S.caustic, c = calcCaustic(d);
   const pkg = PKG.caustic.find(p => p.id === d.selected_packaging);
   const ucost = d.pkg_unit_cost ?? pkg.unit_cost;
+  const transportKg = typeof d.transport_kg === 'number'
+                    ? d.transport_kg
+                    : (typeof d.transport === 'number' && c.total_kg ? d.transport / c.total_kg : 1);
   const portSubtotal = d.custom_clearance + d.carting_exam + d.vgm_form13
                      + d.lacing_choking   + d.unloading    + d.cfs_handling
                      + d.container_repo   + d.lifton
@@ -1264,37 +1290,50 @@ function renderCaustic() {
 
 <aside class="sidebar">
   <div class="sec-head">
-    <span class="sec-label amber">Daily Inputs</span>
-    <span class="sec-tag">Update each day</span>
+    <span class="sec-label amber">Ex-plant Inputs</span>
+    <span class="sec-tag">Product rate, packaging, exchange and margin</span>
   </div>
   <div>
-    ${I('caustic','basic_rate',      d.basic_rate,  'Basic Rate - Caustic Soda Flakes','₹ / kg',   'dai')}
+    ${I('caustic','basic_rate',      d.basic_rate,  'Basic Rate - Caustic Soda Flakes', '₹ / kg', 'dai')}
     ${SEL('caustic','selected_packaging', d.selected_packaging, 'Packaging Type', PKG.caustic)}
-    ${I('caustic','bag_weight',      d.bag_weight,  'Bag Weight',                      'kg',       'dai')}
-    ${I('caustic','bags_per_container', d.bags_per_container, 'Bags per Container (20ft)', 'units', 'dai')}
-    ${I('caustic','pkg_unit_cost',   ucost,         'Packaging Cost (override)',       '₹ / unit', 'dai')}
-    ${I('caustic','transport',       d.transport,   'Transport - Plant to Port',       '₹ / FCL',  'dai')}
+    ${I('caustic','bag_weight',      d.bag_weight,  'Bag Weight',                      'kg / unit',       'dai')}
+    ${I('caustic','bags_per_container', d.bags_per_container, 'Bags per Container (20ft)', 'units / FCL', 'dai')}
+    ${I('caustic','pkg_unit_cost',   ucost,         'Packaging Cost',       '₹ / unit', 'dai')}
     ${I('caustic','usd_inr',         d.usd_inr,     'USD / INR Exchange Rate',         'INR / $',  'dai')}
-    ${I('caustic','insurance',       d.insurance,   'Marine Insurance',                '% of FOB', 'dai')}
     ${I('caustic','margin',          d.margin,      'Target Margin',                   '%',        'dai')}
-    ${I('caustic','moisture',        d.moisture,    'Moisture / Loss Allowance',        '%',        'dai')}
+    ${I('caustic','moisture',        d.moisture,    'Moisture / Loss Allowance',       '%',        'dai')}
   </div>
   <div class="sec-head">
-    <span class="sec-label blue">Port &amp; Charges</span>
-    <button class="reset-btn" onclick="reset('caustic')">Reset defaults</button>
+    <span class="sec-label blue">FOB Inputs</span>
+    <span class="sec-tag">Plant-to-port transport per kg</span>
   </div>
   <div>
-    ${I('caustic','ocean_frt',       d.ocean_frt,   'Ocean Freight (for cif / cfr)',     '$ / Container', 'fix')}
+    ${I('caustic','transport_kg',    transportKg,   'Transport - Plant to Port',       '₹ / kg',  'dai')}
+  </div>
+  <div class="sec-head">
+    <span class="sec-label teal">Port Charges</span>
+    <span class="sec-tag">Local port handling and shipping line fees</span>
+  </div>
+  <div>
     ${I('caustic','shipping_line_local',d.shipping_line_local, 'Shipping Line Local (BL, Seal, MUC, etc)', '₹ / FCL', 'fix')}
     ${I('caustic','cfs_handling',     d.cfs_handling,     'CFS Handling (approx)',       '₹ / FCL', 'fix')}
-    ${I('caustic','custom_clearance', d.custom_clearance, 'Custom Clearance',               '₹ / FCL', 'fix')}
-    ${I('caustic','vgm_form13',       d.vgm_form13,       'VGM &amp; Form 13 Filing',           '₹ / FCL', 'fix')}
-    ${I('caustic','carting_exam',     d.carting_exam,     'Carting / Examination',           '₹ / FCL', 'fix')}
-    ${I('caustic','unloading',        d.unloading,        'Unloading',                      '₹ / FCL', 'fix')}
-    ${I('caustic','container_repo',   d.container_repo,   'Container Repo Charges',         '₹ / FCL', 'fix')}
-    ${I('caustic','lifton',           d.lifton,           'Lift-on Charge',                 '₹ / FCL', 'fix')}
-    ${I('caustic','fumigation',       d.fumigation,       'Fumigation Charge',              '₹ / FCL', 'fix')}
-    ${I('caustic','lashing',          d.lashing,          'Lashing / Cargo Securing',       '₹ / FCL', 'fix')}
+    ${I('caustic','custom_clearance', d.custom_clearance, 'Custom Clearance',            '₹ / FCL', 'fix')}
+    ${I('caustic','vgm_form13',       d.vgm_form13,       'VGM &amp; Form 13 Filing',        '₹ / FCL', 'fix')}
+    ${I('caustic','carting_exam',     d.carting_exam,     'Carting / Examination',        '₹ / FCL', 'fix')}
+    ${I('caustic','unloading',        d.unloading,        'Unloading',                    '₹ / FCL', 'fix')}
+    ${I('caustic','container_repo',   d.container_repo,   'Container Repo Charges',       '₹ / FCL', 'fix')}
+    ${I('caustic','lifton',           d.lifton,           'Lift-on Charge',               '₹ / FCL', 'fix')}
+    ${I('caustic','lacing_choking',   d.lacing_choking,   'Lacing / Choking (Belt + Wood)','₹ / FCL', 'fix')}
+    ${I('caustic','fumigation',       d.fumigation,       'Fumigation Charge',            '₹ / FCL', 'fix')}
+    ${I('caustic','lashing',          d.lashing,          'Lashing / Cargo Securing',     '₹ / FCL', 'fix')}
+  </div>
+  <div class="sec-head">
+    <span class="sec-label amber">CIF Inputs</span>
+    <span class="sec-tag">Ocean freight, insurance and CIF costs</span>
+  </div>
+  <div>
+    ${I('caustic','ocean_frt',       d.ocean_frt,   'Ocean Freight', '$ / Container', 'fix')}
+    ${I('caustic','insurance',       d.insurance,   'Marine Insurance',             '% of FOB', 'dai')}
   </div>
 </aside>
 
@@ -1322,8 +1361,8 @@ function renderCaustic() {
           ${CSEC('Procurement')}
           ${CL('Caustic Soda Flakes', inr(c.procurement), d.basic_rate+' ₹/kg × '+f0(c.total_kg)+' kg')}
           ${CL('Packaging - '+pkg.name, inr(c.packing), ucost+' ₹/unit × '+f0(pkg.units_per_container)+' units')}
-          ${CL('Transport - Plant to Port', inr(c.transport), 'Per FCL road freight')}
-          ${CST('Sub-total', inr(c.procurement + c.packing + d.transport))}
+          ${CL('Transport - Plant to Port', inr(c.transport), transportKg+' ₹/kg × '+f0(c.total_kg)+' kg')}
+          ${CST('Sub-total', inr(c.procurement + c.packing + c.transport))}
         </div>
         <div class="cost-section">
           ${CSEC('Port & Local Charges')}
@@ -1386,24 +1425,30 @@ function renderSulphuric() {
 
 <aside class="sidebar">
   <div class="sec-head">
-    <span class="sec-label amber">Daily Inputs</span>
-    <span class="sec-tag">Update each day</span>
+    <span class="sec-label amber">Ex-plant Inputs</span>
+    <span class="sec-tag">Product rate, packaging, exchange and margin</span>
   </div>
   <div>
     ${I('sulphuric','basic_rate',    d.basic_rate,  'Basic Rate - Sulphuric Acid 98%',  '₹ / kg',   'dai')}
     ${SEL('sulphuric','selected_packaging', d.selected_packaging, 'Packaging Type', PKG.sulphuric)}
-    ${I('sulphuric','pkg_unit_cost', ucost,         'Packaging Cost (override)',         '₹ / unit', 'dai')}
-    ${I('sulphuric','transport_kg',  d.transport_kg,'Transport - Plant to Port',         '₹ / kg',   'dai')}
+    ${I('sulphuric','pkg_units_per_ctr', d.pkg_units_per_ctr, 'Tanks per Container',      'units / FCL',    'dai')}
+    ${I('sulphuric','pkg_unit_weight',   d.pkg_unit_weight,   'Capacity per Tank',     '₹ / kg',       'dai')}
+    ${I('sulphuric','pkg_unit_cost', ucost,         'Cost per Tank',         '₹ / unit', 'dai')}
     ${I('sulphuric','usd_inr',       d.usd_inr,     'USD / INR Exchange Rate',           'INR / $',  'dai')}
-    ${I('sulphuric','insurance',     d.insurance,   'Marine Insurance',                  '% of FOB', 'dai')}
     ${I('sulphuric','margin',        d.margin,      'Target Margin',                     '%',        'dai')}
   </div>
   <div class="sec-head">
-    <span class="sec-label blue">Port &amp; Charges</span>
-    <button class="reset-btn" onclick="reset('sulphuric')">Reset defaults</button>
+    <span class="sec-label blue">FOB Inputs</span>
+    <span class="sec-tag">Plant-to-port transport per kg</span>
   </div>
   <div>
-    ${I('sulphuric','ocean_frt',     d.ocean_frt,   'Ocean Freight (for cif / cfr)',       '$ / Container', 'fix')}
+    ${I('sulphuric','transport_kg',  d.transport_kg,'Transport - Plant to Port',         '₹ / kg',   'dai')}
+  </div>
+  <div class="sec-head">
+    <span class="sec-label teal">Port Charges</span>
+    <span class="sec-tag">Local port handling and shipping line fees</span>
+  </div>
+  <div>
     ${I('sulphuric','ship_line',        d.ship_line,        'Shipping Line (BL, Seal, MUC, etc)',         '₹ / FCL', 'fix')}
     ${I('sulphuric','cfs_handling',     d.cfs_handling,     'CFS Handling (approx)',        '₹ / FCL', 'fix')}
     ${I('sulphuric','custom_clearance', d.custom_clearance, 'Custom Clearance',               '₹ / FCL', 'fix')}
@@ -1415,9 +1460,12 @@ function renderSulphuric() {
     ${I('sulphuric','lacing_choking',   d.lacing_choking,   'Lacing / Choking (Belt + Wood)',  '₹ / FCL', 'fix')}
   </div>
   <div class="sec-head">
-    <span class="sec-label teal">DG / Hazmat Charges</span>
+    <span class="sec-label amber">CIF Inputs</span>
+    <span class="sec-tag">Ocean freight, insurance and hazmat costs</span>
   </div>
   <div>
+    ${I('sulphuric','ocean_frt',     d.ocean_frt,   'Ocean Freight',       '$ / Container', 'fix')}
+    ${I('sulphuric','insurance',     d.insurance,   'Marine Insurance',                  '% of FOB', 'dai')}
     ${I('sulphuric','dg_usd', d.dg_usd, 'DG Surcharge - UN 1830, Class 8', '$ / FCL', 'fix')}
     ${I('sulphuric','imdg',   d.imdg,   'IMDG / DG Documentation Cost',    '₹ / FCL', 'fix')}
   </div>
@@ -1425,9 +1473,9 @@ function renderSulphuric() {
 
 <section class="results">
   ${renderSpecStrip([
-    ['Product','Sulphuric Acid 98%'],
+    ['Product','Sulphuric Acid 98% Min'],
     ['Packing', pkg.name],
-    ['Units / FCL', f0(pkg.units_per_container)],
+    ['Units / FCL', f0(c.units)],
     ['Net / FCL', f2(c.total_mt)+' MT'],
     ['Net KG', f0(c.total_kg)+' KG'],
     ['Margin', d.margin+'%', 'color:#d97706;font-weight:700'],
@@ -1442,8 +1490,8 @@ function renderSulphuric() {
       <div class="cost-head fob">FOB - Full Cost Build-up</div>
       <div class="cost-section">
         ${CSEC('Procurement')}
-        ${CL('Sulphuric Acid 98%', inr(c.procurement), d.basic_rate+' ₹/kg × '+f0(c.total_kg)+' kg')}
-        ${CL('Packaging - '+pkg.name, inr(c.packing), ucost+' ₹/unit × '+f0(pkg.units_per_container)+' units')}
+        ${CL('Sulphuric Acid 98%', inr(c.procurement), d.basic_rate+' ₹/kg × '+f0(c.total_kg)+' kg ('+f0(c.units)+' units × '+f0(c.uwt)+' kg/unit)')}
+        ${CL('Packaging - '+pkg.name, inr(c.packing), ucost+' ₹/unit × '+f0(c.units)+' units')}
         ${CL('Transport - Plant to Port', inr(c.transport), d.transport_kg+' ₹/kg × '+f0(c.total_kg)+' kg')}
         ${CST('Sub-total', inr(c.procurement + c.packing + c.transport))}
       </div>
