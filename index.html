@@ -1099,10 +1099,10 @@ function buildCustomerQuote(productName, packName, c, d) {
   const fobLines =
     `FOB Price: ${usd(c.sfob_mt, 2)} / MT\n` +
     `FCL Value: ${usd(c.sfob_ctr, 0)} / FCL\n` +
-    `KG Price: ${usd(c.sfob_kg, 4)} / KG`;
+    `KG Price: ${usd(c.sfob_kg, 4)} / KG\n`;
 
   const cifLines = hasCif
-  ? `\n\n${destPort ? `${destPort}`: ''}\n` +
+  ? `\n${destPort ? `${destPort}`: ''}\n` +
       `CIF Price: ${usd(c.scif_mt, 2)} / MT\n` +
       `FCL Value: ${usd(c.scif_ctr, 0)} / FCL\n` +
       `KG Price: ${usd(c.scif_kg, 4)} / KG`
@@ -1121,7 +1121,7 @@ function buildCustomerQuote(productName, packName, c, d) {
     `Payment: Advance TT\n` +
     `Validity: 2 working days \n(subject to raw material & freight confirmation)\n\n` +
     `${fobLines}${cifLines}\n\n` +
-    `Delivery: Ready within 2–4 days from payment confirmation.` +
+    `Delivery: Ready within 2–4 days from payment confirmation.\n` +
     `COA/spec sheet available on request.\n`
   );
 }
