@@ -38,32 +38,25 @@
   --a1:#b45309; --a2:#d97706; --a3:#f59e0b; --a4:#fbbf24; --a5:#fef3c7;
   --a-bd:rgba(245,158,11,0.26);
 
-  --b1:#1d4ed8; --b2:#2563eb; --b3:#3b82f6; --b5:#eff6ff;
+  --b1:#1d4ed8; --b2:#2563eb; --b3:#3b82f6; --b5:#f6f8fc;
   --b-bd:rgba(59,130,246,0.20);
 
-  --g1:#065f46; --g2:#059669; --g3:#10b981; --g5:#ecfdf5;
+  --g1:#065f46; --g2:#059669; --g3:#10b981; --g5:#f5faf7;
   --g-bd:rgba(16,185,129,0.20);
 
-  --p2:#7c3aed; --p3:#8b5cf6; --p5:#f5f3ff;
+  --p2:#7c3aed; --p3:#8b5cf6; --p5:#faf8ff;
   --p-bd:rgba(139,92,246,0.20);
-
-  --o2:#ea580c; --o3:#f97316; --o5:#fff7ed;
-  --o-bd:rgba(249,115,22,0.22);
 
   --r2:#dc2626;
 
   --sh0: 0 1px 2px rgba(0,0,0,0.04);
-  --sh1: 0 1px 3px rgba(0,0,0,0.05), 0 2px 8px rgba(0,0,0,0.04);
-  --sh2: 0 4px 12px rgba(0,0,0,0.08), 0 2px 4px rgba(0,0,0,0.04);
+  --sh1: 0 1px 2px rgba(0,0,0,0.04);
 
   --r8:8px; --r12:12px; --r16:16px; --rpill:999px;
   --sans:'DM Sans',sans-serif;
   --mono:'IBM Plex Mono',monospace;
   --ease:cubic-bezier(0.4,0,0.2,1);
 
-  /* Mobile panel switcher */
-  --panel-inputs: 1;
-  --panel-results: 0;
 }
 
 *, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
@@ -106,7 +99,6 @@ input, select, textarea { -webkit-user-select: text; user-select: text; touch-ac
 ═══════════════════════════════════════════ */
 .hdr {
   position: sticky; top: 0; z-index: 500;
-  min-height: calc(58px + var(--safe-top));
   padding-top: var(--safe-top);
   display: flex; align-items: center; justify-content: space-between;
   padding: 0 16px;
@@ -157,6 +149,26 @@ input, select, textarea { -webkit-user-select: text; user-select: text; touch-ac
   padding: 4px 10px; border-radius: var(--rpill); white-space: nowrap;
 }
 @media (max-width: 480px) { #clock { display: none; } }
+
+@media (max-width:768px){
+
+  .sp-inr{
+    font-size:13px;
+  }
+
+  .be-big{
+    font-size:22px;
+  }
+
+  .cost-line-name{
+    font-size:11px;
+  }
+
+  .cost-line-val{
+    font-size:11px;
+  }
+
+}
 
 /* ═══════════════════════════════════════════
    PRODUCT TABS
@@ -311,15 +323,23 @@ input, select, textarea { -webkit-user-select: text; user-select: text; touch-ac
 /* ═══════════════════════════════════════════
    SIDEBAR SECTION HEADERS
 ═══════════════════════════════════════════ */
-.sec-head {
-  position: sticky; top: 0; z-index: 20;
-  padding: 9px 14px;
-  background: rgba(255,255,255,0.94);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border-bottom: 1px solid var(--line);
-  display: flex; align-items: center; justify-content: space-between;
-  gap: 8px;
+.sec-head{
+  position:sticky;
+  top:0;
+  z-index:20;
+
+  padding:10px 14px 8px;
+  background:rgba(255,255,255,0.96);
+
+  backdrop-filter:blur(10px);
+  -webkit-backdrop-filter:blur(10px);
+
+  border-bottom:1px solid var(--line);
+
+  display:flex;
+  flex-direction:column;
+  align-items:flex-start;
+  gap:6px;
 }
 .sec-label {
   display: flex; align-items: center; gap: 7px;
@@ -336,10 +356,17 @@ input, select, textarea { -webkit-user-select: text; user-select: text; touch-ac
 .sec-label.teal  { color: #0891b2; }
 .sec-label.teal::before  { background: #06b6d4; box-shadow: 0 0 6px rgba(6,182,212,0.5); }
 
-.sec-tag {
-  font-family: var(--mono); font-size: 9px; color: var(--ink4);
-  background: var(--inset2); border: 1px solid var(--line);
-  padding: 2px 8px; border-radius: var(--rpill); white-space: nowrap;
+.sec-tag{
+  font-family:var(--sans);
+  font-size:11px;
+  line-height:1.35;
+  color:var(--ink4);
+
+  background:none;
+  border:none;
+  padding:0;
+
+  white-space:normal;
 }
 .reset-btn {
   font-family: var(--sans); font-size: 10px; font-weight: 600;
@@ -397,11 +424,7 @@ input[type=number], select {
     height: 40px;
   }
 }
-@media (max-width: 768px) {
-  html {
-    font-size: 13px;
-  }
-}
+
 input[type=number] { text-align: right; }
 select { cursor: pointer; padding: 8px 8px; }
 
@@ -428,8 +451,8 @@ input[type=number] {
 ═══════════════════════════════════════════ */
 .spec-strip {
   background: var(--surface); border: 1px solid var(--line2);
-  border-radius: var(--r16); overflow: hidden;
-  box-shadow: var(--sh1); margin-bottom: 14px;
+  border-radius: 12px; overflow: hidden;
+  box-shadow: var(--sh1); margin-bottom: 10px;
   position: relative;
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
@@ -446,10 +469,19 @@ input[type=number] {
 }
 /* Remove right border on last in each row, bottom on last row */
 .spec-cell:last-child { border-right: none; }
-@media (max-width: 480px) {
-  .spec-strip { grid-template-columns: 1fr 1fr; }
-  .spec-cell:nth-child(2n) { border-right: none; }
+
+@media(min-width:769px){
+  .spec-strip{
+    grid-template-columns:repeat(7,1fr);
+  }
 }
+
+@media(max-width:768px){
+  .sec-head{
+    position:relative;
+  }
+}
+
 .spec-k { font-size: 9px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--ink4); margin-bottom: 4px; }
 .spec-v { font-family: var(--mono); font-size: 13px; font-weight: 600; color: var(--ink1); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
@@ -459,19 +491,15 @@ input[type=number] {
 .be-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 14px; }
 @media (max-width: 480px) { .be-row { grid-template-columns: 1fr; } }
 
-.be-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 14px; }
-@media (max-width: 480px) { .be-row { grid-template-columns: 1fr; } }
-
 .be-card {
   background: var(--surface); border: 1px solid var(--line2);
-  border-radius: var(--r16); overflow: hidden; box-shadow: var(--sh1);
+  border-radius: 12px; overflow: hidden; box-shadow: var(--sh1);
   transition: box-shadow 0.15s var(--ease);
 }
-.be-card:hover { box-shadow: var(--sh2); }
 .be-accent-bar { height: 3px; }
 .be-accent-fob { background: var(--b2); }
 .be-accent-cif { background: var(--g2); }
-.be-body { padding: 14px 16px; }
+.be-body { padding: 12px; }
 .be-label { font-size: 10px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; margin-bottom: 10px; }
 .be-label-fob { color: var(--b2); }
 .be-label-cif { color: var(--g2); }
@@ -497,7 +525,7 @@ input[type=number] {
 
 .cost-card {
   background: var(--surface); border: 1px solid var(--line2);
-  border-radius: var(--r16); overflow: hidden; box-shadow: var(--sh1);
+  border-radius: 12px; overflow: hidden; box-shadow: var(--sh1);
 }
 
 /* Cost card header */
@@ -569,28 +597,31 @@ input[type=number] {
 ═══════════════════════════════════════════ */
 .sp-card {
   background: var(--surface);
-  border: 1.5px solid var(--a-bd);
-  border-radius: var(--r16);
+  border:1px solid var(--a-bd);
+  border-radius: 12px;
   overflow: hidden;
   box-shadow: var(--sh1);
   margin-bottom: 14px;
 }
 .sp-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: 1fr;
   border-top: 1px solid var(--line);
 }
-@media (max-width: 480px) {
-  .sp-grid { grid-template-columns: 1fr 1fr; }
-}
 .sp-col {
-  padding: 12px 14px;
+  padding: 10px;
   border-right: 1px solid var(--line);
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 10px;
 }
 .sp-col:last-child { border-right: none; }
+.sp-row{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+}
+
 .sp-col-title {
   font-size: 9px; font-weight: 700;
   letter-spacing: 1px; text-transform: uppercase;
@@ -600,7 +631,7 @@ input[type=number] {
 }
 .sp-block {
   border-radius: var(--r8);
-  padding: 8px 10px;
+  padding: 7px 8px;
   display: flex;
   flex-direction: column;
   gap: 2px;
@@ -615,8 +646,8 @@ input[type=number] {
 .sp-cif-label { color: var(--g2); }
 .sp-inr {
   font-family: var(--mono);
-  font-size: 15px; font-weight: 700;
-  line-height: 1.2;
+  font-size: 13px; font-weight: 700;
+  line-height: 1.25;
 }
 .sp-fob-inr { color: var(--b1); }
 .sp-cif-inr { color: var(--g1); }
@@ -627,18 +658,13 @@ input[type=number] {
 .sp-fob-usd { color: var(--b3); }
 .sp-cif-usd { color: var(--g3); }
 
-/* Remove old sell/margin classes no longer used */
-.sell-card, .sell-grid, .sell-col, .sell-k,
-.sell-v-label, .sell-v-fob, .sell-v-cif,
-.margin-card, .margin-grid, .margin-col,
-.margin-k, .margin-v-fob, .margin-v-cif { all: unset; }
 
 /* ═══════════════════════════════════════════
    PORT TABLE
 ═══════════════════════════════════════════ */
 .port-card {
   background: var(--surface); border: 1px solid var(--line2);
-  border-radius: var(--r16); overflow: hidden; box-shadow: var(--sh1);
+  border-radius: 12px; overflow: hidden; box-shadow: var(--sh1);
   overflow-x: auto; /* horizontal scroll on small screens */
 }
 .tbl { width: 100%; border-collapse: collapse; font-size: 11.5px; min-width: 380px; }
@@ -665,10 +691,6 @@ input[type=number] {
 .cs h2 { font-size: 22px; font-weight: 700; color: var(--ink3); }
 .cs p  { font-size: 12px; color: var(--ink4); text-align: center; }
 
-/* ═══════════════════════════════════════════
-   SECTION SPACER (visual breathing room)
-═══════════════════════════════════════════ */
-.section-gap { height: 6px; }
 
 /* ═══════════════════════════════════════════
    CUSTOMER QUOTE CARD
@@ -676,7 +698,7 @@ input[type=number] {
 .quote-card {
   background: var(--surface);
   border: 1.5px solid var(--g-bd);
-  border-radius: var(--r16); overflow: hidden;
+  border-radius: 12px; overflow: hidden;
   box-shadow: var(--sh1), 0 0 20px rgba(16,185,129,0.05);
   margin-bottom: 14px; position: relative;
 }
@@ -1082,21 +1104,6 @@ const CTL = (name, val, fobOrCif) => `
 /* Section title within cost card */
 const CSEC = t => `<div class="cost-sec-title">${t}</div>`;
 
-/* Sell price column */
-const SCOL = (title, fobVal, cifVal, showCif = true) => `
-<div class="sell-col">
-  <div class="sell-k">${title}</div>
-  <div class="sell-v-label">FOB</div><div class="sell-v-fob">${fobVal}</div>
-  ${showCif ? `<div class="sell-v-label" style="margin-top:8px">CIF</div><div class="sell-v-cif">${cifVal}</div>` : ''}
-</div>`;
-
-/* Margin column */
-const MCOL = (title, fobVal, cifVal, showCif = true) => `
-<div class="margin-col">
-  <div class="margin-k">${title}</div>
-  <div class="margin-v-fob">${fobVal}</div>
-  ${showCif ? `<div class="margin-v-cif">${cifVal}</div>` : ''}
-</div>`;
 
 const escapeHtml = text => String(text)
   .replace(/&/g,'&amp;')
@@ -1298,17 +1305,19 @@ function renderSellCard(c, margin, usdInr) {
   const col = (title, fobInr, fobUsd, cifInr, cifUsd) => `
     <div class="sp-col">
       <div class="sp-col-title">${title}</div>
-      <div class="sp-block sp-block-fob">
-        <div class="sp-tier-label sp-fob-label">FOB</div>
-        <div class="sp-inr sp-fob-inr">${fobInr}</div>
-        <div class="sp-usd sp-fob-usd">${fobUsd}</div>
+      <div class="sp-row">
+        <div class="sp-block sp-block-fob">
+          <div class="sp-tier-label sp-fob-label">FOB</div>
+          <div class="sp-inr sp-fob-inr">${fobInr}</div>
+          <div class="sp-usd sp-fob-usd">${fobUsd}</div>
+        </div>
+        ${showCif ? `
+        <div class="sp-block sp-block-cif">
+          <div class="sp-tier-label sp-cif-label">CIF</div>
+          <div class="sp-inr sp-cif-inr">${cifInr}</div>
+          <div class="sp-usd sp-cif-usd">${cifUsd}</div>
+        </div>` : ''}
       </div>
-      ${showCif ? `
-      <div class="sp-block sp-block-cif">
-        <div class="sp-tier-label sp-cif-label">CIF</div>
-        <div class="sp-inr sp-cif-inr">${cifInr}</div>
-        <div class="sp-usd sp-cif-usd">${cifUsd}</div>
-      </div>` : ''}
     </div>`;
 
   return `
@@ -1339,17 +1348,19 @@ function renderMarginCard(c, usdInr) {
   const col = (title, fobInr, fobUsd, cifInr, cifUsd) => `
     <div class="sp-col">
       <div class="sp-col-title">${title}</div>
-      <div class="sp-block sp-block-fob">
-        <div class="sp-tier-label sp-fob-label">FOB</div>
-        <div class="sp-inr sp-fob-inr">${fobInr}</div>
-        <div class="sp-usd sp-fob-usd">${fobUsd}</div>
+      <div class="sp-row">
+        <div class="sp-block sp-block-fob">
+          <div class="sp-tier-label sp-fob-label">FOB</div>
+          <div class="sp-inr sp-fob-inr">${fobInr}</div>
+          <div class="sp-usd sp-fob-usd">${fobUsd}</div>
+        </div>
+        ${showCif ? `
+        <div class="sp-block sp-block-cif">
+          <div class="sp-tier-label sp-cif-label">CIF</div>
+          <div class="sp-inr sp-cif-inr">${cifInr}</div>
+          <div class="sp-usd sp-cif-usd">${cifUsd}</div>
+        </div>` : ''}
       </div>
-      ${showCif ? `
-      <div class="sp-block sp-block-cif">
-        <div class="sp-tier-label sp-cif-label">CIF</div>
-        <div class="sp-inr sp-cif-inr">${cifInr}</div>
-        <div class="sp-usd sp-cif-usd">${cifUsd}</div>
-      </div>` : ''}
     </div>`;
 
   return `
@@ -1390,7 +1401,7 @@ function renderCaustic() {
 <aside class="sidebar">
   <div class="sec-head">
     <span class="sec-label amber">Ex-plant Inputs</span>
-    <div style="display:flex;align-items:center;gap:8px;">
+    <div style="width:100%;display:flex;justify-content:space-between;align-items:flex-start;gap:10px;">
       <span class="sec-tag">Product rate, packaging, exchange and margin</span>
       <button class="reset-btn" onclick="reset('caustic')">
         Reset
@@ -1530,7 +1541,7 @@ function renderSulphuric() {
 <aside class="sidebar">
   <div class="sec-head">
     <span class="sec-label amber">Ex-plant Inputs</span>
-    <div style="display:flex;align-items:center;gap:8px;">
+    <div style="width:100%;display:flex;justify-content:space-between;align-items:flex-start;gap:10px;">
       <span class="sec-tag">Product rate, packaging, exchange and margin</span>
 
       <button class="reset-btn" onclick="reset('sulphuric')">
