@@ -1390,7 +1390,12 @@ function renderCaustic() {
 <aside class="sidebar">
   <div class="sec-head">
     <span class="sec-label amber">Ex-plant Inputs</span>
-    <span class="sec-tag">Product rate, packaging, exchange and margin</span>
+    <div style="display:flex;align-items:center;gap:8px;">
+      <span class="sec-tag">Product rate, packaging, exchange and margin</span>
+      <button class="reset-btn" onclick="reset('caustic')">
+        Reset
+      </button>
+    </div>
   </div>
   <div>
     ${I('caustic','basic_rate',      d.basic_rate,  'Basic Rate - Caustic Soda Flakes', '₹ / kg', 'dai')}
@@ -1525,7 +1530,13 @@ function renderSulphuric() {
 <aside class="sidebar">
   <div class="sec-head">
     <span class="sec-label amber">Ex-plant Inputs</span>
-    <span class="sec-tag">Product rate, packaging, exchange and margin</span>
+    <div style="display:flex;align-items:center;gap:8px;">
+      <span class="sec-tag">Product rate, packaging, exchange and margin</span>
+
+      <button class="reset-btn" onclick="reset('sulphuric')">
+        Reset
+      </button>
+    </div>
   </div>
   <div>
     ${I('sulphuric','basic_rate',    d.basic_rate,  'Basic Rate - Sulphuric Acid 98%',  '₹ / kg',   'dai')}
