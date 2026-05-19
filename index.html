@@ -13,10 +13,10 @@
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'><rect fill='%23f59e0b' width='180' height='180' rx='36'/><text x='50%' y='50%' font-size='90' font-weight='800' fill='white' text-anchor='middle' dominant-baseline='central' font-family='sans-serif'>JM</text></svg>">
 <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'><rect fill='%23f59e0b' width='180' height='180' rx='40'/><text x='50%' y='50%' font-size='90' font-weight='800' fill='white' text-anchor='middle' dominant-baseline='central' font-family='sans-serif'>JM</text></svg>">
 <title>Jaydev Multicomm - Export Pricing</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..4₀,7₀₀;1,9..4₀,4₀₀&family=IBM+Plex+Mono:wght@3₀₀;4₀₀;5₀₀;6₀₀&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=IBM+Plex+Mono:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
 /* ═══════════════════════════════════════════
-   TOKENS (Apple-inspired minimal palette)
+   TOKENS
 ═══════════════════════════════════════════ */
 :root {
   --safe-top: env(safe-area-inset-top, 0px);
@@ -35,7 +35,7 @@
   --ink3: #6b7280;
   --ink4: #9ca3af;
 
-  --a1:#b45309; --a2:#d97706; --a3:#f59e0b; --a4:#fbbf24; --a5:#fef3c7;
+  --a1:#b45309; --a2:#d97706; --a3:#f59e0b; --a5:#fef3c7;
   --a-bd:rgba(245,158,11,0.26);
 
   --b1:#1d4ed8; --b2:#2563eb; --b3:#3b82f6; --b5:#f6f8fc;
@@ -49,14 +49,12 @@
 
   --r2:#dc2626;
 
-  --sh0: 0 1px 2px rgba(0,0,0,0.04);
   --sh1: 0 1px 2px rgba(0,0,0,0.04);
 
   --r8:8px; --r12:12px; --r16:16px; --rpill:999px;
   --sans:'DM Sans',sans-serif;
   --mono:'IBM Plex Mono',monospace;
   --ease:cubic-bezier(0.4,0,0.2,1);
-
 }
 
 *, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
@@ -64,12 +62,9 @@
 html {
   font-size: 14px;
   height: 100%;
-  margin:0;
-  padding:0;
-  overflow-x:hidden;
-  overflow-y:auto;
-  min-height:100%;
-  background:#f5f5f7;
+  overflow-x: hidden;
+  overflow-y: auto;
+  background: #f5f5f7;
 }
 
 body {
@@ -82,13 +77,11 @@ body {
   -webkit-user-select: none;
   user-select: none;
   -webkit-touch-callout: none;
-  padding: 0;
-  margin: 0;
   overflow-y: auto;
   overflow-x: hidden;
-  padding-top:var(--safe-top);
-  padding-bottom:var(--safe-bottom);
-  -webkit-overflow-scrolling:touch;
+  padding-top: var(--safe-top);
+  padding-bottom: var(--safe-bottom);
+  -webkit-overflow-scrolling: touch;
 }
 
 body * { -webkit-user-select: text; user-select: text; }
@@ -99,20 +92,16 @@ input, select, textarea { -webkit-user-select: text; user-select: text; touch-ac
 ═══════════════════════════════════════════ */
 .hdr {
   position: sticky; top: 0; z-index: 500;
-  padding-top: var(--safe-top);
   display: flex; align-items: center; justify-content: space-between;
   padding: 0 16px;
   background: rgba(255,255,255,0.95);
   backdrop-filter: blur(20px) saturate(180%);
   -webkit-backdrop-filter: blur(20px) saturate(180%);
   border-bottom: 1px solid var(--line2);
-  box-shadow: var(--sh0);
+  box-shadow: var(--sh1);
   min-height: 52px;
 }
-.logo {
-  display: flex; align-items: center; gap: 9px;
-  min-width: 0;
-}
+.logo { display: flex; align-items: center; gap: 9px; min-width: 0; }
 .logo-mark {
   width: 32px; height: 32px; border-radius: 9px; flex-shrink: 0;
   background: linear-gradient(145deg,var(--a3),var(--a2));
@@ -120,17 +109,13 @@ input, select, textarea { -webkit-user-select: text; user-select: text; touch-ac
   display: flex; align-items: center; justify-content: center;
   font-weight: 800; font-size: 13px; color: #fff; letter-spacing: -0.5px;
 }
-.logo-name {
-  font-weight: 700; font-size: 14px; letter-spacing: -0.2px; color: var(--ink1);
-  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-}
+.logo-name { font-weight: 700; font-size: 14px; letter-spacing: -0.2px; color: var(--ink1); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .logo-sub {
   font-size: 10px; font-weight: 500; color: var(--ink3);
   background: var(--inset2); border: 1px solid var(--line2);
   padding: 3px 9px; border-radius: var(--rpill);
   white-space: nowrap; flex-shrink: 0;
 }
-/* Hide subtitle on very small screens */
 @media (max-width: 400px) { .logo-sub { display: none; } }
 
 .hdr-right { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
@@ -150,24 +135,11 @@ input, select, textarea { -webkit-user-select: text; user-select: text; touch-ac
 }
 @media (max-width: 480px) { #clock { display: none; } }
 
-@media (max-width:768px){
-
-  .sp-inr{
-    font-size:13px;
-  }
-
-  .be-big{
-    font-size:22px;
-  }
-
-  .cost-line-name{
-    font-size:11px;
-  }
-
-  .cost-line-val{
-    font-size:11px;
-  }
-
+@media (max-width: 768px) {
+  .sp-inr { font-size: 13px; }
+  .be-big { font-size: 22px; }
+  .cost-line-name { font-size: 11px; }
+  .cost-line-val  { font-size: 11px; }
 }
 
 /* ═══════════════════════════════════════════
@@ -207,20 +179,15 @@ input, select, textarea { -webkit-user-select: text; user-select: text; touch-ac
 }
 
 /* ═══════════════════════════════════════════
-   MOBILE PANEL SWITCHER (Inputs / Results)
-   Only visible on mobile (<= 768px)
+   MOBILE PANEL SWITCHER
 ═══════════════════════════════════════════ */
 .panel-switcher {
-  display: none; /* shown via media query */
-  position: static;
-  z-index: 300;
+  display: none;
   background: rgba(255,255,255,0.95);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   border-bottom: 1px solid var(--line2);
-  padding: 12px 16px;
-  padding-left: max(16px, env(safe-area-inset-left));
-  padding-right: max(16px, env(safe-area-inset-right));
+  padding: 12px max(16px, env(safe-area-inset-right)) 12px max(16px, env(safe-area-inset-left));
 }
 .panel-toggle {
   display: flex;
@@ -238,32 +205,20 @@ input, select, textarea { -webkit-user-select: text; user-select: text; touch-ac
   cursor: pointer; transition: all 0.15s var(--ease);
   -webkit-tap-highlight-color: transparent;
   min-height: 44px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  display: flex; align-items: center; justify-content: center;
 }
-.ptab.active {
-  background: var(--surface); color: var(--ink1);
-  box-shadow: var(--sh1);
-}
-
-@media (max-width: 768px) {
-  .panel-switcher { 
-    display: block;
-  }
-}
+.ptab.active { background: var(--surface); color: var(--ink1); box-shadow: var(--sh1); }
+@media (max-width: 768px) { .panel-switcher { display: block; } }
 
 /* ═══════════════════════════════════════════
-   SHELL - desktop two-column, mobile stacked
+   SHELL
 ═══════════════════════════════════════════ */
 .shell {
   display: grid;
   grid-template-columns: 390px 1fr;
   min-height: calc(100dvh - 96px - env(safe-area-inset-top));
-  overflow: visible;
   width: 100%;
 }
-
 .sidebar {
   background: var(--surface);
   border-right: 1px solid var(--line2);
@@ -271,12 +226,9 @@ input, select, textarea { -webkit-user-select: text; user-select: text; touch-ac
   -webkit-overflow-scrolling: touch;
   scrollbar-width: thin;
   scrollbar-color: var(--line3) transparent;
-  display: flex;
-  flex-direction: column;
+  display: flex; flex-direction: column;
 }
-.sidebar > * {
-  flex-shrink: 0;
-}
+.sidebar > * { flex-shrink: 0; }
 .sidebar::-webkit-scrollbar { width: 4px; }
 .sidebar::-webkit-scrollbar-thumb { background: var(--line2); border-radius: 2px; }
 
@@ -286,17 +238,13 @@ input, select, textarea { -webkit-user-select: text; user-select: text; touch-ac
   padding: 16px max(18px, env(safe-area-inset-right)) 40px max(18px, env(safe-area-inset-left));
   scrollbar-width: thin;
   scrollbar-color: var(--line3) transparent;
-  display: flex;
-  flex-direction: column;
+  display: flex; flex-direction: column;
   min-height: 100%;
 }
-.results > * {
-  flex-shrink: 0;
-}
+.results > * { flex-shrink: 0; }
 .results::-webkit-scrollbar { width: 4px; }
 .results::-webkit-scrollbar-thumb { background: var(--line2); border-radius: 2px; }
 
-/* ── Mobile layout overrides ── */
 @media (max-width: 768px) {
   .shell {
     grid-template-columns: 1fr;
@@ -305,50 +253,37 @@ input, select, textarea { -webkit-user-select: text; user-select: text; touch-ac
     overflow-x: hidden;
   }
   .sidebar, .results {
-    width: 100%;
-    height: 100%;
+    width: 100%; height: 100%;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
     border-right: none;
     padding-bottom: max(20px, env(safe-area-inset-bottom));
   }
-
-  /* Panel visibility controlled by JS-toggled classes */
   .sidebar { display: flex !important; flex-direction: column; }
   .results  { display: flex !important; flex-direction: column; }
   .sidebar.mobile-hidden { display: none !important; }
   .results.mobile-hidden  { display: none !important; }
+  .sec-head { position: relative; }
 }
 
 /* ═══════════════════════════════════════════
    SIDEBAR SECTION HEADERS
 ═══════════════════════════════════════════ */
-.sec-head{
-  position:sticky;
-  top:0;
-  z-index:20;
-
-  padding:10px 14px 8px;
-  background:rgba(255,255,255,0.96);
-
-  backdrop-filter:blur(10px);
-  -webkit-backdrop-filter:blur(10px);
-
-  border-bottom:1px solid var(--line);
-
-  display:flex;
-  flex-direction:column;
-  align-items:flex-start;
-  gap:6px;
+.sec-head {
+  position: sticky; top: 0; z-index: 20;
+  padding: 10px 14px 8px;
+  background: rgba(255,255,255,0.96);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--line);
+  display: flex; flex-direction: column; align-items: flex-start; gap: 6px;
 }
 .sec-label {
   display: flex; align-items: center; gap: 7px;
   font-family: var(--sans); font-size: 10px; font-weight: 700;
   letter-spacing: 0.7px; text-transform: uppercase;
 }
-.sec-label::before {
-  content: ''; width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0;
-}
+.sec-label::before { content: ''; width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
 .sec-label.amber { color: var(--a2); }
 .sec-label.amber::before { background: var(--a3); box-shadow: 0 0 6px rgba(245,158,11,0.5); }
 .sec-label.blue  { color: var(--b2); }
@@ -356,42 +291,27 @@ input, select, textarea { -webkit-user-select: text; user-select: text; touch-ac
 .sec-label.teal  { color: #0891b2; }
 .sec-label.teal::before  { background: #06b6d4; box-shadow: 0 0 6px rgba(6,182,212,0.5); }
 
-.sec-tag{
-  font-family:var(--sans);
-  font-size:11px;
-  line-height:1.35;
-  color:var(--ink4);
-
-  background:none;
-  border:none;
-  padding:0;
-
-  white-space:normal;
-}
+.sec-tag { font-family: var(--sans); font-size: 11px; line-height: 1.35; color: var(--ink4); white-space: normal; }
 .reset-btn {
   font-family: var(--sans); font-size: 10px; font-weight: 600;
   padding: 5px 12px; border-radius: var(--rpill);
   border: 1px solid var(--line2); background: var(--surface); color: var(--ink3);
   cursor: pointer; transition: all 0.13s var(--ease);
-  -webkit-tap-highlight-color: transparent;
-  white-space: nowrap;
+  -webkit-tap-highlight-color: transparent; white-space: nowrap;
 }
 .reset-btn:hover, .reset-btn:active {
-  border-color: rgba(220,38,38,0.32); color: var(--r2);
-  background: rgba(220,38,38,0.04);
+  border-color: rgba(220,38,38,0.32); color: var(--r2); background: rgba(220,38,38,0.04);
 }
 
 /* ═══════════════════════════════════════════
    INPUT ROWS
 ═══════════════════════════════════════════ */
 .inp-row {
-  display: grid;
-  grid-template-columns: 1fr auto;
+  display: grid; grid-template-columns: 1fr auto;
   align-items: center; gap: 12px;
   padding: 12px 14px;
   border-bottom: 1px solid var(--line);
-  transition: background 0.1s;
-  min-height: 60px;
+  transition: background 0.1s; min-height: 60px;
 }
 .inp-row:active  { background: var(--inset); }
 .inp-row:last-child { border-bottom: none; }
@@ -399,13 +319,11 @@ input, select, textarea { -webkit-user-select: text; user-select: text; touch-ac
 .inp-unit { font-family: var(--mono); font-size: 9px; color: var(--ink4); margin-top: 2px; }
 
 .inp-ctrl { width: 112px; }
-@media (max-width: 480px) { 
+@media (max-width: 480px) {
   .inp-ctrl { width: 100%; max-width: 140px; }
-  .inp-row { grid-template-columns: 1fr auto; align-items: stretch; }
+  .inp-row  { grid-template-columns: 1fr auto; align-items: stretch; }
 }
-@media (max-width: 380px) { 
-  .inp-ctrl { max-width: 120px; }
-}
+@media (max-width: 380px) { .inp-ctrl { max-width: 120px; } }
 
 input[type=number], select {
   width: 100%; border-radius: var(--r8);
@@ -414,19 +332,21 @@ input[type=number], select {
   outline: none; transition: all 0.13s var(--ease);
   border: 1.5px solid transparent; appearance: none;
   background-size: 24px 24px, 100% 100%;
-  background-repeat: no-repeat, no-repeat;
+  background-repeat: no-repeat;
   background-position: right 8px center, 0 0;
 }
 @media (max-width: 768px) {
-  input[type=number], select { 
-    font-size: 14px;
-    padding: 9px 10px;
-    height: 40px;
-  }
+  input[type=number], select { font-size: 14px; padding: 9px 10px; height: 40px; }
 }
 
-input[type=number] { text-align: right; }
-select { cursor: pointer; padding: 8px 8px; }
+input[type=number] {
+  text-align: right;
+  -moz-appearance: textfield;
+}
+input[type=number]::-webkit-outer-spin-button,
+input[type=number]::-webkit-inner-spin-button { -webkit-appearance: none; }
+
+select { cursor: pointer; padding: 8px; }
 
 .dai { background: rgba(254,243,199,0.55); border-color: rgba(245,158,11,0.22); color: var(--a1); }
 .dai:hover:not(:focus) { border-color: rgba(245,158,11,0.38); }
@@ -436,18 +356,8 @@ select { cursor: pointer; padding: 8px 8px; }
 .fix:hover:not(:focus) { border-color: rgba(59,130,246,0.38); }
 .fix:focus { background: var(--b5); border-color: var(--b3); box-shadow: 0 0 0 3px rgba(59,130,246,0.10); }
 
-input[type=number]::-webkit-outer-spin-button,
-input[type=number]::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-  appearance: none;
-}
-input[type=number] {
-  -moz-appearance: textfield;
-  appearance: textfield;
-}
-
 /* ═══════════════════════════════════════════
-   RESULTS - SPEC STRIP
+   SPEC STRIP
 ═══════════════════════════════════════════ */
 .spec-strip {
   background: var(--surface); border: 1px solid var(--line2);
@@ -467,21 +377,7 @@ input[type=number] {
   border-bottom: 1px solid var(--line);
   min-width: 0;
 }
-/* Remove right border on last in each row, bottom on last row */
 .spec-cell:last-child { border-right: none; }
-
-@media(min-width:769px){
-  .spec-strip{
-    grid-template-columns:repeat(7,1fr);
-  }
-}
-
-@media(max-width:768px){
-  .sec-head{
-    position:relative;
-  }
-}
-
 .spec-k { font-size: 9px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--ink4); margin-bottom: 4px; }
 .spec-v { font-family: var(--mono); font-size: 13px; font-weight: 600; color: var(--ink1); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
@@ -491,11 +387,7 @@ input[type=number] {
 .be-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 14px; }
 @media (max-width: 480px) { .be-row { grid-template-columns: 1fr; } }
 
-.be-card {
-  background: var(--surface); border: 1px solid var(--line2);
-  border-radius: 12px; overflow: hidden; box-shadow: var(--sh1);
-  transition: box-shadow 0.15s var(--ease);
-}
+.be-card { background: var(--surface); border: 1px solid var(--line2); border-radius: 12px; overflow: hidden; box-shadow: var(--sh1); transition: box-shadow 0.15s var(--ease); }
 .be-accent-bar { height: 3px; }
 .be-accent-fob { background: var(--b2); }
 .be-accent-cif { background: var(--g2); }
@@ -518,17 +410,12 @@ input[type=number] {
 .be-usd-v { font-family: var(--mono); font-size: 11px; font-weight: 500; color: var(--ink3); }
 
 /* ═══════════════════════════════════════════
-   COST CARDS (transparent build-up)
+   COST CARDS
 ═══════════════════════════════════════════ */
 .breakdown-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 14px; }
 @media (max-width: 640px) { .breakdown-row { grid-template-columns: 1fr; } }
 
-.cost-card {
-  background: var(--surface); border: 1px solid var(--line2);
-  border-radius: 12px; overflow: hidden; box-shadow: var(--sh1);
-}
-
-/* Cost card header */
+.cost-card { background: var(--surface); border: 1px solid var(--line2); border-radius: 12px; overflow: hidden; box-shadow: var(--sh1); }
 .cost-head {
   padding: 11px 14px; border-bottom: 1px solid var(--line2);
   display: flex; align-items: center; gap: 8px;
@@ -536,28 +423,23 @@ input[type=number] {
   letter-spacing: 0.7px; text-transform: uppercase;
 }
 .cost-head::before { content: ''; width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
-
-.cost-head.fob   { color: var(--b2);  background: linear-gradient(90deg,var(--b5),transparent); }
-.cost-head.fob::before   { background: var(--b3); box-shadow: 0 0 5px rgba(59,130,246,0.45); }
-.cost-head.cif   { color: var(--g2);  background: linear-gradient(90deg,var(--g5),transparent); }
-.cost-head.cif::before   { background: var(--g3); box-shadow: 0 0 5px rgba(16,185,129,0.45); }
-.cost-head.amber { color: var(--a1);  background: linear-gradient(90deg,var(--a5),transparent); }
-.cost-head.amber::before { background: var(--a3); box-shadow: 0 0 5px rgba(245,158,11,0.45); }
-.cost-head.purple{ color: var(--p2);  background: linear-gradient(90deg,var(--p5),transparent); }
-.cost-head.purple::before{ background: var(--p3); box-shadow: 0 0 5px rgba(139,92,246,0.45); }
-.cost-head.neutral{ color: var(--ink2); background: var(--inset2); }
-.cost-head.neutral::before{ background: var(--ink4); }
+.cost-head.fob    { color: var(--b2);  background: linear-gradient(90deg,var(--b5),transparent); }
+.cost-head.fob::before    { background: var(--b3); box-shadow: 0 0 5px rgba(59,130,246,0.45); }
+.cost-head.cif    { color: var(--g2);  background: linear-gradient(90deg,var(--g5),transparent); }
+.cost-head.cif::before    { background: var(--g3); box-shadow: 0 0 5px rgba(16,185,129,0.45); }
+.cost-head.amber  { color: var(--a1);  background: linear-gradient(90deg,var(--a5),transparent); }
+.cost-head.amber::before  { background: var(--a3); box-shadow: 0 0 5px rgba(245,158,11,0.45); }
+.cost-head.purple { color: var(--p2);  background: linear-gradient(90deg,var(--p5),transparent); }
+.cost-head.purple::before { background: var(--p3); box-shadow: 0 0 5px rgba(139,92,246,0.45); }
 
 .cost-section { border-bottom: 1px solid var(--line); }
 .cost-section:last-child { border-bottom: none; }
-
 .cost-sec-title {
   padding: 5px 14px 4px;
   font-size: 9px; font-weight: 700; letter-spacing: 0.9px; text-transform: uppercase;
   color: var(--ink4); background: var(--inset2);
   border-bottom: 1px solid var(--line);
 }
-
 .cost-line {
   display: flex; justify-content: space-between; align-items: flex-start;
   padding: 8px 14px; border-bottom: 1px solid var(--line);
@@ -569,20 +451,13 @@ input[type=number] {
 .cost-line-name { font-size: 12px; font-weight: 400; color: var(--ink2); line-height: 1.3; }
 .cost-line-desc { font-family: var(--mono); font-size: 9px; color: var(--ink4); margin-top: 2px; line-height: 1.4; word-break: break-word; }
 .cost-line-val  { font-family: var(--mono); font-size: 12px; font-weight: 600; color: var(--ink1); white-space: nowrap; flex-shrink: 0; padding-top: 1px; }
-
-.cost-line.subtotal {
-  background: var(--inset2); border-top: 1.5px solid var(--line2);
-}
+.cost-line.subtotal { background: var(--inset2); border-top: 1.5px solid var(--line2); }
 .cost-line.subtotal .cost-line-name { font-weight: 600; color: var(--ink2); }
-
-.cost-line.total-fob, .cost-line.total-cif {
-  background: var(--inset2); border-top: 2px solid var(--line3);
-  padding: 10px 14px;
-}
+.cost-line.total-fob, .cost-line.total-cif { background: var(--inset2); border-top: 2px solid var(--line3); padding: 10px 14px; }
 .cost-line.total-fob .cost-line-name,
 .cost-line.total-cif .cost-line-name { font-weight: 700; color: var(--ink1); font-size: 13px; }
-.cost-line.total-fob .cost-line-val { color: var(--b2); font-size: 13px; font-weight: 700; }
-.cost-line.total-cif .cost-line-val { color: var(--g2); font-size: 13px; font-weight: 700; }
+.cost-line.total-fob .cost-line-val  { color: var(--b2); font-size: 13px; font-weight: 700; }
+.cost-line.total-cif .cost-line-val  { color: var(--g2); font-size: 13px; font-weight: 700; }
 
 .formula-note {
   background: var(--inset2); border-top: 1px solid var(--line);
@@ -593,71 +468,33 @@ input[type=number] {
 .formula-note strong { color: var(--ink2); font-weight: 600; }
 
 /* ═══════════════════════════════════════════
-   SELLING PRICE CARD
+   SELLING PRICE / MARGIN CARD
 ═══════════════════════════════════════════ */
 .sp-card {
-  background: var(--surface);
-  border:1px solid var(--a-bd);
-  border-radius: 12px;
-  overflow: hidden;
-  box-shadow: var(--sh1);
+  background: var(--surface); border: 1px solid var(--a-bd);
+  border-radius: 12px; overflow: hidden; box-shadow: var(--sh1);
   margin-bottom: 14px;
 }
-.sp-grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  border-top: 1px solid var(--line);
-}
+.sp-grid { display: grid; grid-template-columns: 1fr; border-top: 1px solid var(--line); }
 .sp-col {
-  padding: 10px;
-  border-right: 1px solid var(--line);
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
+  padding: 10px; border-right: 1px solid var(--line);
+  display: flex; flex-direction: column; gap: 10px;
 }
 .sp-col:last-child { border-right: none; }
-.sp-row{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:10px;
-}
-
-.sp-col-title {
-  font-size: 9px; font-weight: 700;
-  letter-spacing: 1px; text-transform: uppercase;
-  color: var(--ink4);
-  padding-bottom: 4px;
-  border-bottom: 1px solid var(--line);
-}
-.sp-block {
-  border-radius: var(--r8);
-  padding: 7px 8px;
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
+.sp-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.sp-col-title { font-size: 9px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--ink4); padding-bottom: 4px; border-bottom: 1px solid var(--line); }
+.sp-block { border-radius: var(--r8); padding: 7px 8px; display: flex; flex-direction: column; gap: 2px; }
 .sp-block-fob { background: var(--b5); }
 .sp-block-cif { background: var(--g5); }
-.sp-tier-label {
-  font-size: 9px; font-weight: 700;
-  letter-spacing: 0.8px; text-transform: uppercase;
-}
+.sp-tier-label { font-size: 9px; font-weight: 700; letter-spacing: 0.8px; text-transform: uppercase; }
 .sp-fob-label { color: var(--b2); }
 .sp-cif-label { color: var(--g2); }
-.sp-inr {
-  font-family: var(--mono);
-  font-size: 13px; font-weight: 700;
-  line-height: 1.25;
-}
+.sp-inr { font-family: var(--mono); font-size: 13px; font-weight: 700; line-height: 1.25; }
 .sp-fob-inr { color: var(--b1); }
 .sp-cif-inr { color: var(--g1); }
-.sp-usd {
-  font-family: var(--mono);
-  font-size: 10px; font-weight: 500;
-}
+.sp-usd { font-family: var(--mono); font-size: 10px; font-weight: 500; }
 .sp-fob-usd { color: var(--b3); }
 .sp-cif-usd { color: var(--g3); }
-
 
 /* ═══════════════════════════════════════════
    PORT TABLE
@@ -665,20 +502,12 @@ input[type=number] {
 .port-card {
   background: var(--surface); border: 1px solid var(--line2);
   border-radius: 12px; overflow: hidden; box-shadow: var(--sh1);
-  overflow-x: auto; /* horizontal scroll on small screens */
+  overflow-x: auto;
 }
 .tbl { width: 100%; border-collapse: collapse; font-size: 11.5px; min-width: 380px; }
-.tbl th {
-  padding: 8px 12px; background: var(--inset2); color: var(--ink3);
-  font-family: var(--sans); font-weight: 700; font-size: 9px; letter-spacing: 1px;
-  text-align: right; border-bottom: 1px solid var(--line2); white-space: nowrap;
-}
+.tbl th { padding: 8px 12px; background: var(--inset2); color: var(--ink3); font-family: var(--sans); font-weight: 700; font-size: 9px; letter-spacing: 1px; text-align: right; border-bottom: 1px solid var(--line2); white-space: nowrap; }
 .tbl th:first-child { text-align: left; }
-.tbl td {
-  padding: 9px 12px; border-bottom: 1px solid var(--line);
-  font-family: var(--mono); text-align: right; color: var(--ink2);
-  font-weight: 500; font-size: 11px; transition: background 0.1s; white-space: nowrap;
-}
+.tbl td { padding: 9px 12px; border-bottom: 1px solid var(--line); font-family: var(--mono); text-align: right; color: var(--ink2); font-weight: 500; font-size: 11px; transition: background 0.1s; white-space: nowrap; }
 .tbl tr:hover td { background: var(--inset); }
 .tbl td:first-child { text-align: left; color: var(--b2); font-weight: 700; }
 .tbl tr:last-child td { border-bottom: none; }
@@ -686,18 +515,15 @@ input[type=number] {
 /* ═══════════════════════════════════════════
    COMING SOON
 ═══════════════════════════════════════════ */
-.cs { display: flex; flex-direction: column; align-items: center; justify-content: center;
-      min-height: 60vh; gap: 10px; padding: 40px 20px; }
+.cs { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 60vh; gap: 10px; padding: 40px 20px; }
 .cs h2 { font-size: 22px; font-weight: 700; color: var(--ink3); }
 .cs p  { font-size: 12px; color: var(--ink4); text-align: center; }
-
 
 /* ═══════════════════════════════════════════
    CUSTOMER QUOTE CARD
 ═══════════════════════════════════════════ */
 .quote-card {
-  background: var(--surface);
-  border: 1.5px solid var(--g-bd);
+  background: var(--surface); border: 1.5px solid var(--g-bd);
   border-radius: 12px; overflow: hidden;
   box-shadow: var(--sh1), 0 0 20px rgba(16,185,129,0.05);
   margin-bottom: 14px; position: relative;
@@ -707,32 +533,17 @@ input[type=number] {
   background: linear-gradient(90deg, var(--g2), var(--g3), var(--b3));
 }
 .quote-header {
-  padding: 11px 16px;
-  border-bottom: 1px solid var(--line2);
+  padding: 11px 16px; border-bottom: 1px solid var(--line2);
   display: flex; align-items: center; justify-content: space-between;
   gap: 12px; flex-wrap: wrap;
   background: linear-gradient(90deg, var(--g5), transparent);
 }
-.quote-title-group {
-  display: flex; align-items: center; gap: 8px;
-}
-.quote-title-dot {
-  width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0;
-  background: var(--g3); box-shadow: 0 0 5px rgba(16,185,129,0.5);
-}
-.quote-title {
-  font-family: var(--sans); font-size: 10px; font-weight: 700;
-  letter-spacing: 0.7px; text-transform: uppercase; color: var(--g1);
-}
-.quote-controls {
-  display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
-}
-.quote-dest-wrap {
-  display: flex; align-items: center; gap: 6px;
-}
-.quote-dest-label {
-  font-size: 10px; font-weight: 600; color: var(--ink3); white-space: nowrap;
-}
+.quote-title-group { display: flex; align-items: center; gap: 8px; }
+.quote-title-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; background: var(--g3); box-shadow: 0 0 5px rgba(16,185,129,0.5); }
+.quote-title { font-family: var(--sans); font-size: 10px; font-weight: 700; letter-spacing: 0.7px; text-transform: uppercase; color: var(--g1); }
+.quote-controls { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.quote-dest-wrap { display: flex; align-items: center; gap: 6px; }
+.quote-dest-label { font-size: 10px; font-weight: 600; color: var(--ink3); white-space: nowrap; }
 .quote-dest-input {
   width: 160px; height: 32px;
   border-radius: var(--r8); border: 1.5px solid var(--line2);
@@ -741,9 +552,7 @@ input[type=number] {
   padding: 0 10px; outline: none;
   transition: border-color 0.13s var(--ease), box-shadow 0.13s var(--ease);
 }
-.quote-dest-input:focus {
-  border-color: var(--g3); box-shadow: 0 0 0 3px rgba(16,185,129,0.10);
-}
+.quote-dest-input:focus { border-color: var(--g3); box-shadow: 0 0 0 3px rgba(16,185,129,0.10); }
 .quote-dest-input::placeholder { color: var(--ink4); font-weight: 400; }
 @media (max-width: 480px) { .quote-dest-input { width: 120px; } }
 
@@ -757,8 +566,7 @@ input[type=number] {
   box-shadow: 0 2px 8px rgba(5,150,105,0.32);
   transition: all 0.14s var(--ease);
   -webkit-tap-highlight-color: transparent;
-  white-space: nowrap;
-  position: relative;
+  white-space: nowrap; position: relative;
 }
 .quote-copy-btn:hover  { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(5,150,105,0.38); }
 .quote-copy-btn:active { transform: scale(0.97); }
@@ -770,23 +578,15 @@ input[type=number] {
   transition: opacity 0.18s var(--ease), transform 0.18s var(--ease);
 }
 .copy-pill.show { opacity: 1; transform: translateX(-50%) translateY(0); }
-
-.quote-preview {
-  padding: 16px;
-}
+.quote-preview { padding: 16px; }
 .quote-preview-inner {
-  background: var(--inset);
-  border: 1px solid var(--line2);
-  border-radius: var(--r12);
-  padding: 16px 18px;
+  background: var(--inset); border: 1px solid var(--line2);
+  border-radius: var(--r12); padding: 16px 18px;
   font-family: var(--mono); font-size: 11.5px; font-weight: 400;
   color: var(--ink2); line-height: 1.8;
   white-space: pre-wrap; word-break: break-word;
   -webkit-user-select: text; user-select: text;
 }
-.quote-line-key   { color: var(--ink4); font-size: 10px; }
-.quote-line-price { color: var(--b2); font-weight: 600; }
-.quote-line-head  { color: var(--ink1); font-weight: 600; }
 </style>
 </head>
 <body>
@@ -822,68 +622,63 @@ input[type=number] {
 
 <script>
 /* ═══════════════════════════════════════
-   DATA
+   PRODUCT SCHEMA
 ═══════════════════════════════════════ */
-const PRODUCTS = [ 
-  { id:'sulphuric', label:'Sulphuric Acid',  sub:'98%',                     active:true  },
-  { id:'caustic',   label:'Caustic Soda',    sub:'Flakes',                  active:true  },
-  { id:'calcium',   label:'Calcium Chloride',sub:'',                        active:false },
-  { id:'pac',       label:'PAC',             sub:'Poly Aluminium Chloride', active:false },
-  { id:'h2o2',      label:'H₂O₂',            sub:'Hydrogen Peroxide',       active:false },
-  { id:'sulphur',   label:'Sulphur',         sub:'Granular',                active:false },
+const PRODUCTS = [
+  { id:'sulphuric', label:'Sulphuric Acid',   sub:'98%',                     active:true  },
+  { id:'caustic',   label:'Caustic Soda',     sub:'Flakes',                  active:true  },
+  { id:'calcium',   label:'Calcium Chloride', sub:'',                        active:false },
+  { id:'pac',       label:'PAC',              sub:'Poly Aluminium Chloride', active:false },
+  { id:'h2o2',      label:'H₂O₂',             sub:'Hydrogen Peroxide',       active:false },
+  { id:'sulphur',   label:'Sulphur',          sub:'Granular',                active:false },
 ];
 
 const PKG = {
   caustic: [
-    { id:'pkg_25bag', name:'25 KG HDPE Bag',      unit_weight:25,    unit_cost:0,    units_per_container:1040 },
-    { id:'pkg_50bag', name:'50 KG HDPE Bag',      unit_weight:50,    unit_cost:0,    units_per_container:520  },
-    { id:'pkg_1tbag', name:'1000 KG Jumbo Bag',   unit_weight:1000,  unit_cost:0,   units_per_container:26   },
+    { id:'pkg_25bag', name:'25 KG HDPE Bag',       unit_weight:25,    unit_cost:0,     units_per_container:1040 },
+    { id:'pkg_50bag', name:'50 KG HDPE Bag',       unit_weight:50,    unit_cost:0,     units_per_container:520  },
+    { id:'pkg_1tbag', name:'1000 KG Jumbo Bag',    unit_weight:1000,  unit_cost:0,     units_per_container:26   },
   ],
   sulphuric: [
-    { id:'pkg_ibc',  name:'IBC Tank (1650 KG)',     unit_weight:1650,  unit_cost:8500,  units_per_container:16 },
-    { id:'pkg_bulk', name:'ISO Bulk Tank (16000 KG)',unit_weight:16000, unit_cost:22000, units_per_container:1  },
+    { id:'pkg_ibc',  name:'IBC Tank (1650 KG)',      unit_weight:1650,  unit_cost:8500,  units_per_container:16 },
+    { id:'pkg_bulk', name:'ISO Bulk Tank (16000 KG)', unit_weight:16000, unit_cost:22000, units_per_container:1  },
   ],
+};
+
+/* Shared port charge defaults (identical for both products) */
+const DEF_PORT = {
+  custom_clearance: 3500,
+  carting_exam:     1000,
+  vgm_form13:        500,
+  lacing_choking:      0,
+  unloading:        1500,
+  cfs_handling:    12000,
+  container_repo:   5500,
+  lifton:           3000,
 };
 
 const DEF_CAUSTIC = {
-  basic_rate:46, selected_packaging:'pkg_25bag', transport:25000, usd_inr:99,
-  ocean_frt:0, insurance:0.0, margin:10, moisture:0.0,
-  /* Packaging dimensions for weight calculation */
-  bag_weight: 25, bags_per_container: 1000,
-  /* Port / Local charges - updated from charge sheet */
-  custom_clearance: 3500,   // Custom Clearance per container
-  carting_exam:     1000,   // Carting Examination per container
-  vgm_form13:        500,   // VGM & Form 13 per filing
-  lacing_choking:      0,   // Belt & Wooden Edge - variable, editable
-  unloading:        1500,   // Unloading per container
-  cfs_handling:    12000,   // CFS Handling (Receipted)
-  container_repo:   5500,   // Container Repo Charges
-  lifton:           3000,   // Lift-on / Detention
-  shipping_line_local:35000, // Shipping Line Local (BL + seal + MUC)
-  fumigation:           0,  // Fumigation (not applicable)
-  lashing:              0,  // Lashing / Cargo Securing
-  dest_port: '',            // Destination port for CIF quotation
+  ...DEF_PORT,
+  basic_rate: 46, selected_packaging: 'pkg_25bag',
+  bag_weight: 25, bags_per_container: 1040,
+  pkg_unit_cost: 0,
+  transport_kg: 0,
+  usd_inr: 99, margin: 10, moisture: 0.0,
+  ocean_frt: 0, insurance: 0.0,
+  shipping_line_local: 35000,
+  fumigation: 0, lashing: 0,
+  dest_port: '',
 };
 
-/* Updated sulphuric acid port charges as per the new charge sheet */
 const DEF_SULPHURIC = {
-  basic_rate:36, selected_packaging:'pkg_ibc', transport_kg:1, usd_inr:99,
-  ocean_frt:0, insurance:0.0, margin:10,
-  /* Packaging dimensions for volume calculation */
-  pkg_units_per_ctr: 16,     // IBC Tanks per Container
-  pkg_unit_weight: 1650,     // KG Capacity per IBC Tank
-  /* Port / CFS charges */
-  custom_clearance: 3500,   // Custom Clearance per container
-  carting_exam:     1000,   // Carting Examination per container
-  vgm_form13:        500,   // VGM & Form 13 per filing
-  lacing_choking:      0,   // Belt & Wooden Edge - variable, editable
-  unloading:        1500,   // Unloading per container
-  cfs_handling:    12000,   // CFS Handling (Receipted)
-  container_repo:   5500,   // Container Repo Charges
-  lifton:           3000,   // Lift-on
-  ship_line:       35000,   // Shipping Line (BL + THC)
-  /* DG */
-  dg_usd:0, imdg:0,
+  ...DEF_PORT,
+  basic_rate: 36, selected_packaging: 'pkg_ibc',
+  pkg_units_per_ctr: 16, pkg_unit_weight: 1650,
+  transport_kg: 1,
+  usd_inr: 99, margin: 10,
+  ocean_frt: 0, insurance: 0.0,
+  ship_line: 35000,
+  dg_usd: 0, imdg: 0,
 };
 
 /* ═══════════════════════════════════════
@@ -904,8 +699,8 @@ function flashSave() {
   _st = setTimeout(() => el.classList.remove('show'), 2000);
 }
 
-let active = 'sulphuric'; // default active product
-let mobilePanel = 'inputs'; // 'inputs' | 'results'
+let active = 'sulphuric';
+let mobilePanel = 'inputs';
 
 const S = {
   caustic:   loadState('caustic',   DEF_CAUSTIC),
@@ -922,19 +717,12 @@ window.showPanel = function(panel) {
   const ptI = document.getElementById('ptabInputs');
   const ptR = document.getElementById('ptabResults');
   if (!sidebar || !results) return;
-
   if (window.innerWidth <= 768) {
-    if (panel === 'inputs') {
-      sidebar.classList.remove('mobile-hidden');
-      results.classList.add('mobile-hidden');
-      ptI.classList.add('active');
-      ptR.classList.remove('active');
-    } else {
-      sidebar.classList.add('mobile-hidden');
-      results.classList.remove('mobile-hidden');
-      ptI.classList.remove('active');
-      ptR.classList.add('active');
-    }
+    const toInputs = panel === 'inputs';
+    sidebar.classList.toggle('mobile-hidden', !toInputs);
+    results.classList.toggle('mobile-hidden',  toInputs);
+    ptI.classList.toggle('active',  toInputs);
+    ptR.classList.toggle('active', !toInputs);
   }
 };
 
@@ -953,18 +741,16 @@ window.addEventListener('resize', applyMobilePanel);
    CALCULATIONS
 ═══════════════════════════════════════ */
 function calcCaustic(d) {
-  const pkg  = PKG.caustic.find(p => p.id === d.selected_packaging);
+  const pkg   = PKG.caustic.find(p => p.id === d.selected_packaging);
   const units = d.bags_per_container ?? pkg.units_per_container;
-  const uwt   = d.bag_weight        ?? pkg.unit_weight;
-  const ucost = d.pkg_unit_cost     ?? pkg.unit_cost;
+  const uwt   = d.bag_weight         ?? pkg.unit_weight;
+  const ucost = d.pkg_unit_cost      ?? pkg.unit_cost;
 
   const total_kg    = units * uwt * (1 - d.moisture / 100);
   const total_mt    = total_kg / 1000;
   const procurement = d.basic_rate * total_kg;
   const packing     = ucost * units;
-  const transport_kg = typeof d.transport_kg === 'number'
-                     ? d.transport_kg
-                     : (typeof d.transport === 'number' && total_kg ? d.transport / total_kg : 0);
+  const transport_kg = typeof d.transport_kg === 'number' ? d.transport_kg : 0;
   const transport   = transport_kg * total_kg;
   const port        = d.custom_clearance + d.carting_exam + d.vgm_form13
                     + d.lacing_choking   + d.unloading    + d.cfs_handling
@@ -987,7 +773,7 @@ function calcCaustic(d) {
   const scif_kg = cif_per_kg_usd * (1 + d.margin / 100);
 
   return {
-    units, total_kg, total_mt, procurement, packing, transport, port,
+    units, uwt: uwt, total_kg, total_mt, procurement, packing, transport, port,
     fob_inr, fob_usd, fob_per_kg_usd, fob_per_mt_usd,
     ocean_inr, ins_inr, cif_inr, cif_usd, cif_per_kg_usd, cif_per_mt_usd,
     sfob_kg, sfob_mt: sfob_kg * 1000, sfob_ctr: sfob_kg * total_kg,
@@ -998,7 +784,7 @@ function calcCaustic(d) {
 }
 
 function calcSulphuric(d) {
-  const pkg  = PKG.sulphuric.find(p => p.id === d.selected_packaging);
+  const pkg   = PKG.sulphuric.find(p => p.id === d.selected_packaging);
   const units = d.pkg_units_per_ctr ?? pkg.units_per_container;
   const uwt   = d.pkg_unit_weight   ?? pkg.unit_weight;
   const ucost = d.pkg_unit_cost     ?? pkg.unit_cost;
@@ -1046,7 +832,6 @@ function calcSulphuric(d) {
 ═══════════════════════════════════════ */
 const f0  = v => Math.round(v).toLocaleString('en-IN');
 const f2  = v => v.toLocaleString('en-IN', { minimumFractionDigits:2, maximumFractionDigits:2 });
-const f4  = v => v.toLocaleString('en-US', { minimumFractionDigits:4, maximumFractionDigits:4 });
 const inr = v => '₹' + f0(v);
 const inr2 = v => '₹' + v.toLocaleString('en-IN', { minimumFractionDigits:2, maximumFractionDigits:2 });
 const usd = (v, d=2) => '$' + v.toLocaleString('en-US', { minimumFractionDigits:d, maximumFractionDigits:d });
@@ -1058,8 +843,7 @@ const I = (prod, key, val, lbl, unit, cls) => `
 <div class="inp-row">
   <div><div class="inp-lbl">${lbl}</div><div class="inp-unit">${unit}</div></div>
   <div class="inp-ctrl">
-    <input type="number" class="${cls}" value="${val}" step="any"
-      inputmode="decimal"
+    <input type="number" class="${cls}" value="${val}" step="any" inputmode="decimal"
       oninput="upd('${prod}','${key}',this.value)">
   </div>
 </div>`;
@@ -1077,7 +861,6 @@ const SEL = (prod, key, val, lbl, opts) => `
 const SPEC = (k, v, style='') =>
   `<div class="spec-cell"><div class="spec-k">${k}</div><div class="spec-v"${style ? ` style="${style}"` : ''}>${v}</div></div>`;
 
-/* Cost line: name, value, optional formula */
 const CL = (name, val, desc='') => `
 <div class="cost-line">
   <div class="cost-line-left">
@@ -1087,46 +870,33 @@ const CL = (name, val, desc='') => `
   <div class="cost-line-val">${val}</div>
 </div>`;
 
-/* Subtotal line */
 const CST = (name, val) => `
 <div class="cost-line subtotal">
   <div class="cost-line-left"><div class="cost-line-name">${name}</div></div>
   <div class="cost-line-val">${val}</div>
 </div>`;
 
-/* Total line */
 const CTL = (name, val, fobOrCif) => `
 <div class="cost-line total-${fobOrCif}">
   <div class="cost-line-left"><div class="cost-line-name">${name}</div></div>
   <div class="cost-line-val">${val}</div>
 </div>`;
 
-/* Section title within cost card */
 const CSEC = t => `<div class="cost-sec-title">${t}</div>`;
 
-
 const escapeHtml = text => String(text)
-  .replace(/&/g,'&amp;')
-  .replace(/</g,'&lt;')
-  .replace(/>/g,'&gt;');
+  .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 
 /* ═══════════════════════════════════════
-   CUSTOMER QUOTE GENERATION
+   CUSTOMER QUOTE
 ═══════════════════════════════════════ */
-
-/**
- * Builds clean, client-facing plain-text quotation.
- * NEVER exposes INR, break-even, internal costing, or margin.
- * Auto-determines FOB-only vs FOB+CIF based on freight inputs.
- */
 function buildCustomerQuote(productName, packName, c, d) {
+  const today = new Date().toLocaleDateString('en-GB', { day:'numeric', month:'long', year:'numeric' });
   const qtyMt = f2(c.total_mt);
   const qtyKg = f0(c.total_kg);
   const destPort = (d.dest_port || '').trim();
   const hasCif = c.ocean_inr > 0 || c.ins_inr > 0;
-  const transportIncluded = c.transport > 0;
-  const productLine = productName === 'Sulphuric Acid 98%' ? 'Sulphuric Acid 98% Min' : `${productName}`;
-  const gradeLine = 'Industrial / Technical Grade';
+  const productLine = productName === 'Sulphuric Acid 98%' ? 'Sulphuric Acid 98% Min' : productName;
   const packingLabel = /IBC/i.test(packName) ? 'UN Approved IBC Tank' : packName;
   const weightMatch = packName.match(/(\d[\d,]*)\s*KG/i);
   const netWeightLine = /IBC/i.test(packName) && weightMatch ? `Weight per IBC: ${weightMatch[1].replace(/,/g, '')} KG` : '';
@@ -1135,6 +905,7 @@ function buildCustomerQuote(productName, packName, c, d) {
   const quantityLine = qtyUnits
     ? `Quantity: ${qtyMt} MT (${qtyKg} KG / ${f0(qtyUnits)} ${unitLabel})`
     : `Quantity: ${qtyMt} MT (${qtyKg} KG)`;
+  const transportIncluded = c.transport > 0;
   const priceBasis = `Price Basis: FOB ${transportIncluded ? '(includes plant-to-port transport)' : '(excludes plant-to-port transport)'}`;
 
   const fobLines =
@@ -1143,18 +914,17 @@ function buildCustomerQuote(productName, packName, c, d) {
     `KG Price: ${usd(c.sfob_kg, 4)} / KG\n`;
 
   const cifLines = hasCif
-  ? `\n${destPort ? `${destPort}`: ''}\n` +
+    ? `\n${destPort ? `${destPort}\n` : ''}` +
       `CIF Price: ${usd(c.scif_mt, 2)} / MT\n` +
       `FCL Value: ${usd(c.scif_ctr, 0)} / FCL\n` +
       `KG Price: ${usd(c.scif_kg, 4)} / KG`
     : '';
 
   return (
-
-    `Date: 19 May 2026\n\n` +
+    `Date: ${today}\n\n` +
     `Rate updates,\n\n` +
     `${productLine}\n` +
-    `${gradeLine}\n` +
+    `Industrial / Technical Grade\n` +
     `Packing: ${packingLabel}${netWeightLine ? `\n${netWeightLine}` : ''}\n` +
     `${quantityLine}\n` +
     `Origin: India\n\n` +
@@ -1167,38 +937,32 @@ function buildCustomerQuote(productName, packName, c, d) {
   );
 }
 
-/** Live-updates dest_port in state and patches preview only (no full re-render) */
 window.updDestPort = function(prod, val) {
   S[prod].dest_port = val;
   saveState(prod, S[prod]);
   const el = document.getElementById('quotePreview_' + prod);
   if (!el) return;
-  const d = S[prod];
-  const c = prod === 'caustic' ? calcCaustic(d) : calcSulphuric(d);
+  const d   = S[prod];
+  const c   = prod === 'caustic' ? calcCaustic(d) : calcSulphuric(d);
   const pkg = PKG[prod].find(p => p.id === d.selected_packaging);
   const productName = prod === 'caustic' ? 'Caustic Soda Flakes' : 'Sulphuric Acid 98%';
   el.textContent = buildCustomerQuote(productName, pkg.name, c, d);
 };
 
 window.copyCustomerQuote = function(prod) {
-  const d = S[prod];
-  const c = prod === 'caustic' ? calcCaustic(d) : calcSulphuric(d);
+  const d   = S[prod];
+  const c   = prod === 'caustic' ? calcCaustic(d) : calcSulphuric(d);
   const pkg = PKG[prod].find(p => p.id === d.selected_packaging);
   const productName = prod === 'caustic' ? 'Caustic Soda Flakes' : 'Sulphuric Acid 98%';
   const msg = buildCustomerQuote(productName, pkg.name, c, d);
 
   const showPill = () => {
     const pill = document.getElementById('copyPill_' + prod);
-    if (pill) {
-      pill.classList.add('show');
-      setTimeout(() => pill.classList.remove('show'), 1800);
-    }
+    if (pill) { pill.classList.add('show'); setTimeout(() => pill.classList.remove('show'), 1800); }
   };
 
   if (navigator.clipboard && navigator.clipboard.writeText) {
-    navigator.clipboard.writeText(msg).then(showPill).catch(() => {
-      window.prompt('Copy Customer Quote:', msg);
-    });
+    navigator.clipboard.writeText(msg).then(showPill).catch(() => { window.prompt('Copy Customer Quote:', msg); });
   } else {
     window.prompt('Copy Customer Quote:', msg);
     showPill();
@@ -1206,13 +970,12 @@ window.copyCustomerQuote = function(prod) {
 };
 
 /* ═══════════════════════════════════════
-   SHARED RESULTS BLOCKS
+   SHARED RESULT BLOCKS
 ═══════════════════════════════════════ */
 function renderCustomerQuoteCard(prod, c, d, pkg, productName) {
   const hasCif   = c.ocean_inr > 0 || c.ins_inr > 0;
   const destPort = (d.dest_port || '').trim();
   const preview  = buildCustomerQuote(productName, pkg.name, c, d);
-
   return `
 <div class="quote-card">
   <div class="quote-header">
@@ -1224,13 +987,8 @@ function renderCustomerQuoteCard(prod, c, d, pkg, productName) {
       ${hasCif ? `
       <div class="quote-dest-wrap">
         <span class="quote-dest-label">Dest. Port</span>
-        <input
-          class="quote-dest-input"
-          type="text"
-          placeholder="e.g. Port Klang"
-          value="${escapeHtml(destPort)}"
-          oninput="updDestPort('${prod}', this.value)"
-        >
+        <input class="quote-dest-input" type="text" placeholder="e.g. Port Klang"
+          value="${escapeHtml(destPort)}" oninput="updDestPort('${prod}', this.value)">
       </div>` : ''}
       <button class="quote-copy-btn" onclick="copyCustomerQuote('${prod}')">
         <span id="copyPill_${prod}" class="copy-pill">Copied!</span>
@@ -1244,25 +1002,23 @@ function renderCustomerQuoteCard(prod, c, d, pkg, productName) {
   </div>
 </div>`;
 }
+
 function renderSpecStrip(cells) {
   return `<div class="spec-strip">${cells.map(([k,v,s]) => SPEC(k,v,s||'')).join('')}</div>`;
 }
+
 function renderBeRow(c) {
   const fobPerKgInr = c.fob_inr / c.total_kg;
   const cifPerKgInr = c.cif_inr / c.total_kg;
   const fobPerMtInr = fobPerKgInr * 1000;
   const cifPerMtInr = cifPerKgInr * 1000;
-
   return `
 <div class="be-row">
   <div class="be-card be-card-fob">
     <div class="be-accent-bar be-accent-fob"></div>
     <div class="be-body">
       <div class="be-label be-label-fob">FOB Buying Price</div>
-      <div class="be-main">
-        <span class="be-big be-big-fob">${inr2(fobPerKgInr)}</span>
-        <span class="be-unit">/ KG</span>
-      </div>
+      <div class="be-main"><span class="be-big be-big-fob">${inr2(fobPerKgInr)}</span><span class="be-unit">/ KG</span></div>
       <div class="be-line"><span class="be-line-k">Per MT</span><span class="be-line-v">${inr2(fobPerMtInr)}</span></div>
       <div class="be-line"><span class="be-line-k">Per FCL</span><span class="be-line-v">${inr(c.fob_inr)}</span></div>
       <div class="be-divider"></div>
@@ -1277,10 +1033,7 @@ function renderBeRow(c) {
     <div class="be-accent-bar be-accent-cif"></div>
     <div class="be-body">
       <div class="be-label be-label-cif">CIF Buying Price</div>
-      <div class="be-main">
-        <span class="be-big be-big-cif">${inr2(cifPerKgInr)}</span>
-        <span class="be-unit">/ KG</span>
-      </div>
+      <div class="be-main"><span class="be-big be-big-cif">${inr2(cifPerKgInr)}</span><span class="be-unit">/ KG</span></div>
       <div class="be-line"><span class="be-line-k">Per MT</span><span class="be-line-v">${inr2(cifPerMtInr)}</span></div>
       <div class="be-line"><span class="be-line-k">Per FCL</span><span class="be-line-v">${inr(c.cif_inr)}</span></div>
       <div class="be-divider"></div>
@@ -1293,89 +1046,96 @@ function renderBeRow(c) {
   </div>
 </div>`;
 }
+
+/* Shared column renderer used by both selling price and margin cards */
+function spCol(title, fobInr, fobUsd, cifInr, cifUsd, showCif) {
+  return `
+  <div class="sp-col">
+    <div class="sp-col-title">${title}</div>
+    <div class="sp-row">
+      <div class="sp-block sp-block-fob">
+        <div class="sp-tier-label sp-fob-label">FOB</div>
+        <div class="sp-inr sp-fob-inr">${fobInr}</div>
+        <div class="sp-usd sp-fob-usd">${fobUsd}</div>
+      </div>
+      ${showCif ? `
+      <div class="sp-block sp-block-cif">
+        <div class="sp-tier-label sp-cif-label">CIF</div>
+        <div class="sp-inr sp-cif-inr">${cifInr}</div>
+        <div class="sp-usd sp-cif-usd">${cifUsd}</div>
+      </div>` : ''}
+    </div>
+  </div>`;
+}
+
 function renderSellCard(c, margin, usdInr) {
+  const showCif    = c.ocean_inr > 0 || c.ins_inr > 0;
   const sfobKgInr  = c.sfob_kg  * usdInr;
   const scifKgInr  = c.scif_kg  * usdInr;
   const sfobMtInr  = c.sfob_mt  * usdInr;
   const scifMtInr  = c.scif_mt  * usdInr;
   const sfobCtrInr = c.sfob_ctr * usdInr;
   const scifCtrInr = c.scif_ctr * usdInr;
-  const showCif    = c.ocean_inr > 0 || c.ins_inr > 0;
-
-  const col = (title, fobInr, fobUsd, cifInr, cifUsd) => `
-    <div class="sp-col">
-      <div class="sp-col-title">${title}</div>
-      <div class="sp-row">
-        <div class="sp-block sp-block-fob">
-          <div class="sp-tier-label sp-fob-label">FOB</div>
-          <div class="sp-inr sp-fob-inr">${fobInr}</div>
-          <div class="sp-usd sp-fob-usd">${fobUsd}</div>
-        </div>
-        ${showCif ? `
-        <div class="sp-block sp-block-cif">
-          <div class="sp-tier-label sp-cif-label">CIF</div>
-          <div class="sp-inr sp-cif-inr">${cifInr}</div>
-          <div class="sp-usd sp-cif-usd">${cifUsd}</div>
-        </div>` : ''}
-      </div>
-    </div>`;
-
   return `
 <div class="sp-card">
   <div class="cost-head amber">Selling Price <span style="font-weight:400;opacity:0.6;font-size:9px;margin-left:6px">LANDING COST + ${margin}% MARGIN</span></div>
   <div class="sp-grid">
-    ${col('Per KG',
-      inr2(sfobKgInr)+' / KG',  usd(c.sfob_kg,4)+' / KG',
-      inr2(scifKgInr)+' / KG',  usd(c.scif_kg,4)+' / KG')}
-    ${col('Per MT',
-      inr2(sfobMtInr)+' / MT',  usd(c.sfob_mt,2)+' / MT',
-      inr2(scifMtInr)+' / MT',  usd(c.scif_mt,2)+' / MT')}
-    ${col('Per FCL · '+f2(c.total_mt)+' MT',
+    ${spCol('Per KG',
+      inr2(sfobKgInr)+' / KG', usd(c.sfob_kg,4)+' / KG',
+      inr2(scifKgInr)+' / KG', usd(c.scif_kg,4)+' / KG', showCif)}
+    ${spCol('Per MT',
+      inr2(sfobMtInr)+' / MT', usd(c.sfob_mt,2)+' / MT',
+      inr2(scifMtInr)+' / MT', usd(c.scif_mt,2)+' / MT', showCif)}
+    ${spCol('Per FCL · '+f2(c.total_mt)+' MT',
       inr(sfobCtrInr)+' / FCL', usd(c.sfob_ctr,0)+' / FCL',
-      inr(scifCtrInr)+' / FCL', usd(c.scif_ctr,0)+' / FCL')}
+      inr(scifCtrInr)+' / FCL', usd(c.scif_ctr,0)+' / FCL', showCif)}
   </div>
 </div>`;
 }
+
 function renderMarginCard(c, usdInr) {
+  const showCif    = c.ocean_inr > 0 || c.ins_inr > 0;
+  const mfobKgInr  = c.mfob_mt  * usdInr / 1000;
+  const mcifKgInr  = c.mcif_mt  * usdInr / 1000;
   const mfobMtInr  = c.mfob_mt  * usdInr;
   const mcifMtInr  = c.mcif_mt  * usdInr;
   const mfobCtrInr = c.mfob_ctr * usdInr;
   const mcifCtrInr = c.mcif_ctr * usdInr;
-  const mfobKgInr  = c.mfob_mt  * usdInr / 1000;
-  const mcifKgInr  = c.mcif_mt  * usdInr / 1000;
-  const showCif    = c.ocean_inr > 0 || c.ins_inr > 0;
-
-  const col = (title, fobInr, fobUsd, cifInr, cifUsd) => `
-    <div class="sp-col">
-      <div class="sp-col-title">${title}</div>
-      <div class="sp-row">
-        <div class="sp-block sp-block-fob">
-          <div class="sp-tier-label sp-fob-label">FOB</div>
-          <div class="sp-inr sp-fob-inr">${fobInr}</div>
-          <div class="sp-usd sp-fob-usd">${fobUsd}</div>
-        </div>
-        ${showCif ? `
-        <div class="sp-block sp-block-cif">
-          <div class="sp-tier-label sp-cif-label">CIF</div>
-          <div class="sp-inr sp-cif-inr">${cifInr}</div>
-          <div class="sp-usd sp-cif-usd">${cifUsd}</div>
-        </div>` : ''}
-      </div>
-    </div>`;
-
   return `
-<div class="sp-card" style="border-color:var(--p-bd);box-shadow:var(--sh1)">
+<div class="sp-card" style="border-color:var(--p-bd)">
   <div class="cost-head purple">Gross Margin</div>
   <div class="sp-grid">
-    ${col('Margin / KG',
-      inr2(mfobKgInr)+' / KG',  usd(c.mfob_mt/1000,4)+' / KG',
-      inr2(mcifKgInr)+' / KG',  usd(c.mcif_mt/1000,4)+' / KG')}
-    ${col('Margin / MT',
-      inr2(mfobMtInr)+' / MT',  usd(c.mfob_mt,2)+' / MT',
-      inr2(mcifMtInr)+' / MT',  usd(c.mcif_mt,2)+' / MT')}
-    ${col('Margin / FCL',
+    ${spCol('Margin / KG',
+      inr2(mfobKgInr)+' / KG', usd(c.mfob_mt/1000,4)+' / KG',
+      inr2(mcifKgInr)+' / KG', usd(c.mcif_mt/1000,4)+' / KG', showCif)}
+    ${spCol('Margin / MT',
+      inr2(mfobMtInr)+' / MT', usd(c.mfob_mt,2)+' / MT',
+      inr2(mcifMtInr)+' / MT', usd(c.mcif_mt,2)+' / MT', showCif)}
+    ${spCol('Margin / FCL',
       inr(mfobCtrInr)+' / FCL', usd(c.mfob_ctr,0)+' / FCL',
-      inr(mcifCtrInr)+' / FCL', usd(c.mcif_ctr,0)+' / FCL')}
+      inr(mcifCtrInr)+' / FCL', usd(c.mcif_ctr,0)+' / FCL', showCif)}
+  </div>
+</div>`;
+}
+
+function renderCifCard(c, d) {
+  return `
+<div class="cost-card">
+  <div class="cost-head cif">CIF - Full Landed Cost</div>
+  <div class="cost-section">
+    ${CSEC('FOB Base')}
+    ${CL('FOB (as calculated)', inr(c.fob_inr), usd(c.fob_usd,0))}
+  </div>
+  <div class="cost-section">
+    ${CSEC('Freight & Insurance')}
+    ${CL('Ocean Freight',   inr(c.ocean_inr), d.ocean_frt+' $/Container × ₹'+d.usd_inr)}
+    ${CL('Marine Insurance',inr(c.ins_inr),   d.insurance+'% of FOB value')}
+    ${CST('Sub-total', inr(c.ocean_inr + c.ins_inr))}
+  </div>
+  ${CTL('CIF TOTAL', inr(c.cif_inr)+' · '+usd(c.cif_usd,0), 'cif')}
+  <div class="formula-note">
+    <strong>CIF/KG</strong> = ${inr(c.cif_inr)} ÷ ${f0(c.total_kg)} kg ÷ ${d.usd_inr} = <strong>${usd(c.cif_per_kg_usd,4)}</strong>
+    &nbsp;|&nbsp; <strong>CIF/MT</strong> = ${usd(c.cif_per_mt_usd,2)}
   </div>
 </div>`;
 }
@@ -1387,9 +1147,7 @@ function renderCaustic() {
   const d = S.caustic, c = calcCaustic(d);
   const pkg = PKG.caustic.find(p => p.id === d.selected_packaging);
   const ucost = d.pkg_unit_cost ?? pkg.unit_cost;
-  const transportKg = typeof d.transport_kg === 'number'
-                    ? d.transport_kg
-                    : (typeof d.transport === 'number' && c.total_kg ? d.transport / c.total_kg : 1);
+  const transportKg = typeof d.transport_kg === 'number' ? d.transport_kg : 0;
   const portSubtotal = d.custom_clearance + d.carting_exam + d.vgm_form13
                      + d.lacing_choking   + d.unloading    + d.cfs_handling
                      + d.container_repo   + d.lifton
@@ -1397,61 +1155,57 @@ function renderCaustic() {
 
   return `
 <div class="shell">
-
 <aside class="sidebar">
   <div class="sec-head">
     <span class="sec-label amber">Ex-plant Inputs</span>
     <div style="width:100%;display:flex;justify-content:space-between;align-items:flex-start;gap:10px;">
       <span class="sec-tag">Product rate, packaging, exchange and margin</span>
-      <button class="reset-btn" onclick="reset('caustic')">
-        Reset
-      </button>
+      <button class="reset-btn" onclick="reset('caustic')">Reset</button>
     </div>
   </div>
   <div>
-    ${I('caustic','basic_rate',      d.basic_rate,  'Basic Rate - Caustic Soda Flakes', '₹ / kg', 'dai')}
-    ${SEL('caustic','selected_packaging', d.selected_packaging, 'Packaging Type', PKG.caustic)}
-    ${I('caustic','bag_weight',      d.bag_weight,  'Bag Weight',                      'kg / unit',       'dai')}
-    ${I('caustic','bags_per_container', d.bags_per_container, 'Bags per Container (20ft)', 'units / FCL', 'dai')}
-    ${I('caustic','pkg_unit_cost',   ucost,         'Packaging Cost',       '₹ / unit', 'dai')}
-    ${I('caustic','usd_inr',         d.usd_inr,     'USD / INR Exchange Rate',         'INR / $',  'dai')}
-    ${I('caustic','margin',          d.margin,      'Target Margin',                   '%',        'dai')}
-    ${I('caustic','moisture',        d.moisture,    'Moisture / Loss Allowance',       '%',        'dai')}
+    ${I('caustic','basic_rate',          d.basic_rate,          'Basic Rate - Caustic Soda Flakes',  '₹ / kg',      'dai')}
+    ${SEL('caustic','selected_packaging',d.selected_packaging,  'Packaging Type', PKG.caustic)}
+    ${I('caustic','bag_weight',          d.bag_weight,          'Bag Weight',                        'kg / unit',   'dai')}
+    ${I('caustic','bags_per_container',  d.bags_per_container,  'Bags per Container (20ft)',          'units / FCL', 'dai')}
+    ${I('caustic','pkg_unit_cost',       ucost,                 'Packaging Cost',                    '₹ / unit',    'dai')}
+    ${I('caustic','usd_inr',             d.usd_inr,             'USD / INR Exchange Rate',            'INR / $',     'dai')}
+    ${I('caustic','margin',              d.margin,              'Target Margin',                     '%',           'dai')}
+    ${I('caustic','moisture',            d.moisture,            'Moisture / Loss Allowance',         '%',           'dai')}
   </div>
   <div class="sec-head">
     <span class="sec-label blue">FOB Inputs</span>
     <span class="sec-tag">Plant-to-port transport per kg</span>
   </div>
   <div>
-    ${I('caustic','transport_kg',    transportKg,   'Transport - Plant to Port',       '₹ / kg',  'dai')}
+    ${I('caustic','transport_kg',        transportKg,           'Transport - Plant to Port',         '₹ / kg',      'dai')}
   </div>
   <div class="sec-head">
     <span class="sec-label teal">Port Charges</span>
     <span class="sec-tag">Local port handling and shipping line fees</span>
   </div>
   <div>
-    ${I('caustic','shipping_line_local',d.shipping_line_local, 'Shipping Line Local (BL, Seal, MUC, etc)', '₹ / FCL', 'fix')}
-    ${I('caustic','cfs_handling',     d.cfs_handling,     'CFS Handling (approx)',       '₹ / FCL', 'fix')}
-    ${I('caustic','custom_clearance', d.custom_clearance, 'Custom Clearance',            '₹ / FCL', 'fix')}
-    ${I('caustic','vgm_form13',       d.vgm_form13,       'VGM &amp; Form 13 Filing',        '₹ / FCL', 'fix')}
-    ${I('caustic','carting_exam',     d.carting_exam,     'Carting / Examination',        '₹ / FCL', 'fix')}
-    ${I('caustic','unloading',        d.unloading,        'Unloading',                    '₹ / FCL', 'fix')}
-    ${I('caustic','container_repo',   d.container_repo,   'Container Repo Charges',       '₹ / FCL', 'fix')}
-    ${I('caustic','lifton',           d.lifton,           'Lift-on Charge',               '₹ / FCL', 'fix')}
-    ${I('caustic','lacing_choking',   d.lacing_choking,   'Lacing / Choking (Belt + Wood)','₹ / FCL', 'fix')}
-    ${I('caustic','fumigation',       d.fumigation,       'Fumigation Charge',            '₹ / FCL', 'fix')}
-    ${I('caustic','lashing',          d.lashing,          'Lashing / Cargo Securing',     '₹ / FCL', 'fix')}
+    ${I('caustic','shipping_line_local', d.shipping_line_local, 'Shipping Line Local (BL, Seal, MUC, etc)', '₹ / FCL', 'fix')}
+    ${I('caustic','cfs_handling',        d.cfs_handling,        'CFS Handling (approx)',             '₹ / FCL',     'fix')}
+    ${I('caustic','custom_clearance',    d.custom_clearance,    'Custom Clearance',                  '₹ / FCL',     'fix')}
+    ${I('caustic','vgm_form13',          d.vgm_form13,          'VGM &amp; Form 13 Filing',          '₹ / FCL',     'fix')}
+    ${I('caustic','carting_exam',        d.carting_exam,        'Carting / Examination',             '₹ / FCL',     'fix')}
+    ${I('caustic','unloading',           d.unloading,           'Unloading',                         '₹ / FCL',     'fix')}
+    ${I('caustic','container_repo',      d.container_repo,      'Container Repo Charges',            '₹ / FCL',     'fix')}
+    ${I('caustic','lifton',              d.lifton,              'Lift-on Charge',                    '₹ / FCL',     'fix')}
+    ${I('caustic','lacing_choking',      d.lacing_choking,      'Lacing / Choking (Belt + Wood)',    '₹ / FCL',     'fix')}
+    ${I('caustic','fumigation',          d.fumigation,          'Fumigation Charge',                 '₹ / FCL',     'fix')}
+    ${I('caustic','lashing',             d.lashing,             'Lashing / Cargo Securing',          '₹ / FCL',     'fix')}
   </div>
   <div class="sec-head">
     <span class="sec-label amber">CIF Inputs</span>
     <span class="sec-tag">Ocean freight, insurance and CIF costs</span>
   </div>
   <div>
-    ${I('caustic','ocean_frt',       d.ocean_frt,   'Ocean Freight', '$ / Container', 'fix')}
-    ${I('caustic','insurance',       d.insurance,   'Marine Insurance',             '% of FOB', 'fix')}
+    ${I('caustic','ocean_frt',           d.ocean_frt,           'Ocean Freight',                     '$ / Container','fix')}
+    ${I('caustic','insurance',           d.insurance,           'Marine Insurance',                  '% of FOB',    'fix')}
   </div>
 </aside>
-
 
 <section class="results">
   ${renderSpecStrip([
@@ -1463,62 +1217,42 @@ function renderCaustic() {
     ['USD / INR', String(d.usd_inr)],
     ['Margin', d.margin+'%', 'color:#d97706;font-weight:700'],
   ])}
-
   ${renderSellCard(c, d.margin, d.usd_inr)}
   ${renderMarginCard(c, d.usd_inr)}
-
   ${renderBeRow(c)}
-
-    <div class="breakdown-row">
-      <div class="cost-card">
-        <div class="cost-head fob">FOB - Full Cost Build-up</div>
-        <div class="cost-section">
-          ${CSEC('Procurement')}
-          ${CL('Caustic Soda Flakes', inr(c.procurement), d.basic_rate+' ₹/kg × '+f0(c.total_kg)+' kg')}
-          ${CL('Packaging - '+pkg.name, inr(c.packing), ucost+' ₹/unit × '+f0(pkg.units_per_container)+' units')}
-          ${CL('Transport - Plant to Port', inr(c.transport), transportKg+' ₹/kg × '+f0(c.total_kg)+' kg')}
-          ${CST('Sub-total', inr(c.procurement + c.packing + c.transport))}
-        </div>
-        <div class="cost-section">
-          ${CSEC('Port & Local Charges')}
-          ${CL('Custom Clearance', inr(d.custom_clearance))}
-          ${CL('Carting / Examination', inr(d.carting_exam))}
-          ${CL('VGM & Form 13', inr(d.vgm_form13))}
-          ${CL('Lacing / Choking', inr(d.lacing_choking))}
-          ${CL('Unloading', inr(d.unloading))}
-          ${CL('CFS Handling', inr(d.cfs_handling))}
-          ${CL('Container Repo Charges', inr(d.container_repo))}
-          ${CL('Lift-on Charge', inr(d.lifton))}
-          ${CL('Shipping Line Local', inr(d.shipping_line_local))}
-          ${CL('Fumigation', inr(d.fumigation))}
-          ${CL('Lashing / Securing', inr(d.lashing))}
-          ${CST('Sub-total Port', inr(portSubtotal))}
-        </div>
-        ${CTL('FOB TOTAL', inr(c.fob_inr)+' · '+usd(c.fob_usd,0), 'fob')}
-        <div class="formula-note">
-          <strong>FOB/KG</strong> = ${inr(c.fob_inr)} ÷ ${f0(c.total_kg)} kg ÷ ${d.usd_inr} = <strong>${usd(c.fob_per_kg_usd,4)}</strong>
-          &nbsp;|&nbsp; <strong>FOB/MT</strong> = ${usd(c.fob_per_mt_usd,2)}
-        </div>
+  <div class="breakdown-row">
+    <div class="cost-card">
+      <div class="cost-head fob">FOB - Full Cost Build-up</div>
+      <div class="cost-section">
+        ${CSEC('Procurement')}
+        ${CL('Caustic Soda Flakes',      inr(c.procurement), d.basic_rate+' ₹/kg × '+f0(c.total_kg)+' kg')}
+        ${CL('Packaging - '+pkg.name,    inr(c.packing),     ucost+' ₹/unit × '+f0(c.units)+' units')}
+        ${CL('Transport - Plant to Port',inr(c.transport),   transportKg+' ₹/kg × '+f0(c.total_kg)+' kg')}
+        ${CST('Sub-total', inr(c.procurement + c.packing + c.transport))}
       </div>
-      <div class="cost-card">
-        <div class="cost-head cif">CIF - Full Landed Cost</div>
-        <div class="cost-section">
-          ${CSEC('FOB Base')}
-          ${CL('FOB (as calculated)', inr(c.fob_inr), usd(c.fob_usd,0))}
-        </div>
-        <div class="cost-section">
-          ${CSEC('Freight & Insurance')}
-          ${CL('Ocean Freight', inr(c.ocean_inr), d.ocean_frt+' $/Container × ₹'+d.usd_inr)}
-          ${CL('Marine Insurance', inr(c.ins_inr), d.insurance+'% of FOB value')}
-          ${CST('Sub-total', inr(c.ocean_inr + c.ins_inr))}
-        </div>
-        ${CTL('CIF TOTAL', inr(c.cif_inr)+' · '+usd(c.cif_usd,0), 'cif')}
-        <div class="formula-note">
-          <strong>CIF/KG</strong> = ${inr(c.cif_inr)} ÷ ${f0(c.total_kg)} kg ÷ ${d.usd_inr} = <strong>${usd(c.cif_per_kg_usd,4)}</strong>
-          &nbsp;|&nbsp; <strong>CIF/MT</strong> = ${usd(c.cif_per_mt_usd,2)}
-        </div>
+      <div class="cost-section">
+        ${CSEC('Port & Local Charges')}
+        ${CL('Custom Clearance',         inr(d.custom_clearance))}
+        ${CL('Carting / Examination',    inr(d.carting_exam))}
+        ${CL('VGM & Form 13',            inr(d.vgm_form13))}
+        ${CL('Lacing / Choking',         inr(d.lacing_choking))}
+        ${CL('Unloading',                inr(d.unloading))}
+        ${CL('CFS Handling',             inr(d.cfs_handling))}
+        ${CL('Container Repo Charges',   inr(d.container_repo))}
+        ${CL('Lift-on Charge',           inr(d.lifton))}
+        ${CL('Shipping Line Local',      inr(d.shipping_line_local))}
+        ${CL('Fumigation',               inr(d.fumigation))}
+        ${CL('Lashing / Securing',       inr(d.lashing))}
+        ${CST('Sub-total Port', inr(portSubtotal))}
+      </div>
+      ${CTL('FOB TOTAL', inr(c.fob_inr)+' · '+usd(c.fob_usd,0), 'fob')}
+      <div class="formula-note">
+        <strong>FOB/KG</strong> = ${inr(c.fob_inr)} ÷ ${f0(c.total_kg)} kg ÷ ${d.usd_inr} = <strong>${usd(c.fob_per_kg_usd,4)}</strong>
+        &nbsp;|&nbsp; <strong>FOB/MT</strong> = ${usd(c.fob_per_mt_usd,2)}
       </div>
     </div>
+    ${renderCifCard(c, d)}
+  </div>
   ${renderCustomerQuoteCard('caustic', c, d, pkg, 'Caustic Soda Flakes')}
 </section>
 </div>`;
@@ -1537,58 +1271,54 @@ function renderSulphuric() {
 
   return `
 <div class="shell">
-
 <aside class="sidebar">
   <div class="sec-head">
     <span class="sec-label amber">Ex-plant Inputs</span>
     <div style="width:100%;display:flex;justify-content:space-between;align-items:flex-start;gap:10px;">
       <span class="sec-tag">Product rate, packaging, exchange and margin</span>
-
-      <button class="reset-btn" onclick="reset('sulphuric')">
-        Reset
-      </button>
+      <button class="reset-btn" onclick="reset('sulphuric')">Reset</button>
     </div>
   </div>
   <div>
-    ${I('sulphuric','basic_rate',    d.basic_rate,  'Basic Rate - Sulphuric Acid 98%',  '₹ / kg',   'dai')}
-    ${SEL('sulphuric','selected_packaging', d.selected_packaging, 'Packaging Type', PKG.sulphuric)}
-    ${I('sulphuric','pkg_units_per_ctr', d.pkg_units_per_ctr, 'Tanks per Container',      'units / FCL',    'dai')}
-    ${I('sulphuric','pkg_unit_weight',   d.pkg_unit_weight,   'Capacity per Tank',     'kg / unit',       'dai')}
-    ${I('sulphuric','pkg_unit_cost', ucost,         'Cost per Tank',         '₹ / tank', 'dai')}
-    ${I('sulphuric','usd_inr',       d.usd_inr,     'USD / INR Exchange Rate',           'INR / $',  'dai')}
-    ${I('sulphuric','margin',        d.margin,      'Target Margin',                     '%',        'dai')}
+    ${I('sulphuric','basic_rate',          d.basic_rate,          'Basic Rate - Sulphuric Acid 98%',   '₹ / kg',      'dai')}
+    ${SEL('sulphuric','selected_packaging',d.selected_packaging,  'Packaging Type', PKG.sulphuric)}
+    ${I('sulphuric','pkg_units_per_ctr',   d.pkg_units_per_ctr,   'Tanks per Container',               'units / FCL', 'dai')}
+    ${I('sulphuric','pkg_unit_weight',     d.pkg_unit_weight,     'Capacity per Tank',                 'kg / unit',   'dai')}
+    ${I('sulphuric','pkg_unit_cost',       ucost,                 'Cost per Tank',                     '₹ / unit',    'dai')}
+    ${I('sulphuric','usd_inr',             d.usd_inr,             'USD / INR Exchange Rate',            'INR / $',     'dai')}
+    ${I('sulphuric','margin',              d.margin,              'Target Margin',                     '%',           'dai')}
   </div>
   <div class="sec-head">
     <span class="sec-label blue">FOB Inputs</span>
     <span class="sec-tag">Plant-to-port transport per kg</span>
   </div>
   <div>
-    ${I('sulphuric','transport_kg',  d.transport_kg,'Transport - Plant to Port',         '₹ / kg',   'dai')}
+    ${I('sulphuric','transport_kg',        d.transport_kg,        'Transport - Plant to Port',         '₹ / kg',      'dai')}
   </div>
   <div class="sec-head">
     <span class="sec-label teal">Port Charges</span>
     <span class="sec-tag">Local port handling and shipping line fees</span>
   </div>
   <div>
-    ${I('sulphuric','ship_line',        d.ship_line,        'Shipping Line (BL, Seal, MUC, etc)',         '₹ / FCL', 'fix')}
-    ${I('sulphuric','cfs_handling',     d.cfs_handling,     'CFS Handling (approx)',        '₹ / FCL', 'fix')}
-    ${I('sulphuric','custom_clearance', d.custom_clearance, 'Custom Clearance',               '₹ / FCL', 'fix')}
-    ${I('sulphuric','vgm_form13',       d.vgm_form13,       'VGM &amp; Form 13 Filing',        '₹ / FCL', 'fix')}
-    ${I('sulphuric','carting_exam',     d.carting_exam,     'Carting / Examination',           '₹ / FCL', 'fix')}
-    ${I('sulphuric','unloading',        d.unloading,        'Unloading',                       '₹ / FCL', 'fix')}
-    ${I('sulphuric','container_repo',   d.container_repo,   'Container Repo Charges',          '₹ / FCL', 'fix')}
-    ${I('sulphuric','lifton',           d.lifton,           'Lift-on Charge',                  '₹ / FCL', 'fix')}
-    ${I('sulphuric','lacing_choking',   d.lacing_choking,   'Lacing / Choking (Belt + Wood)',  '₹ / FCL', 'fix')}
+    ${I('sulphuric','ship_line',           d.ship_line,           'Shipping Line (BL, Seal, MUC, etc)','₹ / FCL',     'fix')}
+    ${I('sulphuric','cfs_handling',        d.cfs_handling,        'CFS Handling (approx)',             '₹ / FCL',     'fix')}
+    ${I('sulphuric','custom_clearance',    d.custom_clearance,    'Custom Clearance',                  '₹ / FCL',     'fix')}
+    ${I('sulphuric','vgm_form13',          d.vgm_form13,          'VGM &amp; Form 13 Filing',          '₹ / FCL',     'fix')}
+    ${I('sulphuric','carting_exam',        d.carting_exam,        'Carting / Examination',             '₹ / FCL',     'fix')}
+    ${I('sulphuric','unloading',           d.unloading,           'Unloading',                         '₹ / FCL',     'fix')}
+    ${I('sulphuric','container_repo',      d.container_repo,      'Container Repo Charges',            '₹ / FCL',     'fix')}
+    ${I('sulphuric','lifton',              d.lifton,              'Lift-on Charge',                    '₹ / FCL',     'fix')}
+    ${I('sulphuric','lacing_choking',      d.lacing_choking,      'Lacing / Choking (Belt + Wood)',    '₹ / FCL',     'fix')}
   </div>
   <div class="sec-head">
     <span class="sec-label amber">CIF Inputs</span>
     <span class="sec-tag">Ocean freight, insurance and hazmat costs</span>
   </div>
   <div>
-    ${I('sulphuric','ocean_frt',     d.ocean_frt,   'Ocean Freight', '$ / Container', 'fix')}
-    ${I('sulphuric','insurance',     d.insurance,   'Marine Insurance', '% of FOB', 'fix')}
-    ${I('sulphuric','dg_usd', d.dg_usd, 'DG Surcharge - UN 1830, Class 8', '$ / FCL', 'fix')}
-    ${I('sulphuric','imdg',   d.imdg,   'IMDG / DG Documentation Cost',    '₹ / FCL', 'fix')}
+    ${I('sulphuric','ocean_frt',           d.ocean_frt,           'Ocean Freight',                     '$ / Container','fix')}
+    ${I('sulphuric','insurance',           d.insurance,           'Marine Insurance',                  '% of FOB',    'fix')}
+    ${I('sulphuric','dg_usd',              d.dg_usd,              'DG Surcharge - UN 1830, Class 8',   '$ / FCL',     'fix')}
+    ${I('sulphuric','imdg',                d.imdg,                'IMDG / DG Documentation Cost',      '₹ / FCL',     'fix')}
   </div>
 </aside>
 
@@ -1601,38 +1331,36 @@ function renderSulphuric() {
     ['Net KG', f0(c.total_kg)+' KG'],
     ['Margin', d.margin+'%', 'color:#d97706;font-weight:700'],
   ])}
-
   ${renderSellCard(c, d.margin, d.usd_inr)}
   ${renderMarginCard(c, d.usd_inr)}
   ${renderBeRow(c)}
-
   <div class="breakdown-row">
     <div class="cost-card">
       <div class="cost-head fob">FOB - Full Cost Build-up</div>
       <div class="cost-section">
         ${CSEC('Procurement')}
-        ${CL('Sulphuric Acid 98%', inr(c.procurement), d.basic_rate+' ₹/kg × '+f0(c.total_kg)+' kg ('+f0(c.units)+' units × '+f0(c.uwt)+' kg/unit)')}
-        ${CL('Packaging - '+pkg.name, inr(c.packing), ucost+' ₹/unit × '+f0(c.units)+' units')}
-        ${CL('Transport - Plant to Port', inr(c.transport), d.transport_kg+' ₹/kg × '+f0(c.total_kg)+' kg')}
+        ${CL('Sulphuric Acid 98%',       inr(c.procurement), d.basic_rate+' ₹/kg × '+f0(c.total_kg)+' kg ('+f0(c.units)+' units × '+f0(c.uwt)+' kg/unit)')}
+        ${CL('Packaging - '+pkg.name,    inr(c.packing),     ucost+' ₹/unit × '+f0(c.units)+' units')}
+        ${CL('Transport - Plant to Port',inr(c.transport),   d.transport_kg+' ₹/kg × '+f0(c.total_kg)+' kg')}
         ${CST('Sub-total', inr(c.procurement + c.packing + c.transport))}
       </div>
       <div class="cost-section">
         ${CSEC('Port & Charges')}
-        ${CL('Custom Clearance', inr(d.custom_clearance))}
-        ${CL('Carting / Examination', inr(d.carting_exam))}
-        ${CL('VGM & Form 13 Filing', inr(d.vgm_form13))}
-        ${CL('Lacing / Choking', inr(d.lacing_choking), 'Belt & Wooden Edge - variable')}
-        ${CL('Unloading', inr(d.unloading))}
+        ${CL('Custom Clearance',         inr(d.custom_clearance))}
+        ${CL('Carting / Examination',    inr(d.carting_exam))}
+        ${CL('VGM & Form 13 Filing',     inr(d.vgm_form13))}
+        ${CL('Lacing / Choking',         inr(d.lacing_choking), 'Belt & Wooden Edge - variable')}
+        ${CL('Unloading',                inr(d.unloading))}
         ${CL('CFS Handling (Receipted)', inr(d.cfs_handling))}
-        ${CL('Container Repo Charges', inr(d.container_repo))}
-        ${CL('Lift-on Charge', inr(d.lifton))}
+        ${CL('Container Repo Charges',   inr(d.container_repo))}
+        ${CL('Lift-on Charge',           inr(d.lifton))}
         ${CL('Shipping Line (BL + THC)', inr(d.ship_line))}
         ${CST('Sub-total Port & CFS', inr(portSubLocal))}
       </div>
       <div class="cost-section">
         ${CSEC('DG / Hazmat Charges')}
         ${CL('DG Surcharge (UN 1830, Class 8)', inr(c.dg_inr), d.dg_usd+' $/FCL × ₹'+d.usd_inr)}
-        ${CL('IMDG / DG Documentation', inr(d.imdg))}
+        ${CL('IMDG / DG Documentation',        inr(d.imdg))}
         ${CST('Sub-total DG', inr(c.dg_inr + d.imdg))}
       </div>
       ${CTL('FOB TOTAL', inr(c.fob_inr)+' · '+usd(c.fob_usd,0), 'fob')}
@@ -1641,24 +1369,7 @@ function renderSulphuric() {
         &nbsp;|&nbsp; <strong>FOB/MT</strong> = ${usd(c.fob_per_mt_usd,2)}
       </div>
     </div>
-    <div class="cost-card">
-      <div class="cost-head cif">CIF - Full Landed Cost</div>
-      <div class="cost-section">
-        ${CSEC('FOB Base')}
-        ${CL('FOB (as calculated)', inr(c.fob_inr), usd(c.fob_usd,0))}
-      </div>
-      <div class="cost-section">
-        ${CSEC('Freight & Insurance')}
-        ${CL('Ocean Freight', inr(c.ocean_inr), d.ocean_frt+' $/Container × ₹'+d.usd_inr)}
-        ${CL('Marine Insurance', inr(c.ins_inr), d.insurance+'% of FOB value')}
-        ${CST('Sub-total', inr(c.ocean_inr + c.ins_inr))}
-      </div>
-      ${CTL('CIF TOTAL', inr(c.cif_inr)+' · '+usd(c.cif_usd,0), 'cif')}
-      <div class="formula-note">
-        <strong>CIF/KG</strong> = ${inr(c.cif_inr)} ÷ ${f0(c.total_kg)} kg ÷ ${d.usd_inr} = <strong>${usd(c.cif_per_kg_usd,4)}</strong>
-        &nbsp;|&nbsp; <strong>CIF/MT</strong> = ${usd(c.cif_per_mt_usd,2)}
-      </div>
-    </div>
+    ${renderCifCard(c, d)}
   </div>
   ${renderCustomerQuoteCard('sulphuric', c, d, pkg, 'Sulphuric Acid 98%')}
 </section>
@@ -1670,7 +1381,6 @@ function renderSulphuric() {
 ═══════════════════════════════════════ */
 let _deb;
 window.upd = function(prod, key, val) {
-  /* FIX: parseFloat('0') is falsy - use explicit check */
   const num = parseFloat(val);
   S[prod][key] = isNaN(num) ? val : num;
   if (key === 'selected_packaging') {
@@ -1683,8 +1393,7 @@ window.upd = function(prod, key, val) {
 };
 
 window.reset = function(prod) {
-  const def = prod === 'caustic' ? DEF_CAUSTIC : DEF_SULPHURIC;
-  S[prod] = { ...def };
+  S[prod] = { ...(prod === 'caustic' ? DEF_CAUSTIC : DEF_SULPHURIC) };
   delete S[prod].pkg_unit_weight;
   delete S[prod].pkg_units_per_ctr;
   localStorage.removeItem('jm5_'+prod);
@@ -1698,7 +1407,6 @@ window.switchTab = function(id) {
   render();
 };
 
-/* Only patch the results panel - keeps sidebar inputs focused */
 function patchResults() {
   const rp = document.querySelector('.results');
   if (!rp) { render(); return; }
@@ -1709,7 +1417,6 @@ function patchResults() {
 }
 
 function render() {
-  /* Tabs */
   document.getElementById('tabs').innerHTML = PRODUCTS.map(p => `
     <button class="tab${p.active && active === p.id ? ' active' : ''}${!p.active ? ' soon' : ''}"
       onclick="switchTab('${p.id}')">
@@ -1725,7 +1432,6 @@ function render() {
     const p = PRODUCTS.find(x => x.id === active);
     app.innerHTML = `<div class="cs"><h2>${p.label}</h2><p>Calculator coming soon.</p></div>`;
   }
-
   applyMobilePanel();
 }
 
@@ -1740,11 +1446,8 @@ tick(); setInterval(tick, 30000);
 
 render();
 
-/* Register service worker for PWA */
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('service-worker.js').catch(err => {
-    console.log('ServiceWorker registration failed: ', err);
-  });
+  navigator.serviceWorker.register('service-worker.js').catch(() => {});
 }
 </script>
 </body>
