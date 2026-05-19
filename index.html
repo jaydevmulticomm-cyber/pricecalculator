@@ -1333,7 +1333,7 @@ function renderCaustic() {
   </div>
   <div>
     ${I('caustic','ocean_frt',       d.ocean_frt,   'Ocean Freight', '$ / Container', 'fix')}
-    ${I('caustic','insurance',       d.insurance,   'Marine Insurance',             '% of FOB', 'dai')}
+    ${I('caustic','insurance',       d.insurance,   'Marine Insurance',             '% of FOB', 'fix')}
   </div>
 </aside>
 
@@ -1464,8 +1464,8 @@ function renderSulphuric() {
     <span class="sec-tag">Ocean freight, insurance and hazmat costs</span>
   </div>
   <div>
-    ${I('sulphuric','ocean_frt',     d.ocean_frt,   'Ocean Freight',       '$ / Container', 'fix')}
-    ${I('sulphuric','insurance',     d.insurance,   'Marine Insurance',                  '% of FOB', 'dai')}
+    ${I('sulphuric','ocean_frt',     d.ocean_frt,   'Ocean Freight', '$ / Container', 'fix')}
+    ${I('sulphuric','insurance',     d.insurance,   'Marine Insurance', '% of FOB', 'fix')}
     ${I('sulphuric','dg_usd', d.dg_usd, 'DG Surcharge - UN 1830, Class 8', '$ / FCL', 'fix')}
     ${I('sulphuric','imdg',   d.imdg,   'IMDG / DG Documentation Cost',    '₹ / FCL', 'fix')}
   </div>
