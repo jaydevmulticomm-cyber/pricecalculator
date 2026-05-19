@@ -459,21 +459,35 @@ input[type=number] {
 .be-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 14px; }
 @media (max-width: 480px) { .be-row { grid-template-columns: 1fr; } }
 
+.be-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 14px; }
+@media (max-width: 480px) { .be-row { grid-template-columns: 1fr; } }
+
 .be-card {
   background: var(--surface); border: 1px solid var(--line2);
-  border-radius: var(--r16); padding: 16px;
-  position: relative; overflow: hidden;
-  box-shadow: var(--sh1); transition: box-shadow 0.15s var(--ease);
+  border-radius: var(--r16); overflow: hidden; box-shadow: var(--sh1);
+  transition: box-shadow 0.15s var(--ease);
 }
 .be-card:hover { box-shadow: var(--sh2); }
-.be-card::before {
-  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
-  background: linear-gradient(90deg,var(--o3),var(--a3));
-}
-.be-label { font-size: 10px; font-weight: 700; color: var(--ink3); letter-spacing: 0.4px; text-transform: uppercase; margin-bottom: 8px; }
-.be-big { font-family: var(--mono); font-size: 20px; font-weight: 700; color: var(--o2); letter-spacing: -0.5px; line-height: 1; }
-@media (max-width: 380px) { .be-big { font-size: 17px; } }
-.be-small { font-family: var(--mono); font-size: 10px; color: var(--ink4); margin-top: 6px; line-height: 1.6; }
+.be-accent-bar { height: 3px; }
+.be-accent-fob { background: var(--b2); }
+.be-accent-cif { background: var(--g2); }
+.be-body { padding: 14px 16px; }
+.be-label { font-size: 10px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; margin-bottom: 10px; }
+.be-label-fob { color: var(--b2); }
+.be-label-cif { color: var(--g2); }
+.be-main { display: flex; align-items: baseline; gap: 6px; margin-bottom: 10px; }
+.be-big { font-family: var(--mono); font-size: 26px; font-weight: 700; letter-spacing: -0.5px; line-height: 1; }
+.be-big-fob { color: var(--b1); }
+.be-big-cif { color: var(--g1); }
+.be-unit { font-size: 13px; color: var(--ink3); font-weight: 400; }
+.be-line { display: flex; justify-content: space-between; padding: 3px 0; }
+.be-line-k { font-size: 12px; color: var(--ink3); }
+.be-line-v { font-family: var(--mono); font-size: 12px; font-weight: 600; color: var(--ink1); }
+.be-divider { height: 1px; background: var(--line2); margin: 10px 0; }
+.be-usd-tray { background: var(--inset); border-radius: var(--r8); padding: 8px 10px; display: flex; justify-content: space-between; }
+.be-usd-item { display: flex; flex-direction: column; align-items: center; gap: 2px; }
+.be-usd-k { font-size: 9px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--ink4); }
+.be-usd-v { font-family: var(--mono); font-size: 11px; font-weight: 500; color: var(--ink3); }
 
 /* ═══════════════════════════════════════════
    COST CARDS (transparent build-up)
@@ -553,51 +567,71 @@ input[type=number] {
 /* ═══════════════════════════════════════════
    SELLING PRICE CARD
 ═══════════════════════════════════════════ */
-.sell-card {
+.sp-card {
   background: var(--surface);
   border: 1.5px solid var(--a-bd);
-  border-radius: var(--r16); overflow: hidden;
-  box-shadow: var(--sh1), 0 0 24px rgba(245,158,11,0.06);
-  margin-bottom: 14px; position: relative;
+  border-radius: var(--r16);
+  overflow: hidden;
+  box-shadow: var(--sh1);
+  margin-bottom: 14px;
 }
-.sell-card::before {
-  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
-  background: linear-gradient(90deg,var(--a2),var(--a4),var(--a2));
+.sp-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  border-top: 1px solid var(--line);
 }
-
-.sell-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; }
 @media (max-width: 480px) {
-  .sell-grid { grid-template-columns: 1fr 1fr; }
-  /* Hide per-KG on tiny screens to save space, show MT and FCL */
+  .sp-grid { grid-template-columns: 1fr 1fr; }
 }
-.sell-col { padding: 14px; border-right: 1px solid var(--line); }
-.sell-col:last-child { border-right: none; }
-.sell-k { font-size: 9px; font-weight: 700; color: var(--ink4); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
-.sell-v-label { font-size: 9px; color: var(--ink4); font-family: var(--mono); margin-bottom: 2px; letter-spacing: 0.3px; }
-.sell-v-fob { font-family: var(--mono); font-size: 14px; font-weight: 700; color: var(--b2); }
-.sell-v-cif { font-family: var(--mono); font-size: 14px; font-weight: 700; color: var(--g2); margin-top: 8px; }
-@media (max-width: 380px) {
-  .sell-v-fob, .sell-v-cif { font-size: 12px; }
+.sp-col {
+  padding: 12px 14px;
+  border-right: 1px solid var(--line);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
+.sp-col:last-child { border-right: none; }
+.sp-col-title {
+  font-size: 9px; font-weight: 700;
+  letter-spacing: 1px; text-transform: uppercase;
+  color: var(--ink4);
+  padding-bottom: 4px;
+  border-bottom: 1px solid var(--line);
+}
+.sp-block {
+  border-radius: var(--r8);
+  padding: 8px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.sp-block-fob { background: var(--b5); }
+.sp-block-cif { background: var(--g5); }
+.sp-tier-label {
+  font-size: 9px; font-weight: 700;
+  letter-spacing: 0.8px; text-transform: uppercase;
+}
+.sp-fob-label { color: var(--b2); }
+.sp-cif-label { color: var(--g2); }
+.sp-inr {
+  font-family: var(--mono);
+  font-size: 15px; font-weight: 700;
+  line-height: 1.2;
+}
+.sp-fob-inr { color: var(--b1); }
+.sp-cif-inr { color: var(--g1); }
+.sp-usd {
+  font-family: var(--mono);
+  font-size: 10px; font-weight: 500;
+}
+.sp-fob-usd { color: var(--b3); }
+.sp-cif-usd { color: var(--g3); }
 
-/* ═══════════════════════════════════════════
-   MARGIN CARD
-═══════════════════════════════════════════ */
-.margin-card {
-  background: var(--surface); border: 1px solid var(--line2);
-  border-radius: var(--r16); overflow: hidden;
-  box-shadow: var(--sh1); margin-bottom: 14px;
-}
-.margin-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; }
-@media (max-width: 480px) { .margin-grid { grid-template-columns: 1fr 1fr; } }
-.margin-col { padding: 14px; border-right: 1px solid var(--line); }
-.margin-col:last-child { border-right: none; }
-.margin-k { font-size: 9px; font-weight: 700; color: var(--ink4); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
-.margin-v-fob { font-family: var(--mono); font-size: 14px; font-weight: 700; color: var(--g2); }
-.margin-v-cif { font-family: var(--mono); font-size: 14px; font-weight: 700; color: var(--p3); margin-top: 6px; }
-@media (max-width: 380px) {
-  .margin-v-fob, .margin-v-cif { font-size: 12px; }
-}
+/* Remove old sell/margin classes no longer used */
+.sell-card, .sell-grid, .sell-col, .sell-k,
+.sell-v-label, .sell-v-fob, .sell-v-cif,
+.margin-card, .margin-grid, .margin-col,
+.margin-k, .margin-v-fob, .margin-v-cif { all: unset; }
 
 /* ═══════════════════════════════════════════
    PORT TABLE
@@ -1114,15 +1148,15 @@ function buildCustomerQuote(productName, packName, c, d) {
     `Rate updates,\n\n` +
     `${productLine}\n` +
     `${gradeLine}\n` +
-    `Packing: ${packingLabel}${netWeightLine ? ` | ${netWeightLine}` : ''}\n` +
+    `Packing: ${packingLabel}${netWeightLine ? `\n${netWeightLine}` : ''}\n` +
     `${quantityLine}\n` +
     `Origin: India\n\n` +
     `${priceBasis}\n` +
     `Payment: Advance TT\n` +
     `Validity: 2 working days \n(subject to raw material & freight confirmation)\n\n` +
     `${fobLines}${cifLines}\n\n` +
-    `Delivery: Ready within 2–4 days from payment confirmation.\n` +
-    `COA/spec sheet available on request.\n`
+    `Delivery ready within 2–4 days from payment confirmation.\n` +
+    `COA/Spec sheet available on request.\n`
   );
 }
 
@@ -1214,58 +1248,123 @@ function renderBeRow(c) {
 
   return `
 <div class="be-row">
-  <div class="be-card">
-    <div class="be-label">Break-even FOB - minimum to quote</div>
-    <div class="be-big">${inr2(fobPerKgInr)} / KG</div>
-    <div class="be-small">${inr2(fobPerMtInr)} / MT &nbsp;·&nbsp; ${inr(c.fob_inr)} / FCL</div>
-    <div class="be-small" style="margin-top:6px; color: var(--ink4);">
-      ${usd(c.fob_per_kg_usd,4)} / KG &nbsp;·&nbsp; ${usd(c.fob_per_mt_usd,2)} / MT &nbsp;·&nbsp; ${usd(c.fob_usd,0)} / FCL
+  <div class="be-card be-card-fob">
+    <div class="be-accent-bar be-accent-fob"></div>
+    <div class="be-body">
+      <div class="be-label be-label-fob">FOB Buying Price</div>
+      <div class="be-main">
+        <span class="be-big be-big-fob">${inr2(fobPerKgInr)}</span>
+        <span class="be-unit">/ KG</span>
+      </div>
+      <div class="be-line"><span class="be-line-k">Per MT</span><span class="be-line-v">${inr2(fobPerMtInr)}</span></div>
+      <div class="be-line"><span class="be-line-k">Per FCL</span><span class="be-line-v">${inr(c.fob_inr)}</span></div>
+      <div class="be-divider"></div>
+      <div class="be-usd-tray">
+        <div class="be-usd-item"><span class="be-usd-k">per KG</span><span class="be-usd-v">${usd(c.fob_per_kg_usd,4)}</span></div>
+        <div class="be-usd-item"><span class="be-usd-k">per MT</span><span class="be-usd-v">${usd(c.fob_per_mt_usd,2)}</span></div>
+        <div class="be-usd-item"><span class="be-usd-k">per FCL</span><span class="be-usd-v">${usd(c.fob_usd,0)}</span></div>
+      </div>
     </div>
   </div>
-  <div class="be-card">
-    <div class="be-label">Break-even CIF - minimum to quote</div>
-    <div class="be-big">${inr2(cifPerKgInr)} / KG</div>
-    <div class="be-small">${inr2(cifPerMtInr)} / MT &nbsp;·&nbsp; ${inr(c.cif_inr)} / FCL</div>
-    <div class="be-small" style="margin-top:6px; color: var(--ink4);">
-      ${usd(c.cif_per_kg_usd,4)} / KG &nbsp;·&nbsp; ${usd(c.cif_per_mt_usd,2)} / MT &nbsp;·&nbsp; ${usd(c.cif_usd,0)} / FCL
+  <div class="be-card be-card-cif">
+    <div class="be-accent-bar be-accent-cif"></div>
+    <div class="be-body">
+      <div class="be-label be-label-cif">CIF Buying Price</div>
+      <div class="be-main">
+        <span class="be-big be-big-cif">${inr2(cifPerKgInr)}</span>
+        <span class="be-unit">/ KG</span>
+      </div>
+      <div class="be-line"><span class="be-line-k">Per MT</span><span class="be-line-v">${inr2(cifPerMtInr)}</span></div>
+      <div class="be-line"><span class="be-line-k">Per FCL</span><span class="be-line-v">${inr(c.cif_inr)}</span></div>
+      <div class="be-divider"></div>
+      <div class="be-usd-tray">
+        <div class="be-usd-item"><span class="be-usd-k">per KG</span><span class="be-usd-v">${usd(c.cif_per_kg_usd,4)}</span></div>
+        <div class="be-usd-item"><span class="be-usd-k">per MT</span><span class="be-usd-v">${usd(c.cif_per_mt_usd,2)}</span></div>
+        <div class="be-usd-item"><span class="be-usd-k">per FCL</span><span class="be-usd-v">${usd(c.cif_usd,0)}</span></div>
+      </div>
     </div>
   </div>
 </div>`;
 }
 function renderSellCard(c, margin, usdInr) {
-  const sfobKgInr = c.sfob_kg * usdInr;
-  const scifKgInr = c.scif_kg * usdInr;
-  const sfobMtInr = c.sfob_mt * usdInr;
-  const scifMtInr = c.scif_mt * usdInr;
+  const sfobKgInr  = c.sfob_kg  * usdInr;
+  const scifKgInr  = c.scif_kg  * usdInr;
+  const sfobMtInr  = c.sfob_mt  * usdInr;
+  const scifMtInr  = c.scif_mt  * usdInr;
   const sfobCtrInr = c.sfob_ctr * usdInr;
   const scifCtrInr = c.scif_ctr * usdInr;
-  const showCif = c.ocean_inr > 0 || c.ins_inr > 0;
+  const showCif    = c.ocean_inr > 0 || c.ins_inr > 0;
+
+  const col = (title, fobInr, fobUsd, cifInr, cifUsd) => `
+    <div class="sp-col">
+      <div class="sp-col-title">${title}</div>
+      <div class="sp-block sp-block-fob">
+        <div class="sp-tier-label sp-fob-label">FOB</div>
+        <div class="sp-inr sp-fob-inr">${fobInr}</div>
+        <div class="sp-usd sp-fob-usd">${fobUsd}</div>
+      </div>
+      ${showCif ? `
+      <div class="sp-block sp-block-cif">
+        <div class="sp-tier-label sp-cif-label">CIF</div>
+        <div class="sp-inr sp-cif-inr">${cifInr}</div>
+        <div class="sp-usd sp-cif-usd">${cifUsd}</div>
+      </div>` : ''}
+    </div>`;
 
   return `
-<div class="sell-card">
-  <div class="cost-head amber" style="border-bottom:1px solid rgba(245,158,11,0.2)">
-    Offer / Selling Price - break-even + ${margin}% margin
-  </div>
-  <div class="sell-grid">
-    ${SCOL('Per KG',         `${inr2(sfobKgInr)} / KG<br><span style="font-size:11px;color:var(--ink4)">${usd(c.sfob_kg,4)} / KG</span>`, `${inr2(scifKgInr)} / KG<br><span style="font-size:11px;color:var(--ink4)">${usd(c.scif_kg,4)} / KG</span>`, showCif) }
-    ${SCOL('Per MT',         `${inr2(sfobMtInr)} / MT<br><span style="font-size:11px;color:var(--ink4)">${usd(c.sfob_mt,2)} / MT</span>`, `${inr2(scifMtInr)} / MT<br><span style="font-size:11px;color:var(--ink4)">${usd(c.scif_mt,2)} / MT</span>`, showCif) }
-    ${SCOL(`Per FCL · ${f2(c.total_mt)} MT`, `${inr(sfobCtrInr)} / FCL<br><span style="font-size:11px;color:var(--ink4)">${usd(c.sfob_ctr,0)} / FCL</span>`, `${inr(scifCtrInr)} / FCL<br><span style="font-size:11px;color:var(--ink4)">${usd(c.scif_ctr,0)} / FCL</span>`, showCif) }
+<div class="sp-card">
+  <div class="cost-head amber">Selling Price <span style="font-weight:400;opacity:0.6;font-size:9px;margin-left:6px">LANDING COST + ${margin}% MARGIN</span></div>
+  <div class="sp-grid">
+    ${col('Per KG',
+      inr2(sfobKgInr)+' / KG',  usd(c.sfob_kg,4)+' / KG',
+      inr2(scifKgInr)+' / KG',  usd(c.scif_kg,4)+' / KG')}
+    ${col('Per MT',
+      inr2(sfobMtInr)+' / MT',  usd(c.sfob_mt,2)+' / MT',
+      inr2(scifMtInr)+' / MT',  usd(c.scif_mt,2)+' / MT')}
+    ${col('Per FCL · '+f2(c.total_mt)+' MT',
+      inr(sfobCtrInr)+' / FCL', usd(c.sfob_ctr,0)+' / FCL',
+      inr(scifCtrInr)+' / FCL', usd(c.scif_ctr,0)+' / FCL')}
   </div>
 </div>`;
 }
 function renderMarginCard(c, usdInr) {
-  const mfobMtInr = c.mfob_mt * usdInr;
-  const mcifMtInr = c.mcif_mt * usdInr;
+  const mfobMtInr  = c.mfob_mt  * usdInr;
+  const mcifMtInr  = c.mcif_mt  * usdInr;
   const mfobCtrInr = c.mfob_ctr * usdInr;
   const mcifCtrInr = c.mcif_ctr * usdInr;
-  const showCif = c.ocean_inr > 0 || c.ins_inr > 0;
+  const mfobKgInr  = c.mfob_mt  * usdInr / 1000;
+  const mcifKgInr  = c.mcif_mt  * usdInr / 1000;
+  const showCif    = c.ocean_inr > 0 || c.ins_inr > 0;
+
+  const col = (title, fobInr, fobUsd, cifInr, cifUsd) => `
+    <div class="sp-col">
+      <div class="sp-col-title">${title}</div>
+      <div class="sp-block sp-block-fob">
+        <div class="sp-tier-label sp-fob-label">FOB</div>
+        <div class="sp-inr sp-fob-inr">${fobInr}</div>
+        <div class="sp-usd sp-fob-usd">${fobUsd}</div>
+      </div>
+      ${showCif ? `
+      <div class="sp-block sp-block-cif">
+        <div class="sp-tier-label sp-cif-label">CIF</div>
+        <div class="sp-inr sp-cif-inr">${cifInr}</div>
+        <div class="sp-usd sp-cif-usd">${cifUsd}</div>
+      </div>` : ''}
+    </div>`;
 
   return `
-<div class="margin-card">
-  <div class="cost-head purple">Gross Margin Summary</div>
-  <div class="margin-grid">
-    ${MCOL('Margin / MT', `${inr2(mfobMtInr)} FOB<br><span style="font-size:11px;color:var(--ink4)">${usd(c.mfob_mt,2)} FOB</span>`, `${inr2(mcifMtInr)} CIF<br><span style="font-size:11px;color:var(--ink4)">${usd(c.mcif_mt,2)} CIF</span>`, showCif) }
-    ${MCOL('Margin / FCL', `${inr(mfobCtrInr)} FOB<br><span style="font-size:11px;color:var(--ink4)">${usd(c.mfob_ctr,0)} FOB</span>`, `${inr(mcifCtrInr)} CIF<br><span style="font-size:11px;color:var(--ink4)">${usd(c.mcif_ctr,0)} CIF</span>`, showCif) }
+<div class="sp-card" style="border-color:var(--p-bd);box-shadow:var(--sh1)">
+  <div class="cost-head purple">Gross Margin</div>
+  <div class="sp-grid">
+    ${col('Margin / KG',
+      inr2(mfobKgInr)+' / KG',  usd(c.mfob_mt/1000,4)+' / KG',
+      inr2(mcifKgInr)+' / KG',  usd(c.mcif_mt/1000,4)+' / KG')}
+    ${col('Margin / MT',
+      inr2(mfobMtInr)+' / MT',  usd(c.mfob_mt,2)+' / MT',
+      inr2(mcifMtInr)+' / MT',  usd(c.mcif_mt,2)+' / MT')}
+    ${col('Margin / FCL',
+      inr(mfobCtrInr)+' / FCL', usd(c.mfob_ctr,0)+' / FCL',
+      inr(mcifCtrInr)+' / FCL', usd(c.mcif_ctr,0)+' / FCL')}
   </div>
 </div>`;
 }
